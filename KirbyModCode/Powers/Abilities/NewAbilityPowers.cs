@@ -113,6 +113,8 @@ public sealed class GalaxiaPower : CopyAbilityPower
 
     public override CopyAbilityKind Kind => CopyAbilityKind.Galaxia;
 
+    public override IReadOnlyList<CopyAbilityKind> CountsAs => [CopyAbilityKind.Galaxia, CopyAbilityKind.Sword];
+
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("sword_sage_power");
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)

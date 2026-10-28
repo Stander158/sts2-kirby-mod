@@ -36,6 +36,9 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
     public abstract CopyAbilityKind Kind { get; }
 
+    /// <summary>The abilities this one counts as for "X: ..." card effects and Retain (Master also counts as Sword).</summary>
+    public virtual IReadOnlyList<CopyAbilityKind> CountsAs => [Kind];
+
     public override PowerType Type => PowerType.Buff;
 
     public override PowerStackType StackType => PowerStackType.Single;
@@ -116,7 +119,7 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
         foreach (var card in PileType.Hand.GetPile(player).Cards)
         {
-            if (card is IAbilitySynergyCard synergy && synergy.SynergyAbilities.Contains(Kind))
+            if (card is IAbilitySynergyCard synergy && synergy.SynergyAbilities.Any(CountsAs.Contains))
                 card.GiveSingleTurnRetain();
         }
 

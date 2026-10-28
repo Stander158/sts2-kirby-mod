@@ -234,7 +234,7 @@ public static class CopyAbilities
         player.Creature.Powers.OfType<CopyAbilityPower>().ToList();
 
     public static bool Has(Player? player, IReadOnlyList<CopyAbilityKind> kinds) =>
-        player != null && Held(player).Any(power => kinds.Contains(power.Kind));
+        player != null && Held(player).Any(power => power.CountsAs.Any(kinds.Contains));
 
     public static bool HasAny(Player player) => Held(player).Count > 0;
 
