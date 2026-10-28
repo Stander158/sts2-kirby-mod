@@ -45,7 +45,7 @@
   "KIRBY_MOD_CARD_STONE_PUNCH.description": "Deal {ExtraDamage:diff()} damage for each [gold]Buffer[/gold] you have.{InCombat:\n(Deals {CalculatedDamage:diff()} damage)|}\nGain {Block:diff()} [gold]Block[/gold].\n[gold]Stone[/gold]: [gold]Retain[/gold].",
   "KIRBY_MOD_CARD_CHARGE_UP.title": "Charge Up",
   "KIRBY_MOD_CARD_CHARGE_UP.description": "Gain {StrengthPower:diff()} [gold]Strength[/gold].\n[gold]Fighter[/gold]: [gold]Retain[/gold], gain {FighterBonus} more.",
-  "KIRBY_MOD_CARD_VACUUM_STRIKE.title": "Vacuum Strike",
+  "KIRBY_MOD_CARD_VACUUM_STRIKE.title": "Vulcan Jab",
   "KIRBY_MOD_CARD_VACUUM_STRIKE.description": "Deal {Damage:diff()} damage {Repeat:diff()} times.\n[gold]Fighter[/gold]: [gold]Retain[/gold].",
   "KIRBY_MOD_CARD_ICE_BREATH.title": "Breath",
   "KIRBY_MOD_CARD_ICE_BREATH.description": "[gold]Exhaust[/gold] a card in your [gold]Hand[/gold]. Deal {Damage:diff()} damage.\n[gold]Ice[/gold] or [gold]Fire[/gold]: [gold]Retain[/gold].",

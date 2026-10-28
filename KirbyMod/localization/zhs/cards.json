@@ -45,7 +45,7 @@
   "KIRBY_MOD_CARD_STONE_PUNCH.description": "你每有1层[gold]缓冲[/gold]，造成{ExtraDamage:diff()}点伤害。{InCombat:\n（造成{CalculatedDamage:diff()}点伤害）|}\n获得{Block:diff()}点[gold]格挡[/gold]。\n[gold]石头[/gold]：[gold]保留[/gold]。",
   "KIRBY_MOD_CARD_CHARGE_UP.title": "蓄力",
   "KIRBY_MOD_CARD_CHARGE_UP.description": "获得{StrengthPower:diff()}点[gold]力量[/gold]。\n[gold]格斗家[/gold]：[gold]保留[/gold]，额外获得{FighterBonus}点力量。",
-  "KIRBY_MOD_CARD_VACUUM_STRIKE.title": "真空打击",
+  "KIRBY_MOD_CARD_VACUUM_STRIKE.title": "百裂拳",
   "KIRBY_MOD_CARD_VACUUM_STRIKE.description": "造成{Damage:diff()}点伤害{Repeat:diff()}次。\n[gold]格斗家[/gold]：[gold]保留[/gold]。",
   "KIRBY_MOD_CARD_ICE_BREATH.title": "吐息",
   "KIRBY_MOD_CARD_ICE_BREATH.description": "[gold]消耗[/gold]一张手牌。造成{Damage:diff()}点伤害。\n[gold]冰[/gold]或[gold]火[/gold]：[gold]保留[/gold]。",

@@ -10,7 +10,7 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 [RegisterCard(typeof(KirbyCardPool))]
-[RegisterCharacterStarterCard(typeof(Kirby), 5, Order = 10)]
+[RegisterCharacterStarterCard(typeof(Kirby), 4, Order = 10)]
 public sealed class KirbyStrike() : ModCardTemplate(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
     public override bool IsBasicStrikeOrDefend => true;
