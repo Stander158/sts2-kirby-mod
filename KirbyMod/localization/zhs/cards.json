@@ -10,7 +10,7 @@
   "KIRBY_MOD_CARD_SWALLOW.title": "吞咽",
   "KIRBY_MOD_CARD_SWALLOW.description": "清空嘴里的东西，获得[gold]复制能力入嘴[/gold]对应的复制能力，并将一张[gold]舍弃能力[/gold]放入你的{IfUpgraded:show:[gold]手牌[/gold]|[gold]抽牌堆[/gold]}。{IfUpgraded:show:\n抽1张牌。|}\n[gold]消耗[/gold]其他所有吐星星和吞咽。",
   "KIRBY_MOD_CARD_DROP_ABILITY.title": "舍弃能力",
-  "KIRBY_MOD_CARD_DROP_ABILITY.description": "失去当前的复制能力，[gold]消耗[/gold]它给你的所有牌。",
+  "KIRBY_MOD_CARD_DROP_ABILITY.description": "失去当前的复制能力。",
   "KIRBY_MOD_CARD_SWORD_ABILITY.title": "剑能力",
   "KIRBY_MOD_CARD_SWORD_ABILITY.description": "获得{IfUpgraded:show:升级版|}复制能力：[gold]剑[/gold]。",
   "KIRBY_MOD_CARD_BOOMERANG_ABILITY.title": "回旋镖能力",

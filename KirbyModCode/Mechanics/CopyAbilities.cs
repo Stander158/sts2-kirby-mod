@@ -46,16 +46,6 @@ public enum InhaleOutcome
     Escape,
 }
 
-/// <summary>
-/// Card types that always belong to a copy ability (Drop Ability); they are exhausted when it is lost.
-/// Individual cards an ability hands out are tagged instead (<see cref="CopyAbilities.MarkGranted" />).
-/// </summary>
-public interface ICopyAbilityCard
-{
-    /// <summary>The ability whose loss exhausts this card, or null for "once no ability is left" (Drop Ability).</summary>
-    CopyAbilityKind? GrantedBy { get; }
-}
-
 /// <summary>Inhale, Gooey Inhale and Scan: they start an inhale and count as "Inhale" for other effects.</summary>
 public interface IInhaleCard;
 
@@ -128,29 +118,8 @@ public static class CopyAbilities
     public const int GalaxiaRawDamage = 30;
     public const int StarRodHits = 5;
 
-    private static readonly ConditionalWeakTable<CardModel, StrongBox<CopyAbilityKind>> GrantedCards = new();
-
     // Base-game moves that give Burn. A Burn actually stopped by Inhale also switches the ability to Fire.
     private static readonly HashSet<string> BurnMoves = ["FLAMETHROWER_MOVE", "BURNING_GROWL_MOVE"];
-
-    /// <summary>Tags a card instance as handed out by <paramref name="kind" />, so losing that ability exhausts it.</summary>
-    public static void MarkGranted(CardModel card, CopyAbilityKind kind) => GrantedCards.AddOrUpdate(card, new(kind));
-
-    /// <summary>
-    /// Whether <paramref name="card" /> belongs to a copy ability, and to which one (null kind: Drop Ability,
-    /// exhausted once no ability is left).
-    /// </summary>
-    public static bool TryGetGrantingAbility(CardModel card, out CopyAbilityKind? kind)
-    {
-        if (card is ICopyAbilityCard abilityCard)
-        {
-            kind = abilityCard.GrantedBy;
-            return true;
-        }
-
-        kind = GrantedCards.TryGetValue(card, out var box) ? box.Value : null;
-        return kind != null;
-    }
 
     /// <summary>
     /// Reads the enemy's current intents (DESIGN.md, 意图对应表). Mouthful prefers damage; the ability goes by
@@ -338,7 +307,7 @@ public static class CopyAbilities
 
     /// <summary>
     /// Puts 1 random card of <paramref name="kind" /> into hand (upgraded if the ability is), Ethereal and Exhaust except
-    /// a Burn. It is also tagged, so losing the ability exhausts it.
+    /// a Burn. Losing the ability leaves it where it is.
     /// </summary>
     private static async Task GrantAbilityCard(Player player, CopyAbilityKind kind, bool upgraded)
     {
@@ -347,29 +316,24 @@ public static class CopyAbilities
             return;
 
         var type = player.RunState.Rng.CombatCardGeneration.NextItem(candidates.ToList())!;
-        var card = await GrantCard(player, type, kind);
-        if (card == null)
-            return;
-
-        if (upgraded && card.IsUpgradable)
+        var card = await GrantCard(player, type);
+        if (card != null && upgraded && card.IsUpgradable)
             CardCmd.Upgrade(card);
-        if (card is not Burn)
-        {
-            card.AddKeyword(CardKeyword.Ethereal);
-            card.AddKeyword(CardKeyword.Exhaust);
-        }
     }
 
-    /// <summary>Creates a card of <paramref name="type" /> in hand, tagged as granted by <paramref name="kind" />.</summary>
-    public static async Task<CardModel?> GrantCard(Player player, Type type, CopyAbilityKind kind)
+    /// <summary>Creates a card of <paramref name="type" /> in hand for a copy ability: Ethereal and Exhaust, except a Burn.</summary>
+    public static async Task<CardModel?> GrantCard(Player player, Type type)
     {
         var combatState = player.Creature.CombatState;
         if (combatState == null)
             return null;
 
         var card = combatState.CreateCard(ModelDb.GetById<CardModel>(ModelDb.GetId(type)), player);
-        if (card is not Burn || kind != CopyAbilityKind.Fire)
-            MarkGranted(card, kind);
+        if (card is not Burn)
+        {
+            card.AddKeyword(CardKeyword.Ethereal);
+            card.AddKeyword(CardKeyword.Exhaust);
+        }
         await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
         return card;
     }

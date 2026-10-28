@@ -10,7 +10,7 @@
   "KIRBY_MOD_CARD_SWALLOW.title": "Swallow",
   "KIRBY_MOD_CARD_SWALLOW.description": "Empty your mouth and gain the Copy Ability in it. Put a [gold]Drop Ability[/gold] into your {IfUpgraded:show:[gold]Hand[/gold]|[gold]Draw Pile[/gold]}.{IfUpgraded:show:\nDraw 1 card.|}\n[gold]Exhaust[/gold] all other Star Spits and Swallows.",
   "KIRBY_MOD_CARD_DROP_ABILITY.title": "Drop Ability",
-  "KIRBY_MOD_CARD_DROP_ABILITY.description": "Lose your current Copy Ability and [gold]Exhaust[/gold] all cards it gave you.",
+  "KIRBY_MOD_CARD_DROP_ABILITY.description": "Lose your current Copy Ability.",
   "KIRBY_MOD_CARD_SWORD_ABILITY.title": "Sword Ability",
   "KIRBY_MOD_CARD_SWORD_ABILITY.description": "Gain the {IfUpgraded:show:upgraded |}[gold]Sword[/gold] Copy Ability.",
   "KIRBY_MOD_CARD_BOOMERANG_ABILITY.title": "Boomerang Ability",

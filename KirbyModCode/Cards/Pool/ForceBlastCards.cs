@@ -34,7 +34,6 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
         if (!Launches().Any())
         {
             var launch = KirbyMouth.CreateCard<Launch>(Owner, false);
-            CopyAbilities.MarkGranted(launch, CopyAbilityKind.Fighter);
             await CardPileCmd.AddGeneratedCardToCombat(launch, PileType.Hand, Owner);
         }
 

@@ -119,43 +119,38 @@ public static class KirbyMouth
     }
 
     /// <summary>
-    /// Removes one ability (Sleep waking up) and exhausts the cards it made. Drop Ability is exhausted only once no
-    /// ability is left.
+    /// Removes one ability (Sleep waking up). The cards it handed out stay (they are Ethereal and Exhaust anyway);
+    /// Drop Ability is exhausted once no ability is left.
     /// </summary>
     public static async Task LoseAbility(PlayerChoiceContext ctx, Player player, CopyAbilityPower power)
     {
         await power.OnLost(ctx, player);
         await PowerCmd.Remove(power);
 
-        var noneLeft = !CopyAbilities.HasAny(player);
-        var cards = LivePiles
-            .SelectMany(pile => pile.GetPile(player).Cards)
-            .Where(card => CopyAbilities.TryGetGrantingAbility(card, out var kind)
-                           && (kind == power.Kind || (noneLeft && kind == null)))
-            .ToList();
-        foreach (var card in cards)
-            await CardCmd.Exhaust(ctx, card);
+        if (!CopyAbilities.HasAny(player))
+            await ExhaustDropAbility(ctx, player);
     }
 
-    /// <summary>Removes every copy ability and exhausts the cards they granted. Returns whether anything was lost.</summary>
+    /// <summary>Removes every copy ability and exhausts Drop Ability. Returns whether anything was lost.</summary>
     public static async Task<bool> LoseCopyAbility(PlayerChoiceContext ctx, Player player)
     {
         var powers = player.Creature.Powers.OfType<CopyAbilityPower>().ToList();
-        var cards = LivePiles
-            .SelectMany(pile => pile.GetPile(player).Cards)
-            .Where(card => CopyAbilities.TryGetGrantingAbility(card, out _))
-            .ToList();
-
         foreach (var power in powers)
         {
             await power.OnLost(ctx, player);
             await PowerCmd.Remove(power);
         }
 
+        var dropped = await ExhaustDropAbility(ctx, player);
+        return powers.Count > 0 || dropped;
+    }
+
+    private static async Task<bool> ExhaustDropAbility(PlayerChoiceContext ctx, Player player)
+    {
+        var cards = LivePiles.SelectMany(pile => pile.GetPile(player).Cards).OfType<DropAbility>().ToList();
         foreach (var card in cards)
             await CardCmd.Exhaust(ctx, card);
-
-        return powers.Count > 0 || cards.Count > 0;
+        return cards.Count > 0;
     }
 
     /// <summary>Drop Ability, Great Cave Offensive: lose the ability on purpose (the starter relic then returns Inhale).</summary>

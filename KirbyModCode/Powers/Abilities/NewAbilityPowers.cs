@@ -125,7 +125,7 @@ public sealed class GalaxiaPower : CopyAbilityPower
         {
             var type = rng.NextItem(pool)!;
             pool.Remove(type);
-            var card = await CopyAbilities.GrantCard(player, type, Kind);
+            var card = await CopyAbilities.GrantCard(player, type);
             card?.SetToFreeThisTurn();
         }
     }
