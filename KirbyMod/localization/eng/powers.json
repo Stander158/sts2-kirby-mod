@@ -134,5 +134,8 @@
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.WHEEL.description": "[gold]Swallow[/gold] grants the Wheel ability.",
   "KIRBY_MOD_POWER_VOID_DOOM_POWER.title": "Void",
   "KIRBY_MOD_POWER_VOID_DOOM_POWER.description": "At the start of your next turn, you die.",
-  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "At the start of your next turn, you die."
+  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "At the start of your next turn, you die.",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.title": "Milky Way Wishes+",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.description": "Copy Ability cards are no longer Exhausted.",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.smartDescription": "Copy Ability cards are no longer Exhausted."
 }

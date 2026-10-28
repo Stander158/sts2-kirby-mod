@@ -50,7 +50,7 @@
   "KIRBY_MOD_CARD_ICE_BREATH.title": "Breath",
   "KIRBY_MOD_CARD_ICE_BREATH.description": "[gold]Exhaust[/gold] a card in your [gold]Hand[/gold]. Deal {Damage:diff()} damage.\n[gold]Ice[/gold] or [gold]Fire[/gold]: [gold]Retain[/gold].",
   "KIRBY_MOD_CARD_GALAXY_WISH.title": "Milky Way Wishes",
-  "KIRBY_MOD_CARD_GALAXY_WISH.description": "Whenever you gain a Copy Ability, gain {Energy:energyIcons()}.",
+  "KIRBY_MOD_CARD_GALAXY_WISH.description": "Whenever you gain a Copy Ability, gain {Energy:energyIcons()}.{IfUpgraded:show:\nCopy Ability cards are no longer [gold]Exhausted[/gold].|}",
   "KIRBY_MOD_CARD_ABILITY_SHIELD.title": "Ability Shield",
   "KIRBY_MOD_CARD_ABILITY_SHIELD.description": "Gain {AbilityConservationPower:diff()} [gold]Ability Conservation[/gold].",
   "KIRBY_MOD_CARD_MIX_ABILITY.title": "Mix Ability",

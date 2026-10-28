@@ -11,7 +11,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>向银河许愿 (power): whenever you gain a copy ability, gain 1 energy; ability cards are no longer exhausted. Upgrade: Innate.</summary>
+/// <summary>向银河许愿 (power): whenever you gain a copy ability, gain 1 energy. Upgrade: ability cards are no longer exhausted.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class GalaxyWish() : KirbyCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
@@ -20,9 +20,13 @@ public sealed class GalaxyWish() : KirbyCard(1, CardType.Power, CardRarity.Rare,
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await PowerCmd.Apply<GalaxyWishPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
-    }
+        if (!IsUpgraded || Owner.Creature.HasPower<GalaxyWishRecyclePower>())
+            return;
 
-    protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
+        await PowerCmd.Apply<GalaxyWishRecyclePower>(ctx, Owner.Creature, 1, Owner.Creature, this);
+        foreach (var card in KirbyMouth.LivePiles.SelectMany(pile => pile.GetPile(Owner).Cards).OfType<AbilityCard>())
+            card.RemoveKeyword(CardKeyword.Exhaust);
+    }
 }
 
 /// <summary>能力保护罩 (power): gain 4(6) Ability Conservation.</summary>

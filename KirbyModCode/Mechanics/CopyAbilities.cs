@@ -42,7 +42,7 @@ public enum InhaleOutcome
     /// <summary>Anything else: Inhale resolves with the fallback Mouthful at the start of Kirby's next turn.</summary>
     Fallback,
 
-    /// <summary>The target is about to escape: it is stunned instead; no Mouthful and no ability.</summary>
+    /// <summary>The target is about to escape: it is stunned, then the inhale resolves like Fallback (Wheel in the mouth).</summary>
     Escape,
 }
 
@@ -383,6 +383,8 @@ public static class CopyAbilities
                           ?? throw new InvalidOperationException("Copy ability cards are only created in combat.");
         var card = combatState.CreateCard(ModelDb.GetById<CardModel>(ModelDb.GetId(AbilityCards[kind])), player);
 
+        if (player.Creature.HasPower<GalaxyWishRecyclePower>())
+            card.RemoveKeyword(CardKeyword.Exhaust);
         return card;
     }
 

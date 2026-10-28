@@ -37,12 +37,11 @@ public static class KirbyMouth
             await PowerCmd.Apply<InhaledPower>(ctx, target, 1, kirby, source);
         VfxCmd.PlayOnCreatureCenter(target, "vfx/vfx_gaseous_impact");
 
-        // Escaping enemy: stunned, and Kirby gains Wheel right away (no Mouthful, nothing in the mouth).
+        // Escaping enemy: stunned so it stays, then a normal inhale with the fallback Mouthful and Wheel in the mouth.
         if (outcome == InhaleOutcome.Escape)
         {
             await CreatureCmd.Stun(target);
-            await CopyAbilities.Gain(ctx, player, CopyAbilityKind.Wheel, upgraded: false, source);
-            return;
+            outcome = InhaleOutcome.Fallback;
         }
 
         await PowerCmd.Remove(kirby.GetPower<InhalingPower>());

@@ -50,7 +50,7 @@
   "KIRBY_MOD_CARD_ICE_BREATH.title": "吐息",
   "KIRBY_MOD_CARD_ICE_BREATH.description": "[gold]消耗[/gold]一张手牌。造成{Damage:diff()}点伤害。\n[gold]冰[/gold]或[gold]火[/gold]：[gold]保留[/gold]。",
   "KIRBY_MOD_CARD_GALAXY_WISH.title": "向银河许愿",
-  "KIRBY_MOD_CARD_GALAXY_WISH.description": "每当你获得复制能力时，获得{Energy:energyIcons()}。",
+  "KIRBY_MOD_CARD_GALAXY_WISH.description": "每当你获得复制能力时，获得{Energy:energyIcons()}。{IfUpgraded:show:\n复制能力牌不再被[gold]消耗[/gold]。|}",
   "KIRBY_MOD_CARD_ABILITY_SHIELD.title": "能力保护罩",
   "KIRBY_MOD_CARD_ABILITY_SHIELD.description": "获得{AbilityConservationPower:diff()}层[gold]能力守恒[/gold]。",
   "KIRBY_MOD_CARD_MIX_ABILITY.title": "混合能力",

@@ -39,9 +39,9 @@ public sealed class FighterAbility() : AbilityCard(CardRarity.Uncommon)
     public override CopyAbilityKind Kind => CopyAbilityKind.Fighter;
 }
 
-/// <summary>冰能力: Rare. Upgrade also makes Ice Blocks upgraded (14 damage / 11 Block).</summary>
+/// <summary>冰能力: Uncommon. Upgrade also makes Ice Blocks upgraded (14 damage / 11 Block).</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class IceAbility() : AbilityCard(CardRarity.Rare)
+public sealed class IceAbility() : AbilityCard(CardRarity.Uncommon)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.Ice;
 
@@ -59,9 +59,9 @@ public sealed class IceAbility() : AbilityCard(CardRarity.Rare)
     }
 }
 
-/// <summary>火能力: Rare. Burns can be played for free while Fire is held.</summary>
+/// <summary>火能力: Uncommon. Burns can be played for free while Fire is held.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class FireAbility() : AbilityCard(CardRarity.Rare)
+public sealed class FireAbility() : AbilityCard(CardRarity.Uncommon)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.Fire;
 

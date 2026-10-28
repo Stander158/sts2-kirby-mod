@@ -39,7 +39,7 @@ public sealed class PlasmaCannon() : KirbyCard(0, CardType.Attack, CardRarity.Co
 
 /// <summary>等离子蓄力: gain 2 energy. Plasma: Retain, and gain 6(7) Block. Upgrade: cost 0.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class PlasmaCharge() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class PlasmaCharge() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Plasma];
 

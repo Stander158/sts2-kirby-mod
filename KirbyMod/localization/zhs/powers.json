@@ -134,5 +134,8 @@
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.WHEEL.description": "[gold]吞咽[/gold]时获得复制能力：车轮。",
   "KIRBY_MOD_POWER_VOID_DOOM_POWER.title": "虚无",
   "KIRBY_MOD_POWER_VOID_DOOM_POWER.description": "下回合开始时，你死亡。",
-  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "下回合开始时，你死亡。"
+  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "下回合开始时，你死亡。",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.title": "向银河许愿+",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.description": "复制能力牌不再被消耗。",
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.smartDescription": "复制能力牌不再被消耗。"
 }

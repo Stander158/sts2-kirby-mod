@@ -9,7 +9,7 @@ namespace KirbyMod.Cards;
 /// <summary>
 /// A "gain copy ability X" card: a 1-cost skill unless noted (Stone is a 2-cost power, Star Rod / Galaxia cost 2).
 /// Upgrading lowers the cost by 1 only for the 2-cost ones (1-cost cards keep their cost), and an upgraded card
-/// hands out an upgraded card of the ability. It is exhausted.
+/// hands out an upgraded card of the ability. It is exhausted, or discarded (playable again) with upgraded Milky Way Wishes.
 /// </summary>
 public abstract class AbilityCard(CardRarity rarity, int cost = 1, CardType type = CardType.Skill)
     : KirbyCard(cost, type, rarity, TargetType.Self)
@@ -31,4 +31,7 @@ public abstract class AbilityCard(CardRarity rarity, int cost = 1, CardType type
         if (EnergyCost.Canonical > 1)
             EnergyCost.UpgradeBy(-1);
     }
+
+    protected override PileType GetResultPileTypeForCardPlay() =>
+        Owner.Creature.HasPower<GalaxyWishRecyclePower>() ? PileType.Discard : PileType.Exhaust;
 }
