@@ -107,7 +107,7 @@
   "KIRBY_MOD_CARD_STAR_ROD_ABILITY.title": "Star Rod",
   "KIRBY_MOD_CARD_STAR_ROD_ABILITY.description": "Gain the {IfUpgraded:show:upgraded |}[gold]Star Rod[/gold] Copy Ability.",
   "KIRBY_MOD_CARD_GALAXIA_ABILITY.title": "Galaxia",
-  "KIRBY_MOD_CARD_GALAXIA_ABILITY.description": "Gain the {IfUpgraded:show:upgraded |}[gold]Galaxia[/gold] Copy Ability.",
+  "KIRBY_MOD_CARD_GALAXIA_ABILITY.description": "Gain the {IfUpgraded:show:upgraded |}[gold]Master[/gold] Copy Ability.",
   "KIRBY_MOD_CARD_PLASMA_CANNON.title": "Plasma Cannon",
   "KIRBY_MOD_CARD_PLASMA_CANNON.description": "Deal {Damage:diff()} damage X{IfUpgraded:show:+1} times.\n[gold]Plasma[/gold]: [gold]Retain[/gold], then gain {Energy:energyIcons()}.",
   "KIRBY_MOD_CARD_PLASMA_CHARGE.title": "Plasma Charge",

@@ -13,6 +13,8 @@ namespace KirbyMod.Cards;
 [RegisterCharacterStarterCard(typeof(Kirby), 4, Order = 10)]
 public sealed class KirbyStrike() : ModCardTemplate(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
+
     public override bool IsBasicStrikeOrDefend => true;
 
     protected override HashSet<CardTag> CanonicalTags => [CardTag.Strike];

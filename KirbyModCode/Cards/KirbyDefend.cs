@@ -14,6 +14,8 @@ namespace KirbyMod.Cards;
 [RegisterCharacterStarterCard(typeof(Kirby), 4, Order = 20)]
 public sealed class KirbyDefend() : ModCardTemplate(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
+
     public override bool IsBasicStrikeOrDefend => true;
 
     public override bool GainsBlock => true;
