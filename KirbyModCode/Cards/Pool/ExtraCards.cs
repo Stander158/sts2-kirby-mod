@@ -79,7 +79,7 @@ public sealed class KirbyFireball() : KirbyCard(1, CardType.Skill, CardRarity.Un
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(8);
 }
 
-/// <summary>究极剑斩: Exhaust. Deal 14(20); Vigor affects this card 3(5) times. Sword: Retain, Replay 1.</summary>
+/// <summary>究极剑斩: Exhaust. Deal 14(20); Vigor affects this card 3(5) times; then gain Sword if not held. Sword: Retain, Replay 1.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
@@ -90,12 +90,16 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DamageVar(14, ValueProp.Move), new DynamicVar("VigorTimes", 3)];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<VigorPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<VigorPower>(), HoverTipFactory.FromPower<SwordPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_giant_horizontal_slash").Execute(ctx);
+
+        if (!CopyAbilities.Has(Owner, [CopyAbilityKind.Sword]))
+            await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Sword, upgraded: false, this);
     }
 
     // Vigor itself adds its amount once; this adds the remaining (times - 1) copies.

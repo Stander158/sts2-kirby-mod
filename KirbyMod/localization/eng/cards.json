@@ -132,7 +132,7 @@
   "KIRBY_MOD_CARD_KIRBY_FIREBALL.title": "Fireball",
   "KIRBY_MOD_CARD_KIRBY_FIREBALL.description": "Deal {Damage:diff()} damage. Add {Cards} [gold]Burns[/gold] into your [gold]Hand[/gold].\n[gold]Fire[/gold]: [gold]Retain[/gold].",
   "KIRBY_MOD_CARD_ULTRA_SWORD.title": "Ultra Sword",
-  "KIRBY_MOD_CARD_ULTRA_SWORD.description": "Deal {Damage:diff()} damage.\n[gold]Vigor[/gold] affects this card {VigorTimes:diff()} times.\n[gold]Sword[/gold]: [gold]Retain[/gold], [gold]Replay[/gold] 1.",
+  "KIRBY_MOD_CARD_ULTRA_SWORD.description": "Deal {Damage:diff()} damage.\n[gold]Vigor[/gold] affects this card {VigorTimes:diff()} times.\nIf you do not have the [gold]Sword[/gold] Copy Ability, gain it.\n[gold]Sword[/gold]: [gold]Retain[/gold], [gold]Replay[/gold] 1.",
   "KIRBY_MOD_CARD_DRAGON_STORM.title": "Dragon Storm",
   "KIRBY_MOD_CARD_DRAGON_STORM.description": "Gain the [gold]Fire[/gold] Copy Ability. Then deal {ExtraDamage:diff()} damage for each [gold]Burn[/gold] you have.\n[gold]Fire[/gold]: [gold]Retain[/gold]. Afterwards, put [gold]Burns[/gold] from your [gold]Discard Pile[/gold] into your [gold]Hand[/gold] until it is full.",
   "KIRBY_MOD_CARD_SNOW_BOWL.title": "Snow Bowl",

@@ -132,7 +132,7 @@
   "KIRBY_MOD_CARD_KIRBY_FIREBALL.title": "火球",
   "KIRBY_MOD_CARD_KIRBY_FIREBALL.description": "造成{Damage:diff()}点伤害。将{Cards}张[gold]灼伤[/gold]放入你的[gold]手牌[/gold]。\n[gold]火[/gold]：[gold]保留[/gold]。",
   "KIRBY_MOD_CARD_ULTRA_SWORD.title": "究极剑斩",
-  "KIRBY_MOD_CARD_ULTRA_SWORD.description": "造成{Damage:diff()}点伤害。\n[gold]活力[/gold]对这张牌生效{VigorTimes:diff()}次。\n[gold]剑[/gold]：[gold]保留[/gold]，[gold]重放[/gold]1次。",
+  "KIRBY_MOD_CARD_ULTRA_SWORD.description": "造成{Damage:diff()}点伤害。\n[gold]活力[/gold]对这张牌生效{VigorTimes:diff()}次。\n如果你没有复制能力：[gold]剑[/gold]，获得复制能力：[gold]剑[/gold]。\n[gold]剑[/gold]：[gold]保留[/gold]，[gold]重放[/gold]1次。",
   "KIRBY_MOD_CARD_DRAGON_STORM.title": "究极火龙",
   "KIRBY_MOD_CARD_DRAGON_STORM.description": "获得复制能力：[gold]火[/gold]。然后你每有一张[gold]灼伤[/gold]，造成{ExtraDamage:diff()}点伤害。\n[gold]火[/gold]：[gold]保留[/gold]。打出后，将[gold]弃牌堆[/gold]中的[gold]灼伤[/gold]放入[gold]手牌[/gold]，直到手牌满。",
   "KIRBY_MOD_CARD_SNOW_BOWL.title": "究极冰球",
