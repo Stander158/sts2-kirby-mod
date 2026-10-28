@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://KirbyMod/images/character/kirby_rest.png" id="1_kirby"]
+[ext_resource type="Texture2D" path="res://KirbyMod/images/character/kirby_combat.png" id="1_kirby"]
 
 [node name="KirbyRestSite" type="Node2D"]
 
