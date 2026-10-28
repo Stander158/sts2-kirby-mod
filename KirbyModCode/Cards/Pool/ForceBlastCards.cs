@@ -14,7 +14,6 @@ namespace KirbyMod.Cards;
 /// <summary>
 /// 波动拳: like the Regent's Forge, if there is no Launch in your hand, add one to it; every Launch in your hand gets
 /// +2(3) hits (and +1 damage while you have Fighter). Then it returns to your hand, like Particle Wall.
-/// The Launch it makes belongs to Fighter: losing Fighter exhausts it.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)

@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -139,5 +140,13 @@ public sealed class GalaxiaPower : CopyAbilityPower
 
         Flash();
         await Grant<StrengthPower>(choiceContext, Strength);
+    }
+
+    // Counts as Sword: Meta Knight's Revenge costs 0 here too (see SwordPower).
+    public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
+    {
+        var applies = card is MetaKnightRevenge && card.Owner == Owner.Player;
+        modifiedCost = applies ? 0m : originalCost;
+        return applies;
     }
 }

@@ -15,8 +15,7 @@ namespace KirbyMod.Cards;
 
 /// <summary>
 /// 冰块 (made by the Ice ability): pick an enemy, then choose to hit it for 10(14) or gain 8(11) Block. The game has
-/// no "self or enemy" target type, hence the follow-up choice. Ice Blocks made each turn stay when Ice is lost; only
-/// the one handed out on gaining Ice is tagged and exhausted.
+/// no "self or enemy" target type, hence the follow-up choice. Ice Blocks stay when Ice is lost.
 /// </summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class IceBlock() : ModCardTemplate(1, CardType.Skill, CardRarity.Token, TargetType.AnyEnemy)
@@ -75,6 +74,8 @@ public sealed class IceBlock() : ModCardTemplate(1, CardType.Skill, CardRarity.T
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class IceBlockStrike() : ModCardTemplate(1, CardType.Attack, CardRarity.Token, TargetType.None, false)
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(typeof(IceBlock));
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(IceBlock.BaseDamage, ValueProp.Move)];
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(IceBlock.DamageUpgrade);
@@ -84,6 +85,8 @@ public sealed class IceBlockStrike() : ModCardTemplate(1, CardType.Attack, CardR
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class IceBlockGuard() : ModCardTemplate(1, CardType.Skill, CardRarity.Token, TargetType.None, false)
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(typeof(IceBlock));
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new BlockVar(IceBlock.BaseBlock, ValueProp.Move)];
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(IceBlock.BlockUpgrade);
