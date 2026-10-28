@@ -20,7 +20,7 @@ public sealed class UltimateInhale() : ModCardTemplate(1, CardType.Skill, CardRa
 {
     public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
 
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Innate, CardKeyword.Exhaust];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => Inhale.GetInhaleHoverTips(IsUpgraded, frenzied: true);
 
