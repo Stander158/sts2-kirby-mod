@@ -32,7 +32,11 @@ public sealed class AbilityInMouthPower : ModPowerTemplate
         set => GetInternalData<Data>().Kind = value;
     }
 
-    private string KindKey => $"{Id.Entry}.{Kind.ToString().ToUpperInvariant()}";
+    // The canonical instance (hover tips, e.g. on Swallow) has no ability yet: it uses the generic text instead of
+    // pretending to hold Sword.
+    private string KindKey => GetInternalData<Data?>() is { } data
+        ? $"{Id.Entry}.{data.Kind.ToString().ToUpperInvariant()}"
+        : Id.Entry;
 
     public override LocString Title => new("powers", KindKey + ".title");
 
