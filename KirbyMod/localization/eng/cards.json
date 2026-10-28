@@ -120,7 +120,7 @@
   "KIRBY_MOD_CARD_INVINCIBLE_LOLLIPOP.description": "Gain {InvincibilityPower:diff()} [gold]Invincible[/gold].",
   "KIRBY_MOD_CARD_DODGE.title": "Dodge",
   "KIRBY_MOD_CARD_DODGE.description": "Gain {Block:diff()} [gold]Block[/gold] {Repeat} times.\nGain {AbilityConservationPower:diff()} [gold]Ability Conservation[/gold].",
-  "KIRBY_MOD_CARD_ULTIMATE_INHALE.title": "Ultimate Inhale",
+  "KIRBY_MOD_CARD_ULTIMATE_INHALE.title": "Hypernova Inhale",
   "KIRBY_MOD_CARD_ULTIMATE_INHALE.description": "Apply [gold]Frenzied Inhaled[/gold] to an enemy.\nGain [gold]Inhaling[/gold]; its effect depends on the enemy's intent.\nUntil your next turn, all damage it deals to you becomes 0.",
   "KIRBY_MOD_CARD_FEED.title": "Feed",
   "KIRBY_MOD_CARD_FEED.description": "Spend up to {Heal:diff()} [gold]Mouthful[/gold] to heal an ally that much.",

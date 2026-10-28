@@ -120,7 +120,7 @@
   "KIRBY_MOD_CARD_INVINCIBLE_LOLLIPOP.description": "获得{InvincibilityPower:diff()}层[gold]无敌[/gold]。",
   "KIRBY_MOD_CARD_DODGE.title": "躲避",
   "KIRBY_MOD_CARD_DODGE.description": "获得{Block:diff()}点[gold]格挡[/gold]{Repeat}次。\n获得{AbilityConservationPower:diff()}层[gold]能力守恒[/gold]。",
-  "KIRBY_MOD_CARD_ULTIMATE_INHALE.title": "究极吸入",
+  "KIRBY_MOD_CARD_ULTIMATE_INHALE.title": "超新星吸入",
   "KIRBY_MOD_CARD_ULTIMATE_INHALE.description": "给予一名敌人[gold]被疯狂吸入[/gold]。\n根据它的意图，获得不同的[gold]吸入[/gold]效果。\n直到你的下回合开始，它对你造成的所有伤害变为0。",
   "KIRBY_MOD_CARD_FEED.title": "喂食",
   "KIRBY_MOD_CARD_FEED.description": "消耗至多{Heal:diff()}层[gold]满嘴[/gold]，为一名队友回复等量的生命。",
