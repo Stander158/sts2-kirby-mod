@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using KirbyMod.Cards;
 using KirbyMod.Powers;
+using KirbyMod.Relics;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -191,6 +192,32 @@ public static class CopyAbilities
             : InhaleOutcome.Fallback;
 
         return (kind, outcome);
+    }
+
+    /// <summary>HP lost to a single enemy attack that makes Kirby lose his abilities (12 with Copy Essence Deluxe).</summary>
+    public static int HeavyHitThreshold(Player player) =>
+        player.GetRelic<CopyEssenceDeluxe>() != null ? CopyEssenceDeluxe.HeavyHit : 6;
+
+    /// <summary>
+    /// A heavy hit: every held ability that can be lost to one is lost (its cards exhausted), or 1 Ability Conservation
+    /// is spent instead. The starter relic then returns Inhale.
+    /// </summary>
+    public static async Task OnHeavyHit(PlayerChoiceContext ctx, Player player)
+    {
+        var losing = Held(player).Where(power => power.LostToHeavyHits).ToList();
+        if (losing.Count == 0)
+            return;
+
+        if (player.Creature.GetPower<AbilityConservationPower>() is { } conservation)
+        {
+            await PowerCmd.Decrement(conservation);
+            return;
+        }
+
+        foreach (var power in losing)
+            await KirbyMouth.LoseAbility(ctx, player, power);
+        foreach (var relic in player.Relics.OfType<CopyAbilityRelicBase>().ToList())
+            await relic.AfterAbilityLostToAttack();
     }
 
     /// <summary>Kirby's current copy abilities: one, or several with Smash Bros. Kirby.</summary>

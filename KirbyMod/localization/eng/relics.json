@@ -1,6 +1,6 @@
 {
   "KIRBY_MOD_RELIC_COPY_ABILITY.title": "Copy Ability",
-  "KIRBY_MOD_RELIC_COPY_ABILITY.description": "Your [gold]Inhale[/gold] cards are [gold]Innate[/gold].\nWhenever a single attack makes you lose {HpLoss} or more HP while you have a Copy Ability, lose it ([gold]Exhaust[/gold] all cards it gave you) and return [gold]Inhale[/gold] from your [gold]Exhaust Pile[/gold] to your [gold]Hand[/gold].",
+  "KIRBY_MOD_RELIC_COPY_ABILITY.description": "Your [gold]Inhale[/gold] cards are [gold]Innate[/gold].\nWhenever an attack makes you lose a Copy Ability, return [gold]Inhale[/gold] from your [gold]Exhaust Pile[/gold] to your [gold]Hand[/gold].",
   "KIRBY_MOD_RELIC_COPY_ABILITY.flavor": "",
   "KIRBY_MOD_RELIC_ABILITY_PROTECTOR.title": "Ability Protector",
   "KIRBY_MOD_RELIC_ABILITY_PROTECTOR.description": "At the start of combat, gain {AbilityConservationPower} [gold]Ability Conservation[/gold].",
@@ -12,6 +12,6 @@
   "KIRBY_MOD_RELIC_BOSS_PREP.description": "At the start of combat, choose 1 of {Cards} Copy Ability cards to put into your [gold]Hand[/gold]. It costs 0 this turn.",
   "KIRBY_MOD_RELIC_BOSS_PREP.flavor": "",
   "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.title": "Copy Essence Deluxe",
-  "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.description": "Your [gold]Inhale[/gold] cards are [gold]Innate[/gold].\nWhenever a single attack makes you lose {HpLoss} or more HP while you have a Copy Ability, lose it ([gold]Exhaust[/gold] all cards it gave you) and return [gold]Inhale[/gold] from your [gold]Exhaust Pile[/gold] to your [gold]Hand[/gold].",
+  "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.description": "Your [gold]Inhale[/gold] cards are [gold]Innate[/gold].\nWhenever an attack makes you lose a Copy Ability, return [gold]Inhale[/gold] from your [gold]Exhaust Pile[/gold] to your [gold]Hand[/gold].\nYour Copy Abilities are only lost to an attack that makes you lose {HpLoss} or more HP (instead of 6).",
   "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.flavor": ""
 }

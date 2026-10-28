@@ -1,37 +1,26 @@
 using KirbyMod.Characters;
 using KirbyMod.Mechanics;
-using KirbyMod.Powers;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Relics;
 
 /// <summary>
-/// Kirby's starter relic and its Touch of Orobas upgrade: losing <see cref="HpLossThreshold" /> or more HP to a single
-/// enemy attack while holding a copy ability strips it (exhausting its cards) and returns Inhale from the exhaust pile
-/// to hand. With Ability Conservation, 1 stack is spent instead. Without an ability nothing happens. Buffer and the
-/// like prevent the HP loss, so they also keep the ability. Inhale cards are Innate (given at the first hand draw
-/// of each combat, before the game picks the Innate cards).
+/// Kirby's starter relic and its Touch of Orobas upgrade. Inhale cards are Innate (given at the first hand draw of each
+/// combat, before the game picks the Innate cards), and whenever an attack makes Kirby lose a copy ability (see
+/// <see cref="CopyAbilities.OnHeavyHit" />), Inhale returns from the exhaust pile to hand.
 /// </summary>
 public abstract class CopyAbilityRelicBase : ModRelicTemplate
 {
     public override RelicAssetProfile AssetProfile => KirbyArt.Relic("ability_essence");
 
-    public abstract int HpLossThreshold { get; }
-
     public override RelicRarity Rarity => RelicRarity.Starter;
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("HpLoss", HpLossThreshold)];
 
     public override Task BeforeHandDraw(Player player, PlayerChoiceContext choiceContext, ICombatState combatState)
     {
@@ -43,45 +32,24 @@ public abstract class CopyAbilityRelicBase : ModRelicTemplate
         return Task.CompletedTask;
     }
 
-    public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
-        DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public async Task AfterAbilityLostToAttack()
     {
-        if (target != Owner.Creature || result.UnblockedDamage < HpLossThreshold || !props.IsPoweredAttack()
-            || dealer == null || dealer.Side == target.Side)
-            return;
-
-        // Ability Conservation spends a stack instead (only when there is an ability to keep).
-        if (Owner.Creature.GetPower<AbilityConservationPower>() is { } conservation)
-        {
-            if (CopyAbilities.HasAny(Owner))
-            {
-                Flash();
-                await PowerCmd.Decrement(conservation);
-            }
-
-            return;
-        }
-
-        if (!await KirbyMouth.LoseCopyAbility(choiceContext, Owner))
-            return;
-
-        Flash();
-        await KirbyMouth.PutInhaleIntoHand(Owner);
+        if (await KirbyMouth.PutInhaleIntoHand(Owner))
+            Flash();
     }
 }
 
-/// <summary>复制能力 (starter): the ability is lost to an attack that takes 6 or more HP.</summary>
+/// <summary>复制能力 (starter).</summary>
 [RegisterRelic(typeof(KirbyRelicPool))]
 [RegisterCharacterStarterRelic(typeof(Kirby), Order = 0)]
 [RegisterTouchOfOrobasRefinement(typeof(CopyEssenceDeluxe))]
-public sealed class CopyAbility : CopyAbilityRelicBase
-{
-    public override int HpLossThreshold => 6;
-}
+public sealed class CopyAbility : CopyAbilityRelicBase;
 
-/// <summary>豪华复制精华 (Touch of Orobas upgrade of Copy Ability): the threshold becomes 12 or more HP.</summary>
+/// <summary>豪华复制精华 (Touch of Orobas upgrade of Copy Ability): abilities are only lost to hits of 12 or more HP.</summary>
 [RegisterRelic(typeof(KirbyRelicPool))]
 public sealed class CopyEssenceDeluxe : CopyAbilityRelicBase
 {
-    public override int HpLossThreshold => 12;
+    public const int HeavyHit = 12;
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("HpLoss", HeavyHit)];
 }

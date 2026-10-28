@@ -1,18 +1,22 @@
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Powers;
 
 /// <summary>
 /// One of Kirby's copy abilities (see <see cref="CopyAbilities.Gain" />). While held, synergy cards for
-/// <see cref="Kind" /> in hand are retained at end of turn.
+/// <see cref="Kind" /> in hand are retained at end of turn. A single enemy attack that takes
+/// <see cref="CopyAbilities.HeavyHitThreshold" /> or more HP makes Kirby lose it (see <see cref="CopyAbilities.OnHeavyHit" />),
+/// unless <see cref="LostToHeavyHits" /> is false.
 /// </summary>
 public abstract class CopyAbilityPower : ModPowerTemplate
 {
@@ -45,6 +49,24 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
     /// <summary>Sleep: gaining it ends the turn (done once by <see cref="CopyAbilities.Gain" />, even when gained twice).</summary>
     public virtual bool EndsTurnOnGain => false;
+
+    /// <summary>Whether a heavy hit makes Kirby lose this ability (Star Rod: no).</summary>
+    public virtual bool LostToHeavyHits => true;
+
+    public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
+        DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
+    {
+        var player = Owner.Player;
+        if (player == null || target != Owner || dealer == null || dealer.Side == target.Side || !props.IsPoweredAttack()
+            || result.UnblockedDamage < CopyAbilities.HeavyHitThreshold(player))
+            return;
+
+        // With Smash Bros. Kirby several abilities are held: the first one handles the hit for all of them.
+        if (CopyAbilities.Held(player).FirstOrDefault() != this)
+            return;
+
+        await CopyAbilities.OnHeavyHit(choiceContext, player);
+    }
 
     protected Data State => GetInternalData<Data>();
 

@@ -81,6 +81,8 @@ public sealed class StarRodPower : CopyAbilityPower
 
     public override CopyAbilityKind Kind => CopyAbilityKind.StarRod;
 
+    public override bool LostToHeavyHits => false;
+
     public override PowerAssetProfile AssetProfile => KirbyArt.Power("dream_rod");
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)

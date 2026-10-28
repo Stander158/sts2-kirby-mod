@@ -5,8 +5,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Powers;
 
 /// <summary>
-/// 能力守恒: each stack blocks the Copy Ability relic once. Stacks do not wear off over time; the relic spends one
-/// whenever it would have taken your ability (see <see cref="Relics.CopyAbility" />).
+/// 能力守恒: whenever an attack would make Kirby lose his copy abilities, 1 stack is spent instead (see
+/// <see cref="Mechanics.CopyAbilities.OnHeavyHit" />). Stacks do not wear off over time.
 /// </summary>
 [RegisterPower]
 public sealed class AbilityConservationPower : ModPowerTemplate
