@@ -1,0 +1,21 @@
+<Project>
+    <PropertyGroup>
+        <!-- Local paths: edit these for your machine. -->
+
+        <!-- Game install. Mods are copied to $(ModsPath)KirbyMod/ on build. -->
+        <Sts2Path>D:/Steam/steamapps/common/Slay the Spire 2</Sts2Path>
+        <Sts2DataDir>$(Sts2Path)/data_sts2_windows_x86_64</Sts2DataDir>
+        <ModsPath>$(Sts2Path)/mods/</ModsPath>
+
+        <!-- MegaDot build matching the game's engine (v4.5.1.m.12). Used for export-pack when publishing. -->
+        <GodotPath>D:/StS2Modding/tools/MegaDot/MegaDot_v4.5.1-stable_mono_win64_console.exe</GodotPath>
+
+        <!-- RitsuLib from the Steam Workshop install; compiled against the game API it targets. -->
+        <RitsuLibDir>D:/Steam/steamapps/workshop/content/2868840/3747602295/</RitsuLibDir>
+        <RitsuLibReferenceTarget>0.107.1</RitsuLibReferenceTarget>
+
+        <!-- Optional folder with art that is not in the repository (borrowed, personal use only). When it exists, its
+             images/ tree is copied over the public placeholders before the .pck is exported. -->
+        <KirbyPrivateArtDir>D:/StS2Modding/KirbyArt-private/</KirbyPrivateArtDir>
+    </PropertyGroup>
+</Project>

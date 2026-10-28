@@ -1,0 +1,10 @@
+.godot/
+bin/
+obj/
+publish/
+.idea/
+.vs/
+*.user
+
+# Generated from art/public + the private art folder (see AssembleArt in KirbyMod.csproj)
+KirbyMod/images/

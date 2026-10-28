@@ -1,0 +1,21 @@
+{
+  "KIRBY_MOD_CHARACTER_KIRBY.title": "卡比",
+  "KIRBY_MOD_CHARACTER_KIRBY.titleObject": "卡比",
+  "KIRBY_MOD_CHARACTER_KIRBY.description": "来自梦之国的粉色小圆球。把敌人吸进嘴里，复制它们的能力。",
+  "KIRBY_MOD_CHARACTER_KIRBY.flavor": "来自梦之国的粉色小圆球。把敌人吸进嘴里，复制它们的能力。",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounSubject": "他",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounObject": "他",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounPossessive": "他的",
+  "KIRBY_MOD_CHARACTER_KIRBY.possessiveAdjective": "他的",
+  "KIRBY_MOD_CHARACTER_KIRBY.cardsModifierTitle": "卡比卡牌",
+  "KIRBY_MOD_CHARACTER_KIRBY.cardsModifierDescription": "卡比的卡牌现在会出现在奖励和商店中。",
+  "KIRBY_MOD_CHARACTER_KIRBY.aromaPrinciple": "[sine][color=#FF88B5]……吸入……复制……吞下一切……[/color][/sine]",
+  "KIRBY_MOD_CHARACTER_KIRBY.banter.alive.endTurnPing": "Poyo！",
+  "KIRBY_MOD_CHARACTER_KIRBY.banter.dead.endTurnPing": "……",
+  "KIRBY_MOD_CHARACTER_KIRBY.eventDeathPrevention": "还……还没吃饱呢！",
+  "KIRBY_MOD_CHARACTER_KIRBY.goldMonologue": "[sine]这么多金币……能换多少蛋糕呢……[/sine]",
+  "KIRBY_MOD_CHARACTER_KIRBY.unlockText": "用[pink]{Prerequisite}[/pink]进行一局游戏来解锁这个角色。",
+  "KIRBY_MOD_CHARACTER_KIRBY.defeatMessage": "卡比瘪了下去……",
+  "KIRBY_MOD_CHARACTER_KIRBY.selectMessage": "Poyo！张大嘴，吸进去！",
+  "KIRBY_MOD_CHARACTER_KIRBY.victoryMessage": "卡比跳起了胜利之舞！"
+}

@@ -1,0 +1,30 @@
+; Engine configuration file.
+; Only used to export KirbyMod.pck with MegaDot; the game itself never loads this file.
+
+config_version=5
+
+[application]
+
+config/name="KirbyMod"
+config/features=PackedStringArray("4.5", "C#", "Mobile")
+
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[dotnet]
+
+project/assembly_name="KirbyMod"
+
+[editor]
+
+; Keep .tscn files as text in the pck: scenes like the energy counter reference base-game resources that only exist
+; inside the game, so converting them to binary at export time would fail.
+export/convert_text_resources_to_binary=false
+
+[rendering]
+
+renderer/rendering_method="mobile"

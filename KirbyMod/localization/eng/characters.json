@@ -1,0 +1,21 @@
+{
+  "KIRBY_MOD_CHARACTER_KIRBY.title": "Kirby",
+  "KIRBY_MOD_CHARACTER_KIRBY.titleObject": "Kirby",
+  "KIRBY_MOD_CHARACTER_KIRBY.description": "A pink puffball from Dream Land. Inhales foes and copies their abilities.",
+  "KIRBY_MOD_CHARACTER_KIRBY.flavor": "A pink puffball from Dream Land. Inhales foes and copies their abilities.",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounSubject": "he",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounObject": "him",
+  "KIRBY_MOD_CHARACTER_KIRBY.pronounPossessive": "his",
+  "KIRBY_MOD_CHARACTER_KIRBY.possessiveAdjective": "his",
+  "KIRBY_MOD_CHARACTER_KIRBY.cardsModifierTitle": "Kirby Cards",
+  "KIRBY_MOD_CHARACTER_KIRBY.cardsModifierDescription": "Kirby cards will now appear in rewards and shops.",
+  "KIRBY_MOD_CHARACTER_KIRBY.aromaPrinciple": "[sine][color=#FF88B5]...inhale... copy... swallow everything...[/color][/sine]",
+  "KIRBY_MOD_CHARACTER_KIRBY.banter.alive.endTurnPing": "Poyo!",
+  "KIRBY_MOD_CHARACTER_KIRBY.banter.dead.endTurnPing": "...",
+  "KIRBY_MOD_CHARACTER_KIRBY.eventDeathPrevention": "Not... full... yet!",
+  "KIRBY_MOD_CHARACTER_KIRBY.goldMonologue": "[sine]So much gold... how many cakes is that...[/sine]",
+  "KIRBY_MOD_CHARACTER_KIRBY.unlockText": "Play a run as [pink]{Prerequisite}[/pink] to unlock this character.",
+  "KIRBY_MOD_CHARACTER_KIRBY.defeatMessage": "Kirby deflated...",
+  "KIRBY_MOD_CHARACTER_KIRBY.selectMessage": "Poyo! Open wide and inhale!",
+  "KIRBY_MOD_CHARACTER_KIRBY.victoryMessage": "Kirby does the victory dance!"
+}

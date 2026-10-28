@@ -1,0 +1,91 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Texture2D" path="res://KirbyMod/images/character/energy_counter.png" id="1_star"]
+[ext_resource type="Material" uid="uid://ft58cpw2uxdl" path="res://materials/ui/energy_orb_dark.tres" id="2_dark"]
+[ext_resource type="Script" uid="uid://bd46jtcut2h66" path="res://src/Core/Nodes/Vfx/Utilities/NParticlesContainer.cs" id="3_particles"]
+[ext_resource type="Script" uid="uid://dtfio45agppyj" path="res://addons/mega_text/MegaLabel.cs" id="4_megalabel"]
+[ext_resource type="FontVariation" uid="uid://bg85h22rkxs6g" path="res://themes/kreon_bold_shared.tres" id="5_kreon"]
+
+[sub_resource type="FontVariation" id="FontVariation_kirby"]
+base_font = ExtResource("5_kreon")
+spacing_glyph = 2
+
+[node name="KirbyEnergyCounter" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 128.0
+offset_bottom = 128.0
+pivot_offset = Vector2(64, 64)
+
+[node name="EnergyVfxBack" type="Node2D" parent="." node_paths=PackedStringArray("_particles")]
+unique_name_in_owner = true
+position = Vector2(64, 64)
+script = ExtResource("3_particles")
+_particles = []
+
+[node name="Layers" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="RotationLayers" type="Control" parent="Layers"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Star" type="TextureRect" parent="Layers/RotationLayers"]
+material = ExtResource("2_dark")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(64, 64)
+mouse_filter = 2
+texture = ExtResource("1_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnergyVfxFront" type="Node2D" parent="." node_paths=PackedStringArray("_particles")]
+unique_name_in_owner = true
+position = Vector2(64, 64)
+script = ExtResource("3_particles")
+_particles = []
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = -29.0
+offset_right = -16.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.9647059, 0.8862745, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.1882353)
+theme_override_colors/font_outline_color = Color(0.62, 0.16, 0.38, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/outline_size = 16
+theme_override_constants/shadow_outline_size = 16
+theme_override_fonts/font = SubResource("FontVariation_kirby")
+theme_override_font_sizes/font_size = 36
+text = "3/3"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("4_megalabel")
+MinFontSize = 32
+MaxFontSize = 36

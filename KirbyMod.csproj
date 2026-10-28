@@ -1,0 +1,72 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1" InitialTargets="CheckDependencyPaths">
+    <Import Project="$(RitsuLibDir)RitsuLib.References.props" Condition="Exists('$(RitsuLibDir)RitsuLib.References.props')"/>
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <RootNamespace>KirbyMod</RootNamespace>
+
+        <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
+        <PathMap>$(AppOutputBase)=.\</PathMap>
+        <GodotDisabledSourceGenerators>GodotPluginsInitializer</GodotDisabledSourceGenerators>
+
+        <!-- Mods are built as MSIL while the local game is x64. -->
+        <NoWarn>$(NoWarn);MSB3270</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup Condition="Exists('$(Sts2DataDir)')">
+        <Reference Include="0Harmony" HintPath="$(Sts2DataDir)/0Harmony.dll" Private="false"/>
+        <Reference Include="sts2" HintPath="$(Sts2DataDir)/sts2.dll" Private="false"/>
+        <Reference Include="SmartFormat" HintPath="$(Sts2DataDir)/SmartFormat.dll" Private="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="KirbyMod/**;images/**;scenes/**;refs/**;art/**"/>
+        <EmbeddedResource Remove="KirbyMod/**;images/**;scenes/**;refs/**;art/**"/>
+        <None Include="KirbyMod.json;project.godot;DESIGN.md;KirbyMod/**"/>
+    </ItemGroup>
+
+    <Target Name="CheckDependencyPaths">
+        <Error Text="Slay the Spire 2 data not found at '$(Sts2DataDir)'. Check Directory.Build.props."
+               Condition="'$(Sts2DataDir)' == '' or !Exists('$(Sts2DataDir)')"/>
+        <Error Text="RitsuLib not found at '$(RitsuLibDir)'. Subscribe to RitsuLib on the Workshop or fix Directory.Build.props."
+               Condition="!Exists('$(RitsuLibDir)RitsuLib.References.props')"/>
+    </Target>
+
+    <Target Name="CopyToModsFolderOnBuild" AfterTargets="PostBuildEvent" Condition="'$(IsInnerGodotExport)' != 'true'">
+        <Message Text="Copying KirbyMod .dll .pdb .json to $(ModsPath)$(MSBuildProjectName)/" Importance="high"/>
+        <Copy SourceFiles="$(TargetPath);$(TargetDir)$(TargetName).pdb;$(MSBuildProjectName).json"
+              DestinationFolder="$(ModsPath)$(MSBuildProjectName)/"/>
+    </Target>
+
+    <!--
+        KirbyMod/images/ is generated: the public placeholders from art/public/images/, then (if present) the private
+        art from $(KirbyPrivateArtDir)images/ on top. A fresh clone therefore exports placeholder art only.
+    -->
+    <Target Name="AssembleArt" BeforeTargets="Publish" Condition="'$(IsInnerGodotExport)' != 'true'">
+        <ItemGroup>
+            <PublicArt Include="art/public/images/**/*.png"/>
+            <PrivateArt Include="$(KirbyPrivateArtDir)images/**/*.png" Condition="'$(KirbyPrivateArtDir)' != '' and Exists('$(KirbyPrivateArtDir)images')"/>
+        </ItemGroup>
+        <Message Text="Art: $(KirbyPrivateArtDir)images found, using private art over placeholders" Importance="high"
+                 Condition="'@(PrivateArt)' != ''"/>
+        <Message Text="Art: no private art, exporting placeholders only" Importance="high" Condition="'@(PrivateArt)' == ''"/>
+        <Copy SourceFiles="@(PublicArt)" DestinationFiles="@(PublicArt->'KirbyMod/images/%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="@(PrivateArt)" DestinationFiles="@(PrivateArt->'KirbyMod/images/%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true"/>
+    </Target>
+
+    <Target Name="NeedGodotForPublish" BeforeTargets="Publish">
+        <Error Text="MegaDot not found at '$(GodotPath)'. Check Directory.Build.props."
+               Condition="'$(GodotPath)' == '' or !Exists('$(GodotPath)')"/>
+    </Target>
+
+    <Target Name="GodotPublish" AfterTargets="Publish" Condition="'$(IsInnerGodotExport)' != 'true'">
+        <Message Text="Exporting KirbyMod.pck to $(ModsPath)$(MSBuildProjectName)/" Importance="high"/>
+        <Exec Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(ModsPath)$(MSBuildProjectName)/$(MSBuildProjectName).pck&quot;"
+              EnvironmentVariables="IsInnerGodotExport=true;MSBUILDDISABLENODEREUSE=1"/>
+    </Target>
+</Project>
