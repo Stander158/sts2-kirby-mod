@@ -27,8 +27,8 @@ public sealed class AttendingPhysicianPower : ModPowerTemplate
 }
 
 /// <summary>
-/// 实验对象 (from Experiment), for the rest of combat. At the start of each player turn (before cards are drawn), 2
-/// different random effects happen:
+/// 实验对象 (from Experiment), for the rest of combat; stacks. At the start of each player turn (before cards are drawn),
+/// 2 random effects per stack happen, all different until every effect has come up once:
 /// <list type="bullet">
 ///     <item>
 ///         on an enemy: 2 Vulnerable / 2 Weak / 6 Poison / -1 Strength / -8 Strength this turn / heal 20 / stunned
@@ -61,7 +61,7 @@ public sealed class TestSubjectPower : ModPowerTemplate
         Dazed,
     }
 
-    private const int PicksPerTurn = 2;
+    private const int PicksPerStack = 2;
 
     // Weights: the stun is picked about 5% of the time (one of 2 picks from 6 x 1.0 + 0.15).
     private static readonly (Effect Effect, float Weight)[] EnemyEffects =
@@ -79,14 +79,14 @@ public sealed class TestSubjectPower : ModPowerTemplate
     private sealed class Data
     {
         public Player? Physician;
-        public bool CopyNextCard;
+        public int CardsToCopy;
     }
 
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("devour_life_power");
 
     public override PowerType Type => PowerType.Debuff;
 
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
     private Data State => GetInternalData<Data>();
 
@@ -109,11 +109,15 @@ public sealed class TestSubjectPower : ModPowerTemplate
         if (player != trigger)
             return;
 
-        var pool = (Owner.IsPlayer ? AllyEffects : EnemyEffects).ToList();
+        var effects = Owner.IsPlayer ? AllyEffects : EnemyEffects;
+        var pool = effects.ToList();
         var rng = physician.RunState.Rng.CombatCardGeneration;
         Flash();
-        for (var i = 0; i < PicksPerTurn && pool.Count > 0; i++)
+        for (var i = 0; i < PicksPerStack * Amount; i++)
         {
+            if (pool.Count == 0)
+                pool = effects.ToList();
+
             var roll = rng.NextFloat(pool.Sum(entry => entry.Weight));
             var index = 0;
             while (index < pool.Count - 1 && roll >= pool[index].Weight)
@@ -156,7 +160,7 @@ public sealed class TestSubjectPower : ModPowerTemplate
                 await CreatureCmd.Heal(Owner, 20);
                 break;
             case Effect.CopyFirstCard:
-                State.CopyNextCard = true;
+                State.CardsToCopy++;
                 break;
             case Effect.LoseHp:
                 await CreatureCmd.Damage(ctx, Owner, 3, ValueProp.Unblockable | ValueProp.Unpowered | ValueProp.Move,
@@ -185,27 +189,31 @@ public sealed class TestSubjectPower : ModPowerTemplate
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var state = State;
-        if (!state.CopyNextCard || state.Physician == null || cardPlay.Card.Owner != Owner.Player)
+        if (state.CardsToCopy == 0 || state.Physician == null || cardPlay.Card.Owner != Owner.Player)
             return;
 
-        state.CopyNextCard = false;
+        var copies = state.CardsToCopy;
+        state.CardsToCopy = 0;
         var physician = state.Physician;
         var combat = physician.Creature.CombatState;
         if (combat == null)
             return;
 
-        var copy = combat.CreateCard(ModelDb.GetById<CardModel>(cardPlay.Card.Id), physician);
-        if (cardPlay.Card.IsUpgraded && copy.IsUpgradable)
-            CardCmd.Upgrade(copy);
         Flash();
-        await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, physician);
+        for (var i = 0; i < copies; i++)
+        {
+            var copy = combat.CreateCard(ModelDb.GetById<CardModel>(cardPlay.Card.Id), physician);
+            if (cardPlay.Card.IsUpgraded && copy.IsUpgradable)
+                CardCmd.Upgrade(copy);
+            await CardPileCmd.AddGeneratedCardToCombat(copy, PileType.Hand, physician);
+        }
     }
 
     public override Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
         IEnumerable<Creature> participants)
     {
         if (participants.Contains(Owner))
-            State.CopyNextCard = false;
+            State.CardsToCopy = 0;
         return Task.CompletedTask;
     }
 }

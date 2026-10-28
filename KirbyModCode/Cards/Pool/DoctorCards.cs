@@ -141,8 +141,14 @@ public sealed class Experiment() : KirbyCard(2, CardType.Power, CardRarity.Rare,
         if (!Owner.Creature.HasPower<AttendingPhysicianPower>())
             await PowerCmd.Apply<AttendingPhysicianPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
 
-        // A creature has one physician: a new Experiment on it replaces the old one.
-        await PowerCmd.Remove(target.GetPower<TestSubjectPower>());
+        // Another Experiment on the same creature adds a stack; its player becomes the physician.
+        if (target.GetPower<TestSubjectPower>() is { } existing)
+        {
+            existing.Physician = Owner;
+            await PowerCmd.Apply<TestSubjectPower>(ctx, target, 1, Owner.Creature, this);
+            return;
+        }
+
         var subject = (TestSubjectPower)ModelDb.Power<TestSubjectPower>().ToMutable();
         subject.Physician = Owner;
         await PowerCmd.Apply(ctx, subject, target, 1, Owner.Creature, this);
