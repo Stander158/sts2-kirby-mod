@@ -57,9 +57,9 @@ public sealed class Frost() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, 
     }
 }
 
-/// <summary>火球 (skill): deal 18(26), add 2 Burns to hand. Fire: Retain.</summary>
+/// <summary>火球 (attack): deal 18(26), add 2 Burns to hand. Fire: Retain.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class KirbyFireball() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+public sealed class KirbyFireball() : KirbyCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fire];
 
