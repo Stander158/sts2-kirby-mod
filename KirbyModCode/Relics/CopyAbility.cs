@@ -2,7 +2,10 @@ using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -17,7 +20,8 @@ namespace KirbyMod.Relics;
 /// Kirby's starter relic and its Touch of Orobas upgrade: losing <see cref="HpLossThreshold" /> or more HP to a single
 /// enemy attack while holding a copy ability strips it (exhausting its cards) and returns Inhale from the exhaust pile
 /// to hand. With Ability Conservation, 1 stack is spent instead. Without an ability nothing happens. Buffer and the
-/// like prevent the HP loss, so they also keep the ability.
+/// like prevent the HP loss, so they also keep the ability. Inhale cards are Innate (given at the first hand draw
+/// of each combat, before the game picks the Innate cards).
 /// </summary>
 public abstract class CopyAbilityRelicBase : ModRelicTemplate
 {
@@ -28,6 +32,16 @@ public abstract class CopyAbilityRelicBase : ModRelicTemplate
     public override RelicRarity Rarity => RelicRarity.Starter;
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("HpLoss", HpLossThreshold)];
+
+    public override Task BeforeHandDraw(Player player, PlayerChoiceContext choiceContext, ICombatState combatState)
+    {
+        if (player != Owner || player.PlayerCombatState?.TurnNumber != 1)
+            return Task.CompletedTask;
+
+        foreach (var card in PileType.Draw.GetPile(player).Cards.Where(card => card is IInhaleCard))
+            card.AddKeyword(CardKeyword.Innate);
+        return Task.CompletedTask;
+    }
 
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)

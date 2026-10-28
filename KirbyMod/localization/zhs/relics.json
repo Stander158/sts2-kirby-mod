@@ -1,6 +1,6 @@
 {
   "KIRBY_MOD_RELIC_COPY_ABILITY.title": "复制能力",
-  "KIRBY_MOD_RELIC_COPY_ABILITY.description": "你因受到一次攻击失去{HpLoss}点或更多生命时，若你有复制能力，则失去它（它给你的牌全部[gold]消耗[/gold]），并将[gold]消耗牌堆[/gold]中的[gold]吸入[/gold]放回你的[gold]手牌[/gold]。",
+  "KIRBY_MOD_RELIC_COPY_ABILITY.description": "你的[gold]吸入[/gold]拥有[gold]固有[/gold]。\n你因受到一次攻击失去{HpLoss}点或更多生命时，若你有复制能力，则失去它（它给你的牌全部[gold]消耗[/gold]），并将[gold]消耗牌堆[/gold]中的[gold]吸入[/gold]放回你的[gold]手牌[/gold]。",
   "KIRBY_MOD_RELIC_COPY_ABILITY.flavor": "",
   "KIRBY_MOD_RELIC_ABILITY_PROTECTOR.title": "能力保护器",
   "KIRBY_MOD_RELIC_ABILITY_PROTECTOR.description": "战斗开始时，获得{AbilityConservationPower}层[gold]能力守恒[/gold]。",
@@ -12,6 +12,6 @@
   "KIRBY_MOD_RELIC_BOSS_PREP.description": "战斗开始时，从{Cards}张复制能力牌中选择1张放入你的[gold]手牌[/gold]，它本回合耗能为0。",
   "KIRBY_MOD_RELIC_BOSS_PREP.flavor": "",
   "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.title": "豪华复制精华",
-  "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.description": "你因受到一次攻击失去{HpLoss}点或更多生命时，若你有复制能力，则失去它（它给你的牌全部[gold]消耗[/gold]），并将[gold]消耗牌堆[/gold]中的[gold]吸入[/gold]放回你的[gold]手牌[/gold]。",
+  "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.description": "你的[gold]吸入[/gold]拥有[gold]固有[/gold]。\n你因受到一次攻击失去{HpLoss}点或更多生命时，若你有复制能力，则失去它（它给你的牌全部[gold]消耗[/gold]），并将[gold]消耗牌堆[/gold]中的[gold]吸入[/gold]放回你的[gold]手牌[/gold]。",
   "KIRBY_MOD_RELIC_COPY_ESSENCE_DELUXE.flavor": ""
 }

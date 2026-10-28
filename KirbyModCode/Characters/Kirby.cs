@@ -40,7 +40,7 @@ public sealed class Kirby : ModCharacterTemplate<KirbyCardPool, KirbyRelicPool, 
 
     public override CharacterGender Gender => CharacterGender.Masculine;
 
-    public override int StartingHp => 60;
+    public override int StartingHp => 72;
 
     public override int StartingGold => 99;
 

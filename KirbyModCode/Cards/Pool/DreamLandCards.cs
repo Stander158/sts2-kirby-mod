@@ -34,10 +34,10 @@ public sealed class MineBattle() : KirbyCard(2, CardType.Skill, CardRarity.Commo
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(5);
 }
 
-/// <summary>春风 (starter card, never offered): with a copy ability, gain 2(3) energy; without one, draw 2 cards instead.</summary>
+/// <summary>春风 (0-cost starter card, never offered): with a copy ability, gain 2(3) energy; without one, draw 2 cards instead.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 [RegisterCharacterStarterCard(typeof(Kirby), 1, Order = 40)]
-public sealed class SpringBreeze() : KirbyCard(1, CardType.Skill, CardRarity.Basic, TargetType.Self)
+public sealed class SpringBreeze() : KirbyCard(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(2), new EnergyVar(2)];
 
