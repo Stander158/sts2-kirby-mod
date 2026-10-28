@@ -1,6 +1,7 @@
 using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using KirbyMod.Powers;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -10,7 +11,7 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Cards;
 
-/// <summary>吞咽 (0-cost power): empty the mouth and gain the ability in it; its Drop Ability goes to the draw pile (upgraded: hand).</summary>
+/// <summary>吞咽 (0-cost power): empty the mouth and gain the ability in it; its Drop Ability goes to the draw pile. Upgraded: Drop Ability to hand, and draw 1 card.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class Swallow() : ModCardTemplate(0, CardType.Power, CardRarity.Token, TargetType.Self)
 {
@@ -32,9 +33,12 @@ public sealed class Swallow() : ModCardTemplate(0, CardType.Power, CardRarity.To
                 dropAbilityPile: IsUpgraded ? PileType.Hand : PileType.Draw);
 
         await KirbyMouth.ExhaustOtherMouthCards(ctx, Owner, this);
+
+        if (IsUpgraded)
+            await CardPileCmd.Draw(ctx, 1, Owner);
     }
 
-    // Upgrade only moves the Drop Ability to hand (see OnPlay).
+    // Upgrade moves the Drop Ability to hand and adds a draw (see OnPlay).
     protected override void OnUpgrade()
     {
     }

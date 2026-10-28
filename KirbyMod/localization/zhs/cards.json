@@ -8,7 +8,7 @@
   "KIRBY_MOD_CARD_SPIT_STAR.title": "吐星星",
   "KIRBY_MOD_CARD_SPIT_STAR.description": "造成等同于[gold]满嘴[/gold]层数的伤害。{InCombat:\n（造成{CalculatedDamage:diff()}点伤害）|}\n清空嘴里的东西，将[gold]吸入[/gold]洗入你的[gold]抽牌堆[/gold]。\n[gold]消耗[/gold]其他所有吐星星和吞咽。",
   "KIRBY_MOD_CARD_SWALLOW.title": "吞咽",
-  "KIRBY_MOD_CARD_SWALLOW.description": "清空嘴里的东西，获得[gold]复制能力入嘴[/gold]对应的复制能力，并将一张[gold]舍弃能力[/gold]放入你的{IfUpgraded:show:[gold]手牌[/gold]|[gold]抽牌堆[/gold]}。\n[gold]消耗[/gold]其他所有吐星星和吞咽。",
+  "KIRBY_MOD_CARD_SWALLOW.description": "清空嘴里的东西，获得[gold]复制能力入嘴[/gold]对应的复制能力，并将一张[gold]舍弃能力[/gold]放入你的{IfUpgraded:show:[gold]手牌[/gold]|[gold]抽牌堆[/gold]}。{IfUpgraded:show:\n抽1张牌。|}\n[gold]消耗[/gold]其他所有吐星星和吞咽。",
   "KIRBY_MOD_CARD_DROP_ABILITY.title": "舍弃能力",
   "KIRBY_MOD_CARD_DROP_ABILITY.description": "失去当前的复制能力，[gold]消耗[/gold]它给你的所有牌。\n将[gold]消耗牌堆[/gold]中的[gold]吸入[/gold]放入你的[gold]手牌[/gold]。",
   "KIRBY_MOD_CARD_SWORD_ABILITY.title": "剑能力",
