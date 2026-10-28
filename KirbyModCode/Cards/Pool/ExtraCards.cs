@@ -157,7 +157,7 @@ public sealed class DragonStorm() : KirbyCard(2, CardType.Attack, CardRarity.Rar
     protected override void OnUpgrade() => DynamicVars.ExtraDamage.UpgradeValueBy(2);
 }
 
-/// <summary>究极冰球 (1-cost power): fill your hand with Ice Blocks (upgraded when this is). For the rest of combat, Ice Blocks deal damage AND give Block. Ice: Retain.</summary>
+/// <summary>究极冰球 (1-cost power): exhaust every other card in your hand, then fill it with Ice Blocks (upgraded when this is). For the rest of combat, Ice Blocks deal damage AND give Block. Ice: Retain.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class SnowBowl() : KirbyCard(1, CardType.Power, CardRarity.Rare, TargetType.None)
 {
@@ -167,9 +167,12 @@ public sealed class SnowBowl() : KirbyCard(1, CardType.Power, CardRarity.Rare, T
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        var hand = PileType.Hand.GetPile(Owner);
+        foreach (var card in hand.Cards.Where(card => card != this).ToList())
+            await CardCmd.Exhaust(ctx, card);
+
         await PowerCmd.Apply<SnowBowlPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
 
-        var hand = PileType.Hand.GetPile(Owner);
         while (hand.Cards.Count < CardPile.MaxCardsInHand)
             await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<IceBlock>(Owner, IsUpgraded),
                 PileType.Hand, Owner);
