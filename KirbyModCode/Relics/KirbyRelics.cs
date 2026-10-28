@@ -22,7 +22,7 @@ namespace KirbyMod.Relics;
 [RegisterRelic(typeof(KirbyRelicPool))]
 public sealed class AbilityProtector : ModRelicTemplate
 {
-    public override RelicAssetProfile AssetProfile => KirbyArt.VanillaRelic("anchor");
+    public override RelicAssetProfile AssetProfile => KirbyArt.Relic("ability_protector");
 
     public override RelicRarity Rarity => RelicRarity.Common;
 
@@ -44,7 +44,7 @@ public sealed class FriendshipStar : ModRelicTemplate
 {
     private bool _dealtDamage;
 
-    public override RelicAssetProfile AssetProfile => KirbyArt.VanillaRelic("red_mask");
+    public override RelicAssetProfile AssetProfile => KirbyArt.Relic("friendship_star");
 
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
@@ -89,7 +89,7 @@ public sealed class BossPrep : ModRelicTemplate
 {
     private const int Choices = 3;
 
-    public override RelicAssetProfile AssetProfile => KirbyArt.VanillaRelic("toolbox");
+    public override RelicAssetProfile AssetProfile => KirbyArt.Relic("boss_prep");
 
     public override RelicRarity Rarity => RelicRarity.Rare;
 
