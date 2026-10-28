@@ -4,7 +4,7 @@
 
 [node name="KirbyMerchant" type="Sprite2D"]
 position = Vector2(0, 9)
-scale = Vector2(1.2, 1.2)
+scale = Vector2(0.46, 0.46)
 texture = ExtResource("1_kirby")
 centered = false
-offset = Vector2(-86, -198)
+offset = Vector2(-175, -260)
