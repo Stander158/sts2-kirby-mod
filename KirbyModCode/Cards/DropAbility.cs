@@ -1,3 +1,4 @@
+using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -15,6 +16,8 @@ namespace KirbyMod.Cards;
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class DropAbility() : ModCardTemplate(0, CardType.Power, CardRarity.Token, TargetType.Self), ICopyAbilityCard
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
+
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Retain];
 
     public CopyAbilityKind? GrantedBy => null;

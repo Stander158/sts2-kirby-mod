@@ -1,3 +1,4 @@
+using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
@@ -20,6 +21,8 @@ namespace KirbyMod.Cards;
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class IceBlock() : ModCardTemplate(1, CardType.Skill, CardRarity.Token, TargetType.AnyEnemy)
 {
+    public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
+
     public const int BaseBlock = 8;
     public const int BaseDamage = 10;
     public const int BlockUpgrade = 3;
