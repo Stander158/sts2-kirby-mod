@@ -179,13 +179,13 @@ public sealed class SnowBowl() : KirbyCard(1, CardType.Power, CardRarity.Rare, T
     }
 }
 
-/// <summary>冰壶: you or an ally loses all Block and gains 1 Buffer per 17(13) Block lost. Exhaust. Stone: Retain, and it is not exhausted.</summary>
+/// <summary>冰壶 (0 cost): you or an ally loses all Block and gains 1 Buffer per 15(10) Block lost. Exhaust. Stone: Retain, and it is not exhausted.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class CurlingStone() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
+public sealed class CurlingStone() : KirbyCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Stone];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("BlockPerBuffer", 17)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("BlockPerBuffer", 15)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<BufferPower>()];
 
@@ -207,7 +207,7 @@ public sealed class CurlingStone() : KirbyCard(1, CardType.Skill, CardRarity.Unc
     protected override PileType GetResultPileTypeForCardPlay() =>
         SynergyActive ? base.GetResultPileTypeForCardPlay() : PileType.Exhaust;
 
-    protected override void OnUpgrade() => DynamicVars["BlockPerBuffer"].UpgradeValueBy(-4);
+    protected override void OnUpgrade() => DynamicVars["BlockPerBuffer"].UpgradeValueBy(-5);
 }
 
 /// <summary>粉红恶魔: apply 1(2) Vulnerable and 1 Weak. If you have a copy ability, draw 1(2).</summary>

@@ -52,9 +52,9 @@ public sealed class SpringBreeze() : KirbyCard(1, CardType.Skill, CardRarity.Bas
     protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
 }
 
-/// <summary>铁翼: deal 7(9). Every Strike in your hand becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
+/// <summary>巨大锋翼鸟 (Dynablade, 0 cost): deal 7(9). Every Strike in your hand becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class SteelWing() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<VanillaCards.Peck>()];
 
