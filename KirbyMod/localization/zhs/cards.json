@@ -67,7 +67,7 @@
   "KIRBY_MOD_CARD_META_KNIGHT_REVENGE.description": "造成{Damage:diff()}点伤害。\n[gold]剑[/gold]：耗能为0。",
   "KIRBY_MOD_CARD_META_NIGHTMARE.title": "魅塔梦魇",
   "KIRBY_MOD_CARD_META_NIGHTMARE.description": "本回合你的[gold]剑[/gold]相关的牌耗能为0。\n获得复制能力：[gold]剑[/gold]。将一张[gold]马赫龙卷风[/gold]放入你的[gold]弃牌堆[/gold]。",
-  "KIRBY_MOD_CARD_MINE_BATTLE.title": "矿洞大作战",
+  "KIRBY_MOD_CARD_MINE_BATTLE.title": "洞穴大作战",
   "KIRBY_MOD_CARD_MINE_BATTLE.description": "获得{Block:diff()}点[gold]格挡[/gold]。\n若你有复制能力，舍弃它（[gold]吸入[/gold]回到手牌），并获得{Energy:energyIcons()}。",
   "KIRBY_MOD_CARD_SPRING_BREEZE.title": "春风",
   "KIRBY_MOD_CARD_SPRING_BREEZE.description": "若你有复制能力，获得{Energy:energyIcons()}。\n否则，抽{Cards:diff()}张牌。",
