@@ -79,9 +79,9 @@ public sealed class RisingSlash() : KirbyCard(2, CardType.Attack, CardRarity.Com
     }
 }
 
-/// <summary>降龙斩 (made by Rising Slash): deal 8(10). Sword/Boomerang: Retain, +4(5).</summary>
+/// <summary>降龙斩 (made by Rising Slash, 1 cost): deal 8(10). Sword/Boomerang: Retain, +4(5).</summary>
 [RegisterCard(typeof(TokenCardPool))]
-public sealed class DescendingSlash() : KirbyCard(2, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
+public sealed class DescendingSlash() : KirbyCard(1, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Sword, CopyAbilityKind.Boomerang];
 

@@ -52,11 +52,11 @@ public sealed class SpringBreeze() : KirbyCard(1, CardType.Skill, CardRarity.Bas
     protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
 }
 
-/// <summary>铁翼: deal 7(9). Every Strike in your hand becomes a Peck (upgraded: Peck+) for this combat.</summary>
+/// <summary>铁翼: deal 7(9). Every Strike in your hand becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class SteelWing() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<VanillaCards.Peck>(IsUpgraded)];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<VanillaCards.Peck>()];
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7, ValueProp.Move)];
 
@@ -67,7 +67,7 @@ public sealed class SteelWing() : KirbyCard(1, CardType.Attack, CardRarity.Commo
 
         var strikes = PileType.Hand.GetPile(Owner).Cards.Where(card => card.Tags.Contains(CardTag.Strike)).ToList();
         foreach (var strike in strikes)
-            await CardCmd.Transform(strike, KirbyMouth.CreateCard<VanillaCards.Peck>(Owner, IsUpgraded));
+            await CardCmd.Transform(strike, KirbyMouth.CreateCard<VanillaCards.Peck>(Owner, strike.IsUpgraded));
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2);

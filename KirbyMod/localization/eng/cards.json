@@ -72,7 +72,7 @@
   "KIRBY_MOD_CARD_SPRING_BREEZE.title": "Spring Breeze",
   "KIRBY_MOD_CARD_SPRING_BREEZE.description": "If you have a Copy Ability, gain {Energy:energyIcons()}.\nOtherwise, draw {Cards:diff()} cards.",
   "KIRBY_MOD_CARD_STEEL_WING.title": "Steel Wing",
-  "KIRBY_MOD_CARD_STEEL_WING.description": "Deal {Damage:diff()} damage.\nTurn every Strike in your [gold]Hand[/gold] into a {IfUpgraded:show:[gold]Peck+[/gold]|[gold]Peck[/gold]} for this combat.",
+  "KIRBY_MOD_CARD_STEEL_WING.description": "Deal {Damage:diff()} damage.\nTurn every Strike in your [gold]Hand[/gold] into a [gold]Peck[/gold] for this combat; upgraded Strikes become [gold]Peck+[/gold].",
   "KIRBY_MOD_CARD_FOUNTAIN_OF_DREAMS.title": "Fountain of Dreams",
   "KIRBY_MOD_CARD_FOUNTAIN_OF_DREAMS.description": "Shuffle {Cards:diff()} [gold]Wish[/gold] into your [gold]Draw Pile[/gold].",
   "KIRBY_MOD_CARD_MIRROR_LABYRINTH.title": "Amazing Mirror",
