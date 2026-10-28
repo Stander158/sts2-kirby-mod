@@ -29,7 +29,7 @@ public sealed class PlasmaCannon() : KirbyCard(0, CardType.Attack, CardRarity.Co
         if (hits > 0)
         {
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this)
-                .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_attack_lightning").Execute(ctx);
+                .Targeting(cardPlay.Target!).WithLightningHit().Execute(ctx);
         }
 
         if (synergy)
@@ -91,7 +91,7 @@ public sealed class UltimateFlash() : KirbyCard(3, CardType.Attack, CardRarity.U
             damage += DynamicVars["EnergyDamage"].BaseValue * (Owner.PlayerCombatState?.Energy ?? 0);
 
         await DamageCmd.Attack(damage).FromCard(this).TargetingAllOpponents(CombatState!)
-            .WithHitFx("vfx/vfx_attack_lightning").Execute(ctx);
+            .WithLightningHit().Execute(ctx);
     }
 
     protected override void OnUpgrade()

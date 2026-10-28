@@ -70,7 +70,7 @@ public sealed class KirbyFireball() : KirbyCard(1, CardType.Skill, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_fire_burst").Execute(ctx);
+            .WithHitFx("vfx/vfx_fire_burst", KirbyFx.FireSfx).Execute(ctx);
 
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
             await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<Burn>(Owner, false), PileType.Hand, Owner);
@@ -147,7 +147,7 @@ public sealed class DragonStorm() : KirbyCard(3, CardType.Attack, CardRarity.Rar
         await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Fire, upgraded: false, this);
 
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_fire_burst").Execute(ctx);
+            .WithHitFx("vfx/vfx_fire_burst", KirbyFx.FireSfx).Execute(ctx);
 
         if (!SynergyActive)
             return;
