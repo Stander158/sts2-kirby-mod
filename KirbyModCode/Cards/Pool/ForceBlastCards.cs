@@ -25,7 +25,7 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
     private static readonly CopyAbilityKind[] Fighter = [CopyAbilityKind.Fighter];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Hits", 1), new DynamicVar("FighterBonus", FighterDamageBonus)];
+        [new DynamicVar("Hits", 2), new DynamicVar("FighterBonus", FighterDamageBonus)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<Launch>()];
 
@@ -60,13 +60,13 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
     private IEnumerable<Launch> Launches() => PileType.Hand.GetPile(Owner).Cards.OfType<Launch>();
 }
 
-/// <summary>发射 (made by Force Blast): 0 cost, Ethereal, deal 5(7) damage 0 times. Exhaust. Force Blast adds hits.</summary>
+/// <summary>发射 (made by Force Blast): 0 cost, Ethereal, deal 4(6) damage 0 times. Exhaust. Force Blast adds hits.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class Launch() : KirbyCard(0, CardType.Attack, CardRarity.Token, TargetType.AnyEnemy)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(5, ValueProp.Move), new RepeatVar(0)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(4, ValueProp.Move), new RepeatVar(0)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
