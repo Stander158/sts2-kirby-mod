@@ -71,7 +71,7 @@
   "KIRBY_MOD_CARD_MINE_BATTLE.description": "获得{Block:diff()}点[gold]格挡[/gold]。\n若你有复制能力，舍弃它（[gold]吸入[/gold]回到手牌），并获得{Energy:energyIcons()}。",
   "KIRBY_MOD_CARD_SPRING_BREEZE.title": "春风",
   "KIRBY_MOD_CARD_SPRING_BREEZE.description": "若你有复制能力，获得{Energy:energyIcons()}。\n否则，抽{Cards:diff()}张牌。",
-  "KIRBY_MOD_CARD_STEEL_WING.title": "铁翼",
+  "KIRBY_MOD_CARD_STEEL_WING.title": "巨大锋翼鸟",
   "KIRBY_MOD_CARD_STEEL_WING.description": "造成{Damage:diff()}点伤害。\n本场战斗中，将你[gold]手牌[/gold]中所有打击牌变为[gold]啄击[/gold]。",
   "KIRBY_MOD_CARD_FOUNTAIN_OF_DREAMS.title": "梦之泉",
   "KIRBY_MOD_CARD_FOUNTAIN_OF_DREAMS.description": "将{Cards:diff()}张[gold]许愿[/gold]洗入你的[gold]抽牌堆[/gold]。",
