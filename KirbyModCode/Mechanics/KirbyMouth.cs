@@ -30,16 +30,18 @@ public static class KirbyMouth
         Entry.Logger.Info($"[Inhale] {target.Monster?.Id.Entry} move={target.Monster?.NextMove.Id} " +
                           $"hp={target.CurrentHp}/{target.MaxHp} -> ability={kind}{(readKind == null ? " (random)" : "")}, outcome={outcome}");
 
-        // Ultimate Inhale: Frenzied Inhaled (dies at 30 HP or less) instead of Inhaled.
+        // Hypernova Inhale: Frenzied Inhaled (dies at 33 HP or less) instead of Inhaled.
         if (source is UltimateInhale)
             await PowerCmd.Apply<FrenziedInhaledPower>(ctx, target, 1, kirby, source);
         else
             await PowerCmd.Apply<InhaledPower>(ctx, target, 1, kirby, source);
+        VfxCmd.PlayOnCreatureCenter(target, "vfx/vfx_gaseous_impact");
 
-        // Escaping enemy: stunned instead, no Mouthful and no ability in the mouth.
+        // Escaping enemy: stunned, and Kirby gains Wheel right away (no Mouthful, nothing in the mouth).
         if (outcome == InhaleOutcome.Escape)
         {
             await CreatureCmd.Stun(target);
+            await CopyAbilities.Gain(ctx, player, CopyAbilityKind.Wheel, upgraded: false, source);
             return;
         }
 
@@ -157,11 +159,11 @@ public static class KirbyMouth
         return powers.Count > 0 || cards.Count > 0;
     }
 
-    /// <summary>Drop Ability, Mine Battle: lose the ability on purpose and get Inhale back from the exhaust pile.</summary>
+    /// <summary>Drop Ability, Great Cave Offensive: lose the ability on purpose (the starter relic then returns Inhale).</summary>
     public static async Task DropCopyAbility(PlayerChoiceContext ctx, Player player)
     {
-        await LoseCopyAbility(ctx, player);
-        await PutInhaleIntoHand(player);
+        if (await LoseCopyAbility(ctx, player))
+            await CopyAbilities.AfterAbilityLost(player);
     }
 
     /// <summary>Adds a <typeparamref name="TCard" /> to hand unless there is one; an <paramref name="upgraded" /> request upgrades the one there.</summary>

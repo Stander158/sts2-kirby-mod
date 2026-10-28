@@ -29,7 +29,7 @@ public sealed class IceBreath() : KirbyCard(0, CardType.Attack, CardRarity.Commo
         }
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .WithHitFx("vfx/vfx_gaseous_impact").Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4);

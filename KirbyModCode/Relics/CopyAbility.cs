@@ -13,8 +13,8 @@ namespace KirbyMod.Relics;
 
 /// <summary>
 /// Kirby's starter relic and its Touch of Orobas upgrade. Inhale cards are Innate (given at the first hand draw of each
-/// combat, before the game picks the Innate cards), and whenever an attack makes Kirby lose a copy ability (see
-/// <see cref="CopyAbilities.OnHeavyHit" />), Inhale returns from the exhaust pile to hand.
+/// combat, before the game picks the Innate cards), and whenever Kirby loses a copy ability to damage
+/// (<see cref="CopyAbilities.OnHeavyHit" />) or drops it, Inhale returns from the exhaust pile to hand.
 /// </summary>
 public abstract class CopyAbilityRelicBase : ModRelicTemplate
 {
@@ -32,7 +32,7 @@ public abstract class CopyAbilityRelicBase : ModRelicTemplate
         return Task.CompletedTask;
     }
 
-    public async Task AfterAbilityLostToAttack()
+    public async Task AfterAbilityLost()
     {
         if (await KirbyMouth.PutInhaleIntoHand(Owner))
             Flash();
@@ -45,7 +45,7 @@ public abstract class CopyAbilityRelicBase : ModRelicTemplate
 [RegisterTouchOfOrobasRefinement(typeof(CopyEssenceDeluxe))]
 public sealed class CopyAbility : CopyAbilityRelicBase;
 
-/// <summary>豪华复制精华 (Touch of Orobas upgrade of Copy Ability): abilities are only lost to hits of 12 or more HP.</summary>
+/// <summary>豪华复制精华 (Touch of Orobas upgrade of Copy Ability): abilities are only lost after 12 or more damage in a round.</summary>
 [RegisterRelic(typeof(KirbyRelicPool))]
 public sealed class CopyEssenceDeluxe : CopyAbilityRelicBase
 {

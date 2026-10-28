@@ -20,12 +20,9 @@ public sealed class GalaxyWish() : KirbyCard(1, CardType.Power, CardRarity.Rare,
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await PowerCmd.Apply<GalaxyWishPower>(ctx, Owner.Creature, DynamicVars.Energy.BaseValue, Owner.Creature, this);
-
-        foreach (var card in KirbyMouth.LivePiles.SelectMany(pile => pile.GetPile(Owner).Cards).OfType<AbilityCard>())
-            card.RemoveKeyword(CardKeyword.Exhaust);
     }
 
-    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
+    protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
 }
 
 /// <summary>能力保护罩 (power): gain 4(6) Ability Conservation.</summary>

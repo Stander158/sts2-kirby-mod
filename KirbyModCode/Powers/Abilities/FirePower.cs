@@ -66,7 +66,7 @@ public sealed class FirePower : CopyAbilityPower
         {
             var damage = BurnDamage + (Upgraded ? UpgradedBurnDamageBonus : 0);
             await DamageCmd.Attack(damage).FromCard(cardPlay.Card).Targeting(target)
-                .WithHitFx("vfx/vfx_attack_blunt").Execute(choiceContext);
+                .WithHitFx("vfx/vfx_fire_burst").Execute(choiceContext);
         }
     }
 

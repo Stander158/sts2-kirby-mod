@@ -71,7 +71,7 @@ public sealed class Launch() : KirbyCard(0, CardType.Attack, CardRarity.Token, T
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
-            .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_hyperbeam_impact").Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2);

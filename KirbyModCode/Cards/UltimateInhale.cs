@@ -10,8 +10,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// 超新星吸入 (Hypernova Inhale; class name kept from 究极吸入) (Ancient frame): Inhale that applies Frenzied Inhaled (dies at 30 HP or less), and until your next turn
-/// every hit of the inhaled enemy deals 0. Only obtainable
+/// 超新星吸入 (Hypernova Inhale; class name kept from 究极吸入) (Ancient frame): Inhale that applies Frenzied Inhaled (dies at 33 HP or less), and until your next turn
+/// every hit of the inhaled enemy deals half damage. Only obtainable
 /// from Archaic Tooth (offered by Orobas, the act 2 ancient), which transcends Inhale into it. As a transcendence card
 /// it is skipped by rewards and by Dusty Tome.
 /// </summary>

@@ -26,7 +26,8 @@ namespace KirbyMod.Powers;
 ///     <item>the inhaled enemy dies, for Mouthful equal to half its Max HP;</item>
 ///     <item>otherwise, 6 Mouthful at the start of Kirby's next turn.</item>
 /// </list>
-/// From Ultimate Inhale, every hit of the inhaled enemy deals 0 until then (the first attack still becomes Mouthful).
+/// From Hypernova Inhale, every hit of the inhaled enemy deals half damage until then (the first attack still becomes
+/// Mouthful at its full damage).
 /// </summary>
 [RegisterPower]
 public sealed class InhalingPower : ModPowerTemplate
@@ -38,7 +39,7 @@ public sealed class InhalingPower : ModPowerTemplate
         public bool Resolved;
         public bool UpgradedTokens;
 
-        // Ultimate Inhale: all damage from the inhaled enemy is negated.
+        // Hypernova Inhale: all damage from the inhaled enemy is halved.
         public bool NegateAll;
 
         // Set during the inhaled enemy's first attack; its hits on Kirby add up to the Mouthful.
@@ -84,7 +85,7 @@ public sealed class InhalingPower : ModPowerTemplate
             return Task.CompletedTask;
 
         state.Hit = true;
-        state.Total += amount;
+        state.Total += state.NegateAll ? amount * 2 : amount;  // Mouthful counts the hit before it was halved
         return Task.CompletedTask;
     }
 
@@ -102,7 +103,7 @@ public sealed class InhalingPower : ModPowerTemplate
         state.Hit = false;
         state.Total = 0m;
 
-        if (!(state.NegateAll || Owner.HasPower<UltimateFruitPower>()))
+        if (!Owner.HasPower<UltimateFruitPower>())
             return Task.CompletedTask;
 
         state.NegatingAttack = true;
@@ -132,13 +133,20 @@ public sealed class InhalingPower : ModPowerTemplate
             "inhaled enemy's first attack (all hits)");
     }
 
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer,
+        CardModel? cardSource)
+    {
+        var state = State;
+        return state.NegateAll && target == Owner && dealer != null && dealer == state.Target ? 0.5m : 1m;
+    }
+
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         var state = State;
         if (target != Owner || dealer == null || dealer != state.Target)
             return decimal.MaxValue;
 
-        return state.NegateAll || (state.NegatingAttack && state.Tracking && props.IsPoweredAttack())
+        return state.NegatingAttack && state.Tracking && props.IsPoweredAttack()
             ? 0m
             : decimal.MaxValue;
     }
@@ -147,8 +155,6 @@ public sealed class InhalingPower : ModPowerTemplate
     public override Task AfterModifyingDamageAmount(CardModel? cardSource)
     {
         var state = State;
-        if (state.NegateAll)
-            Flash();
         if (!state.NegatingAttack || !state.Tracking || state.Target == null)
             return Task.CompletedTask;
 

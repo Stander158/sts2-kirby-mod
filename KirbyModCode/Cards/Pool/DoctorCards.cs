@@ -104,6 +104,7 @@ public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarit
         var target = cardPlay.Target ?? Owner.Creature;
         if (target.IsPlayer)
         {
+            VfxCmd.PlayOnCreatureCenter(target, "vfx/vfx_cross_heal");
             await CreatureCmd.Heal(target, DynamicVars.Heal.BaseValue);
             return;
         }
@@ -124,7 +125,7 @@ public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarit
 /// becomes your Test Subject. Doctor: costs 1 less (in <see cref="DoctorPower" />), Retain. Upgrade: cost 2.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class Experiment() : KirbyCard(3, CardType.Power, CardRarity.Rare, CustomTargetType.Anyone)
+public sealed class Experiment() : KirbyCard(2, CardType.Power, CardRarity.Rare, CustomTargetType.Anyone)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Doctor];
 

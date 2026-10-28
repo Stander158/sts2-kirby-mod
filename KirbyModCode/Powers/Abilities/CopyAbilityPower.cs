@@ -14,9 +14,9 @@ namespace KirbyMod.Powers;
 
 /// <summary>
 /// One of Kirby's copy abilities (see <see cref="CopyAbilities.Gain" />). While held, synergy cards for
-/// <see cref="Kind" /> in hand are retained at end of turn. A single enemy attack that takes
-/// <see cref="CopyAbilities.HeavyHitThreshold" /> or more HP makes Kirby lose it (see <see cref="CopyAbilities.OnHeavyHit" />),
-/// unless <see cref="LostToHeavyHits" /> is false.
+/// <see cref="Kind" /> in hand are retained at end of turn. Taking <see cref="CopyAbilities.HeavyHitThreshold" /> or more
+/// damage from enemies within one round makes Kirby lose it (see <see cref="CopyAbilities.OnHeavyHit" />), unless
+/// <see cref="LostToHeavyHits" /> is false.
 /// </summary>
 public abstract class CopyAbilityPower : ModPowerTemplate
 {
@@ -57,15 +57,15 @@ public abstract class CopyAbilityPower : ModPowerTemplate
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         var player = Owner.Player;
-        if (player == null || target != Owner || dealer == null || dealer.Side == target.Side || !props.IsPoweredAttack()
-            || result.UnblockedDamage < CopyAbilities.HeavyHitThreshold(player))
+        if (player == null || target != Owner || dealer == null || dealer.Side == target.Side || result.UnblockedDamage <= 0)
             return;
 
-        // With Smash Bros. Kirby several abilities are held: the first one handles the hit for all of them.
+        // With several abilities held (Smash Bros. Kirby), the first one counts the damage for all of them.
         if (CopyAbilities.Held(player).FirstOrDefault() != this)
             return;
 
-        await CopyAbilities.OnHeavyHit(choiceContext, player);
+        if (CopyAbilities.AddRoundDamage(player, result.UnblockedDamage))
+            await CopyAbilities.OnHeavyHit(choiceContext, player);
     }
 
     protected Data State => GetInternalData<Data>();

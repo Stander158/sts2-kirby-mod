@@ -21,6 +21,7 @@ internal static class KirbyArt
         [typeof(Robobot)] = "robobot_armor",
         [typeof(GalaxyWish)] = "galactic_nova",
         [typeof(UltimateInhale)] = "ultimate_inhale",
+        [typeof(VoidCard)] = "void_card",
 
         // Official artwork picked from WiKirby (art-sources/wikirby/card_art_map.py, outside the repository).
         [typeof(SwordAbility)] = "wk_sword_ability",
@@ -89,6 +90,9 @@ internal static class KirbyArt
         [typeof(MakeMedicine)] = "wk_make_medicine",
         [typeof(Experiment)] = "wk_experiment",
         [typeof(Dodge)] = "wk_dodge",
+        [typeof(WheelDash)] = "wk_wheel_dash",
+        [typeof(WheelCharge)] = "wk_wheel_charge",
+        [typeof(WheelieRider)] = "wk_wheelie_rider",
     };
 
     private static bool Exists(string path) => Godot.ResourceLoader.Exists(path);

@@ -70,7 +70,7 @@ public sealed class KirbyFireball() : KirbyCard(1, CardType.Skill, CardRarity.Un
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .WithHitFx("vfx/vfx_fire_burst").Execute(ctx);
 
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
             await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<Burn>(Owner, false), PileType.Hand, Owner);
@@ -95,7 +95,7 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_slash").Execute(ctx);
+            .WithHitFx("vfx/vfx_giant_horizontal_slash").Execute(ctx);
     }
 
     // Vigor itself adds its amount once; this adds the remaining (times - 1) copies.
@@ -117,9 +117,9 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     }
 }
 
-/// <summary>究极火龙: Exhaust. Deal 5(7) damage for each Burn you have. Fire: Retain; afterwards move Burns from the discard pile to hand until it is full.</summary>
+/// <summary>究极火龙 (3 cost): Exhaust. Gain the Fire copy ability, then deal 5(7) damage for each Burn you have. Fire: Retain; afterwards move Burns from the discard pile to hand until it is full.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class DragonStorm() : KirbyCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+public sealed class DragonStorm() : KirbyCard(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fire];
 
@@ -132,15 +132,18 @@ public sealed class DragonStorm() : KirbyCard(2, CardType.Attack, CardRarity.Rar
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) => card.IsMutable ? BurnCount(card.Owner) : 0),
     ];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<Burn>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<FirePower>(), HoverTipFactory.FromCard<Burn>()];
 
     private static int BurnCount(Player player) =>
         KirbyMouth.LivePiles.SelectMany(pile => pile.GetPile(player).Cards).Count(card => card is Burn);
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Fire, upgraded: false, this);
+
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .WithHitFx("vfx/vfx_fire_burst").Execute(ctx);
 
         if (!SynergyActive)
             return;
@@ -157,25 +160,34 @@ public sealed class DragonStorm() : KirbyCard(2, CardType.Attack, CardRarity.Rar
     protected override void OnUpgrade() => DynamicVars.ExtraDamage.UpgradeValueBy(2);
 }
 
-/// <summary>究极冰球 (1-cost power): exhaust every other card in your hand, then fill it with Ice Blocks (upgraded when this is). For the rest of combat, Ice Blocks deal damage AND give Block. Ice: Retain.</summary>
+/// <summary>
+/// 究极冰球 (3 cost, Exhaust): gain the Ice copy ability, exhaust every other card in your hand, then fill it with Ice
+/// Blocks (upgraded when this is). Ice: Retain, and for the rest of combat Ice Blocks deal damage AND give Block.
+/// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class SnowBowl() : KirbyCard(1, CardType.Power, CardRarity.Rare, TargetType.None)
+public sealed class SnowBowl() : KirbyCard(3, CardType.Skill, CardRarity.Rare, TargetType.None)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Ice];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<IceBlock>(IsUpgraded)];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<IcePower>(), HoverTipFactory.FromCard<IceBlock>(IsUpgraded)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Ice, upgraded: false, this);
+
         var hand = PileType.Hand.GetPile(Owner);
         foreach (var card in hand.Cards.Where(card => card != this).ToList())
             await CardCmd.Exhaust(ctx, card);
 
-        await PowerCmd.Apply<SnowBowlPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
-
         while (hand.Cards.Count < CardPile.MaxCardsInHand)
             await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<IceBlock>(Owner, IsUpgraded),
                 PileType.Hand, Owner);
+
+        if (SynergyActive)
+            await PowerCmd.Apply<SnowBowlPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
 }
 

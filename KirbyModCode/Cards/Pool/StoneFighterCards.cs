@@ -12,11 +12,13 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>无敌防御: gain 1(2) Buffer. Stone: Retain, also draw 1 card.</summary>
+/// <summary>无敌防御: gain 1(2) Buffer. Exhaust. Stone: Retain, also draw 1 card.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class InvincibleGuard() : KirbyCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Stone];
+
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new PowerVar<BufferPower>(1), new CardsVar(1)];
@@ -48,7 +50,7 @@ public sealed class StonePunch() : KirbyCard(1, CardType.Attack, CardRarity.Comm
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }
 
@@ -89,7 +91,7 @@ public sealed class VacuumStrike() : KirbyCard(1, CardType.Attack, CardRarity.Ra
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
-            .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+            .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_thrash").Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars.Repeat.UpgradeValueBy(2);

@@ -63,7 +63,7 @@ public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Commo
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_slash").Execute(ctx);
+            .WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
 
         var strikes = PileType.Hand.GetPile(Owner).Cards.Where(card => card.Tags.Contains(CardTag.Strike)).ToList();
         foreach (var strike in strikes)

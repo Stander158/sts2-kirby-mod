@@ -27,6 +27,7 @@ public enum CopyAbilityKind
     StarRod,
     Galaxia,
     Doctor,
+    Wheel,
 }
 
 /// <summary>How a given Inhale can succeed, decided from the target's intent when Inhale is played.</summary>
@@ -86,6 +87,7 @@ public static class CopyAbilities
         [CopyAbilityKind.StarRod] = [],
         [CopyAbilityKind.Galaxia] = [],
         [CopyAbilityKind.Doctor] = [typeof(PillThrow), typeof(MakeMedicine), typeof(Experiment)],
+        [CopyAbilityKind.Wheel] = [typeof(WheelDash), typeof(WheelCharge)],
     };
 
     /// <summary>The "gain copy ability X" card of each ability.</summary>
@@ -103,6 +105,7 @@ public static class CopyAbilities
         [CopyAbilityKind.StarRod] = typeof(StarRodAbility),
         [CopyAbilityKind.Galaxia] = typeof(GalaxiaAbility),
         [CopyAbilityKind.Doctor] = typeof(DoctorAbility),
+        [CopyAbilityKind.Wheel] = typeof(WheelieRider),
     };
 
     private static readonly Dictionary<CopyAbilityKind, Type> AbilityPowers = new()
@@ -119,6 +122,7 @@ public static class CopyAbilities
         [CopyAbilityKind.StarRod] = typeof(StarRodPower),
         [CopyAbilityKind.Galaxia] = typeof(GalaxiaPower),
         [CopyAbilityKind.Doctor] = typeof(DoctorPower),
+        [CopyAbilityKind.Wheel] = typeof(WheelPower),
     };
 
     public const int GalaxiaRawDamage = 30;
@@ -173,7 +177,7 @@ public static class CopyAbilities
         var unknown = intents.Any(i => i is UnknownIntent or HiddenIntent);
 
         if (intents.Any(i => i is EscapeIntent))
-            return (null, InhaleOutcome.Escape);
+            return (CopyAbilityKind.Wheel, InhaleOutcome.Escape);
 
         CopyAbilityKind? kind = maxRawDamage >= GalaxiaRawDamage ? CopyAbilityKind.Galaxia
             : maxHits >= StarRodHits ? CopyAbilityKind.StarRod
@@ -194,13 +198,43 @@ public static class CopyAbilities
         return (kind, outcome);
     }
 
-    /// <summary>HP lost to a single enemy attack that makes Kirby lose his abilities (12 with Copy Essence Deluxe).</summary>
+    private sealed class RoundDamage
+    {
+        public int Round = -1;
+        public int Total;
+    }
+
+    private static readonly ConditionalWeakTable<Player, RoundDamage> DamageThisRound = new();
+
+    /// <summary>
+    /// Adds damage Kirby took from enemies this round; true once the round's total reaches the threshold (the total
+    /// then starts over, so a further threshold's worth triggers again).
+    /// </summary>
+    public static bool AddRoundDamage(Player player, int damage)
+    {
+        var round = player.Creature.CombatState?.RoundNumber ?? 0;
+        var entry = DamageThisRound.GetOrCreateValue(player);
+        if (entry.Round != round)
+        {
+            entry.Round = round;
+            entry.Total = 0;
+        }
+
+        entry.Total += damage;
+        if (entry.Total < HeavyHitThreshold(player))
+            return false;
+
+        entry.Total = 0;
+        return true;
+    }
+
+    /// <summary>Damage within one round that makes Kirby lose his abilities (12 with Copy Essence Deluxe).</summary>
     public static int HeavyHitThreshold(Player player) =>
         player.GetRelic<CopyEssenceDeluxe>() != null ? CopyEssenceDeluxe.HeavyHit : 6;
 
     /// <summary>
-    /// A heavy hit: every held ability that can be lost to one is lost (its cards exhausted), or 1 Ability Conservation
-    /// is spent instead. The starter relic then returns Inhale.
+    /// Enough damage this round: every held ability that can be lost this way is lost (its cards exhausted), or 1
+    /// Ability Conservation is spent instead. The starter relic then returns Inhale.
     /// </summary>
     public static async Task OnHeavyHit(PlayerChoiceContext ctx, Player player)
     {
@@ -216,8 +250,14 @@ public static class CopyAbilities
 
         foreach (var power in losing)
             await KirbyMouth.LoseAbility(ctx, player, power);
+        await AfterAbilityLost(player);
+    }
+
+    /// <summary>The starter relic's "an ability was lost" effect (returns Inhale), after damage or a deliberate drop.</summary>
+    public static async Task AfterAbilityLost(Player player)
+    {
         foreach (var relic in player.Relics.OfType<CopyAbilityRelicBase>().ToList())
-            await relic.AfterAbilityLostToAttack();
+            await relic.AfterAbilityLost();
     }
 
     /// <summary>Kirby's current copy abilities: one, or several with Smash Bros. Kirby.</summary>
@@ -236,7 +276,7 @@ public static class CopyAbilities
     /// regained while held.
     /// </summary>
     public static async Task Gain(PlayerChoiceContext ctx, Player player, CopyAbilityKind kind, bool upgraded,
-        CardModel? source, PileType dropAbilityPile = PileType.Hand)
+        CardModel? source, PileType dropAbilityPile = PileType.Hand, bool keepOthers = false, bool allowEndTurn = true)
     {
         var kirby = player.Creature;
 
@@ -247,7 +287,7 @@ public static class CopyAbilities
             await PowerCmd.Decrement(super);
         }
 
-        if (!kirby.HasPower<SmashBrosPower>())
+        if (!keepOthers && !kirby.HasPower<SmashBrosPower>())
             await KirbyMouth.LoseCopyAbility(ctx, player);
 
         CopyAbilityPower? power = null;
@@ -255,7 +295,7 @@ public static class CopyAbilities
             power = await GainOnce(ctx, player, kind, upgraded, source, dropAbilityPile);
 
         // Last, and only once even when gained twice: Sleep ends the turn.
-        if (power is { EndsTurnOnGain: true })
+        if (allowEndTurn && power is { EndsTurnOnGain: true })
             PlayerCmd.EndTurn(player, canBackOut: false);
     }
 
@@ -297,25 +337,27 @@ public static class CopyAbilities
     }
 
     /// <summary>
-    /// Puts 1 card of <paramref name="kind" /> into hand, tagged so losing the ability exhausts it: a lowest-rarity
-    /// one, or an Uncommon-or-better one when the ability came from an upgraded card.
+    /// Puts 1 random card of <paramref name="kind" /> into hand (upgraded if the ability is), Ethereal and Exhaust except
+    /// a Burn. It is also tagged, so losing the ability exhausts it.
     /// </summary>
     private static async Task GrantAbilityCard(Player player, CopyAbilityKind kind, bool upgraded)
     {
-        var byRarity = AbilityCardTypes[kind]
-            .Select(type => (Type: type, ModelDb.GetById<CardModel>(ModelDb.GetId(type)).Rarity))
-            .ToList();
-        if (byRarity.Count == 0)
+        var candidates = AbilityCardTypes[kind];
+        if (candidates.Length == 0)
             return;
 
-        var better = byRarity.Where(e => e.Rarity is CardRarity.Uncommon or CardRarity.Rare).ToList();
-        var lowest = byRarity.Min(e => e.Rarity);
-        var candidates = (upgraded && better.Count > 0 ? better : byRarity.Where(e => e.Rarity == lowest))
-            .Select(e => e.Type)
-            .ToList();
+        var type = player.RunState.Rng.CombatCardGeneration.NextItem(candidates.ToList())!;
+        var card = await GrantCard(player, type, kind);
+        if (card == null)
+            return;
 
-        var type = player.RunState.Rng.CombatCardGeneration.NextItem(candidates)!;
-        await GrantCard(player, type, kind);
+        if (upgraded && card.IsUpgradable)
+            CardCmd.Upgrade(card);
+        if (card is not Burn)
+        {
+            card.AddKeyword(CardKeyword.Ethereal);
+            card.AddKeyword(CardKeyword.Exhaust);
+        }
     }
 
     /// <summary>Creates a card of <paramref name="type" /> in hand, tagged as granted by <paramref name="kind" />.</summary>
@@ -341,8 +383,6 @@ public static class CopyAbilities
                           ?? throw new InvalidOperationException("Copy ability cards are only created in combat.");
         var card = combatState.CreateCard(ModelDb.GetById<CardModel>(ModelDb.GetId(AbilityCards[kind])), player);
 
-        if (player.Creature.HasPower<GalaxyWishPower>())
-            card.RemoveKeyword(CardKeyword.Exhaust);
         return card;
     }
 

@@ -37,7 +37,7 @@ public sealed class MetaKnightRevenge() : KirbyCard(3, CardType.Attack, CardRari
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_attack_slash").Execute(ctx);
+            .WithHitFx("vfx/vfx_big_slash").Execute(ctx);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(12);

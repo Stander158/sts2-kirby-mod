@@ -30,7 +30,10 @@ public sealed class DoctorPower : CopyAbilityPower
 
         Flash();
         foreach (var enemy in Owner.CombatState.HittableEnemies.ToList())
+        {
+            VfxCmd.PlayOnCreatureCenter(enemy, "vfx/vfx_poison_impact");
             await PowerCmd.Apply<PoisonPower>(choiceContext, enemy, Poison, Owner, null);
+        }
     }
 
     // The game always uses modifiedCost (the return value is ignored), so other cards must get their cost back.

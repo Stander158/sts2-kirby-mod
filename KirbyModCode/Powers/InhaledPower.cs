@@ -54,11 +54,11 @@ public sealed class InhaledPower : InhaledPowerBase
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("devour_life_power");
 }
 
-/// <summary>被疯狂吸入 (Ultimate Inhale): dies at 30 HP or less.</summary>
+/// <summary>被疯狂吸入 (Hypernova Inhale): dies at 33 HP or less.</summary>
 [RegisterPower]
 public sealed class FrenziedInhaledPower : InhaledPowerBase
 {
-    public const int FrenziedThreshold = 30;
+    public const int FrenziedThreshold = 33;
 
     public override int Threshold => FrenziedThreshold;
 

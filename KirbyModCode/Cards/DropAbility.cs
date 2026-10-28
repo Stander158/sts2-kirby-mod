@@ -8,8 +8,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// 舍弃能力 (0-cost power, Retain): given with every copy ability. Drops the ability (exhausting its cards) and
-/// returns Inhale from the exhaust pile to hand. It counts as one of the ability's cards, so losing the ability any
+/// 舍弃能力 (0-cost power, Retain): given with every copy ability. Drops the ability (exhausting its cards); the
+/// starter relic returns Inhale. It counts as one of the ability's cards, so losing the ability any
 /// other way exhausts it too.
 /// </summary>
 [RegisterCard(typeof(TokenCardPool))]

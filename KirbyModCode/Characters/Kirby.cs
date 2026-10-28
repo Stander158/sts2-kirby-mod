@@ -24,6 +24,7 @@ public sealed class Kirby : ModCharacterTemplate<KirbyCardPool, KirbyRelicPool, 
             RestSiteAnimPath: KirbyTheme.Scenes + "kirby_rest.tscn"),
         Ui: new CharacterUiAssetSet(
             IconTexturePath: KirbyTheme.CharacterImages + "icon.png",
+            IconPath: KirbyTheme.Scenes + "kirby_icon.tscn",
             IconOutlineTexturePath: KirbyTheme.CharacterImages + "icon.png",
             CharacterSelectBgPath: KirbyTheme.Scenes + "kirby_select_bg.tscn",
             CharacterSelectIconPath: KirbyTheme.CharacterImages + "char_select.png",
