@@ -85,7 +85,7 @@
   "KIRBY_MOD_CARD_ICE_BLOCK_GUARD.description": "Gain {Block:diff()} [gold]Block[/gold].",
   "KIRBY_MOD_CARD_ICE_BREATH.selectionScreenPrompt": "Choose a card to [gold]Exhaust[/gold].",
   "KIRBY_MOD_CARD_GOOEY_INHALE.title": "No-Ability Inhale",
-  "KIRBY_MOD_CARD_GOOEY_INHALE.description": "Apply [gold]Inhaled[/gold] to an enemy.\nGain [gold]Inhaling[/gold]; its effect depends on the enemy's intent. Only gives [gold]Mouthful[/gold], never a Copy Ability in your mouth.",
+  "KIRBY_MOD_CARD_GOOEY_INHALE.description": "Apply [gold]Inhaled[/gold] to an enemy.\nGain [gold]Inhaling[/gold]; its effect depends on the enemy's intent. Only gives [gold]Mouthful[/gold].",
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.title": "Bubble Storage",
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.description": "[gold]Swallow[/gold] no longer empties your [gold]Mouthful[/gold].",
   "KIRBY_MOD_CARD_SUPER_ABILITY.title": "Super Ability",
