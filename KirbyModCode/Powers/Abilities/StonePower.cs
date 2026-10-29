@@ -20,9 +20,10 @@ public sealed class StonePower : CopyAbilityPower
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("buffer_power");
 
     public const int PlatingPerTurn = 2;
+    public const int BufferOnGain = 1;
 
     public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
-        Grant<BufferPower>(ctx, 1);
+        Grant<BufferPower>(ctx, BufferOnGain);
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {

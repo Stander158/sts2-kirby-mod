@@ -11,10 +11,12 @@ namespace KirbyMod.Powers;
 [RegisterPower]
 public sealed class FighterPower : CopyAbilityPower
 {
+    public const int Strength = 3;
+
     public override CopyAbilityKind Kind => CopyAbilityKind.Fighter;
 
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("strength_power");
 
     public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
-        Grant<StrengthPower>(ctx, 3);
+        Grant<StrengthPower>(ctx, Strength);
 }

@@ -22,6 +22,11 @@ internal static class KirbyArt
         [typeof(GalaxyWish)] = "galactic_nova",
         [typeof(UltimateInhale)] = "ultimate_inhale",
         [typeof(VoidCard)] = "void_card",
+        [typeof(VoidShooterCutter)] = "void_shooter_cutter",
+        [typeof(VoidLoudSong)] = "void_loud_song",
+        [typeof(VoidDeadlySun)] = "void_deadly_sun",
+        [typeof(VoidPleasantDream)] = "void_pleasant_dream",
+        [typeof(VoidDefeat)] = "void_defeat",
 
         // Official artwork picked from WiKirby (art-sources/wikirby/card_art_map.py, outside the repository).
         [typeof(SwordAbility)] = "wk_sword_ability",

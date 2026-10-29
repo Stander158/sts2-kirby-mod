@@ -132,10 +132,19 @@
   "KIRBY_MOD_POWER_WHEEL_POWER.title": "复制能力：车轮",
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.WHEEL.title": "复制能力入嘴：车轮",
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.WHEEL.description": "[gold]吞咽[/gold]时获得复制能力：车轮。",
-  "KIRBY_MOD_POWER_VOID_DOOM_POWER.title": "虚无",
-  "KIRBY_MOD_POWER_VOID_DOOM_POWER.description": "下回合开始时，你死亡。",
-  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "下回合开始时，你死亡。",
+  "KIRBY_MOD_POWER_VOID_DOOM_POWER.title": "󰁄󰁯󰁯󰁭",
+  "KIRBY_MOD_POWER_VOID_DOOM_POWER.description": "下回合开始时[gold]姝讳骸[/gold]。",
+  "KIRBY_MOD_POWER_VOID_DOOM_POWER.smartDescription": "下回合开始时[gold]姝讳骸[/gold]。",
   "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.title": "向银河许愿+",
   "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.description": "复制能力牌不再被消耗。",
-  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.smartDescription": "复制能力牌不再被消耗。"
+  "KIRBY_MOD_POWER_GALAXY_WISH_RECYCLE_POWER.smartDescription": "复制能力牌不再被消耗。",
+  "KIRBY_MOD_POWER_VOID_POWER.title": "󰁖󰁯󰁩󰁤",
+  "KIRBY_MOD_POWER_VOID_POWER.description": "？",
+  "KIRBY_MOD_POWER_VOID_POWER.smartDescription": "？",
+  "KIRBY_MOD_POWER_VOID_DEFEAT_POWER.title": "󰁖󰁯󰁩󰁤 󰁄󰁥󰁦󰁥󰁡󰁴",
+  "KIRBY_MOD_POWER_VOID_DEFEAT_POWER.description": "下回合开始时...的同时？",
+  "KIRBY_MOD_POWER_VOID_DEFEAT_POWER.smartDescription": "下回合开始时...的同时？",
+  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.title": "能力失去不能",
+  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.description": "这个能力不能丢掉！",
+  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.smartDescription": "这个能力不能丢掉！"
 }

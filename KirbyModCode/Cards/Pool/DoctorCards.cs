@@ -93,11 +93,14 @@ public sealed class MedicineWeak() : ModCardTemplate(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars[nameof(WeakPower)].UpgradeValueBy(1);
 }
 
-/// <summary>投掷药丸: an enemy takes 7(9) damage; you or an ally heals 3(4). Exhaust. Doctor: Retain, Replay 1.</summary>
+/// <summary>投掷药丸: an enemy takes 7(9) damage and 3(4) Poison; you or an ally heals 3(4). Exhaust. Doctor: Retain, Replay 1.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarity.Common)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7, ValueProp.Move), new HealVar(3)];
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DamageVar(7, ValueProp.Move), new PowerVar<PoisonPower>(3), new HealVar(3)];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
@@ -111,11 +114,14 @@ public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarit
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target)
             .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
+        if (target.IsAlive)
+            await PowerCmd.Apply<PoisonPower>(ctx, target, DynamicVars[nameof(PoisonPower)].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(2);
+        DynamicVars[nameof(PoisonPower)].UpgradeValueBy(1);
         DynamicVars.Heal.UpgradeValueBy(1);
     }
 }

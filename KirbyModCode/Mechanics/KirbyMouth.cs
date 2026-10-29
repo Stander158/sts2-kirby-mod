@@ -153,11 +153,31 @@ public static class KirbyMouth
         return cards.Count > 0;
     }
 
-    /// <summary>Drop Ability, Great Cave Offensive: lose the ability on purpose (the starter relic then returns Inhale).</summary>
-    public static async Task DropCopyAbility(PlayerChoiceContext ctx, Player player)
+    /// <summary>
+    /// Drop Ability, Great Cave Offensive: lose the ability on purpose (the starter relic then returns Inhale). Void
+    /// cannot be dropped: you get the do-nothing Ability Lock instead. Returns whether an ability was dropped.
+    /// </summary>
+    public static async Task<bool> DropCopyAbility(PlayerChoiceContext ctx, Player player)
     {
-        if (await LoseCopyAbility(ctx, player))
-            await CopyAbilities.AfterAbilityLost(player);
+        if (await BlockedByVoid(ctx, player))
+            return false;
+
+        if (!await LoseCopyAbility(ctx, player))
+            return false;
+        await CopyAbilities.AfterAbilityLost(player);
+        return true;
+    }
+
+    /// <summary>True (and Ability Lock applied) when <paramref name="player" /> holds Void, which cannot be given up.</summary>
+    public static async Task<bool> BlockedByVoid(PlayerChoiceContext ctx, Player player)
+    {
+        var kirby = player.Creature;
+        if (!kirby.HasPower<VoidPower>())
+            return false;
+
+        if (!kirby.HasPower<AbilityLockPower>())
+            await PowerCmd.Apply<AbilityLockPower>(ctx, kirby, 1, kirby, null);
+        return true;
     }
 
     /// <summary>Adds a <typeparamref name="TCard" /> to hand unless there is one; an <paramref name="upgraded" /> request upgrades the one there.</summary>
@@ -181,6 +201,14 @@ public static class KirbyMouth
     public static TCard CreateCard<TCard>(Player player, bool upgraded) where TCard : CardModel
     {
         var card = player.Creature.CombatState!.CreateCard<TCard>(player);
+        if (upgraded && card.IsUpgradable)
+            CardCmd.Upgrade(card);
+        return card;
+    }
+
+    public static CardModel CreateCard(Type type, Player player, bool upgraded)
+    {
+        var card = player.Creature.CombatState!.CreateCard(ModelDb.GetById<CardModel>(ModelDb.GetId(type)), player);
         if (upgraded && card.IsUpgradable)
             CardCmd.Upgrade(card);
         return card;

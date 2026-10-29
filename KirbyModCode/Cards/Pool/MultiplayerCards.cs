@@ -53,7 +53,7 @@ public sealed class AbilityOffering() : KirbyCard(1, CardType.Power, CardRarity.
     {
         var ally = cardPlay.Target!.Player;
         var held = CopyAbilities.Held(Owner).Select(power => (power.Kind, power.Upgraded)).ToList();
-        if (ally == null || held.Count == 0)
+        if (ally == null || held.Count == 0 || await KirbyMouth.BlockedByVoid(ctx, Owner))
             return;
 
         await KirbyMouth.LoseCopyAbility(ctx, Owner);

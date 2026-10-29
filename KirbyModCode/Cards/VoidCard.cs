@@ -12,9 +12,9 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// 虚无 (Void, Ancient frame, from Darv's Dusty Tome): 3(2) cost, Ethereal, Exhaust. Exhaust your hand, gain every copy
-/// ability at once (none replaces another, Sleep does not end the turn), gain 2 energy, and die at the start of your
-/// next turn.
+/// V-O-I-D (Ancient frame, from Darv's Dusty Tome): 3(2) cost, Ethereal, Exhaust; its text is garbled on purpose. Lose
+/// every copy ability and become Void (<see cref="VoidPower" />), gain 5 energy, discard your hand and add the five Void
+/// cards (upgraded with this). At the start of your next turn, Void's 60 hits land (<see cref="VoidDoomPower" />).
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 [RegisterDustyTomeCard(typeof(Kirby))]
@@ -24,20 +24,24 @@ public sealed class VoidCard() : ModCardTemplate(3, CardType.Skill, CardRarity.A
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(2)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(5)];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<VoidDoomPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [VoidMoveCard.TrueEffect(this), HoverTipFactory.FromPower<VoidPower>(), HoverTipFactory.FromPower<VoidDoomPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        foreach (var card in PileType.Hand.GetPile(Owner).Cards.Where(card => card != this).ToList())
-            await CardCmd.Exhaust(ctx, card);
-
-        foreach (var kind in CopyAbilities.All)
-            await CopyAbilities.Gain(ctx, Owner, kind, upgraded: false, this, keepOthers: true, allowEndTurn: false);
-
+        // Every ability goes, Smash Bros. Kirby or not, and Void takes their place.
+        await KirbyMouth.LoseCopyAbility(ctx, Owner);
+        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Void, upgraded: false, this);
         await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
-        await PowerCmd.Apply<VoidDoomPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
+
+        await CardCmd.Discard(ctx, PileType.Hand.GetPile(Owner).Cards.Where(card => card != this).ToList());
+        foreach (var type in VoidMoveCard.All)
+            await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard(type, Owner, IsUpgraded), PileType.Hand, Owner);
+
+        if (!Owner.Creature.HasPower<VoidDoomPower>())
+            await PowerCmd.Apply<VoidDoomPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
 
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);

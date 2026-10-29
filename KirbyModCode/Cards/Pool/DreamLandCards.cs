@@ -24,11 +24,8 @@ public sealed class MineBattle() : KirbyCard(2, CardType.Skill, CardRarity.Commo
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
-        if (!CopyAbilities.HasAny(Owner))
-            return;
-
-        await KirbyMouth.DropCopyAbility(ctx, Owner);
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
+        if (await KirbyMouth.DropCopyAbility(ctx, Owner))
+            await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(5);

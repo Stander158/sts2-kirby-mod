@@ -28,6 +28,9 @@ public enum CopyAbilityKind
     Galaxia,
     Doctor,
     Wheel,
+
+    /// <summary>Only from the V-O-I-D card; never random.</summary>
+    Void,
 }
 
 /// <summary>How a given Inhale can succeed, decided from the target's intent when Inhale is played.</summary>
@@ -57,7 +60,9 @@ public interface IAbilitySynergyCard
 
 public static class CopyAbilities
 {
-    public static readonly IReadOnlyList<CopyAbilityKind> All = Enum.GetValues<CopyAbilityKind>();
+    /// <summary>Every ability you can inhale or roll at random (all but Void).</summary>
+    public static readonly IReadOnlyList<CopyAbilityKind> All =
+        Enum.GetValues<CopyAbilityKind>().Where(kind => kind != CopyAbilityKind.Void).ToList();
 
     /// <summary>
     /// Cards an ability hands out when gained: 1 of its lowest-rarity ones, or from an upgraded ability card 1 of its
@@ -78,6 +83,7 @@ public static class CopyAbilities
         [CopyAbilityKind.Galaxia] = [],
         [CopyAbilityKind.Doctor] = [typeof(PillThrow), typeof(MakeMedicine), typeof(Experiment)],
         [CopyAbilityKind.Wheel] = [typeof(WheelDash), typeof(WheelCharge)],
+        [CopyAbilityKind.Void] = [],
     };
 
     /// <summary>The "gain copy ability X" card of each ability.</summary>
@@ -113,6 +119,7 @@ public static class CopyAbilities
         [CopyAbilityKind.Galaxia] = typeof(GalaxiaPower),
         [CopyAbilityKind.Doctor] = typeof(DoctorPower),
         [CopyAbilityKind.Wheel] = typeof(WheelPower),
+        [CopyAbilityKind.Void] = typeof(VoidPower),
     };
 
     public const int GalaxiaRawDamage = 30;
