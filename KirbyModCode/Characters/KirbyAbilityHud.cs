@@ -12,7 +12,7 @@ namespace KirbyMod.Characters;
 /// Kirby's current copy ability as a big badge with its name, at the lower right of the energy counter (one badge per
 /// ability with Smash Bros. Kirby). Kirby's head shows while he has none; other characters (given an ability by
 /// Ability Offering) only show badges while they hold one. New badges flip in, and hovering a real one shows the
-/// ability's tip above it to the left. Badges can also be shown for abilities that are not held (<see cref="ShowPhantom" />,
+/// ability's tip above it to the left, growing upward so a long tip stays on screen. Badges can also be shown for abilities that are not held (<see cref="ShowPhantom" />,
 /// V-O-I-D's display). It is a child of the energy counter, so it slides in and out with it. The abilities themselves
 /// are hidden from the status bar (<see cref="CopyAbilityPower" />).
 /// </summary>
@@ -23,7 +23,9 @@ internal static class KirbyAbilityHud
     private const float BadgeSize = 96f;
     private const float BadgeGap = 4f;
     private static readonly Vector2 Origin = new(75f, 75f);
-    private static readonly Vector2 TipOffset = new(-70f, -200f);
+    private const float TipLeft = -70f;
+    private const float TipGap = 12f;
+    private const float ScreenMargin = 10f;
 
     /// <summary>Badges shown after the held abilities without the abilities being held.</summary>
     private static readonly ConditionalWeakTable<Player, List<CopyAbilityKind>> Phantoms = new();
@@ -123,9 +125,8 @@ internal static class KirbyAbilityHud
         {
             panel.MouseEntered += () =>
             {
-                var tips = NHoverTipSet.CreateAndShow(panel, HoverTipFactory.FromPower(power));
-                if (tips != null)
-                    tips.GlobalPosition = panel.GlobalPosition + TipOffset;
+                if (NHoverTipSet.CreateAndShow(panel, HoverTipFactory.FromPower(power)) is { } tips)
+                    PlaceAbove(tips, panel);
             };
             panel.MouseExited += () => NHoverTipSet.Remove(panel);
         }
@@ -142,6 +143,33 @@ internal static class KirbyAbilityHud
         }
 
         return panel;
+    }
+
+    /// <summary>
+    /// Puts the tip's bottom just above the badge, so it grows upward however long it is (but not past the top of the
+    /// screen). The tip's text box is only filled in and laid out after it appears, so it is placed again every frame
+    /// until it closes.
+    /// </summary>
+    private static void PlaceAbove(Control tips, Control panel)
+    {
+        var tree = panel.GetTree();
+        void Place()
+        {
+            if (!GodotObject.IsInstanceValid(tips) || !GodotObject.IsInstanceValid(panel))
+            {
+                tree.ProcessFrame -= Place;
+                return;
+            }
+            if (!tips.IsInsideTree())
+                return;
+
+            var height = tips.GetNodeOrNull<Control>("textHoverTipContainer")?.Size.Y ?? 0f;
+            var y = Math.Max(ScreenMargin, panel.GlobalPosition.Y - height - TipGap);
+            tips.GlobalPosition = new Vector2(panel.GlobalPosition.X + TipLeft, y);
+        }
+
+        Place();
+        tree.ProcessFrame += Place;
     }
 
     /// <summary>"复制能力：剑" / "Copy Ability: Sword" -> "剑" / "Sword".</summary>
