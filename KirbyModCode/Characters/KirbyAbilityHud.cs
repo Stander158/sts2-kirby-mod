@@ -8,76 +8,137 @@ using MegaCrit.Sts2.Core.Nodes.HoverTips;
 namespace KirbyMod.Characters;
 
 /// <summary>
-/// Badges for Kirby's current copy abilities, to the right of the energy counter (several with Smash Bros. Kirby or
-/// Void). A badge pops in when its ability is gained; hovering one shows the ability's tip. It is a child of the energy
-/// counter, so it slides in and out with it.
+/// Kirby's current copy ability as a big badge with its name, at the lower right of the energy counter (one badge per
+/// ability with Smash Bros. Kirby or Void). Kirby's head shows while he has none; other characters (given an ability
+/// by Ability Offering) only show badges while they hold one. A badge flips in when the abilities change, and
+/// hovering one shows the ability's tip above it to the left. It is a child of the energy counter, so it slides in
+/// and out with it. The abilities themselves are hidden from the status bar (<see cref="CopyAbilityPower" />).
 /// </summary>
 internal static class KirbyAbilityHud
 {
     private const string Badges = "res://KirbyMod/images/abilities/";
-    private const float BadgeSize = 64f;
-    private static readonly Vector2 Offset = new(122f, 30f);
+    private const string KirbyHead = "res://KirbyMod/images/character/icon.png";
+    private const float BadgeSize = 96f;
+    private const float BadgeGap = 4f;
+    private static readonly Vector2 Origin = new(75f, 75f);
+    private static readonly Vector2 TipOffset = new(-70f, -200f);
 
     public static void Attach(Control energyCounter, Player player)
     {
-        var row = new HBoxContainer { Name = "KirbyAbilityHud", Position = Offset, MouseFilter = Control.MouseFilterEnum.Ignore };
-        row.AddThemeConstantOverride("separation", 4);
+        var root = new Control { Name = "KirbyAbilityHud", MouseFilter = Control.MouseFilterEnum.Ignore };
+        var isKirby = player.Character is Kirby;
 
-        List<CopyAbilityPower> shown = [];
+        List<CopyAbilityPower>? shown = null;
         void Update()
         {
-            var held = player.Creature.CombatState == null ? [] : CopyAbilities.Held(player);
-            if (held.SequenceEqual(shown))
+            var held = player.Creature.CombatState == null ? [] : CopyAbilities.Held(player).ToList();
+            if (shown != null && held.SequenceEqual(shown))
                 return;
 
-            var gained = held.Except(shown).ToHashSet();
-            shown = held.ToList();
-            foreach (var child in row.GetChildren())
+            var animate = shown != null;
+            shown = held;
+            foreach (var child in root.GetChildren())
                 child.QueueFree();
-            foreach (var power in shown)
-                row.AddChild(Badge(power, gained.Contains(power)));
+
+            if (held.Count == 0)
+            {
+                if (isKirby)
+                    root.AddChild(Badge(Load(KirbyHead), null, null, 0, animate));
+                return;
+            }
+
+            for (var i = 0; i < held.Count; i++)
+                root.AddChild(Badge(BadgeTexture(held[i]), ShortName(held[i]), held[i], i, animate));
         }
 
-        row.TreeEntered += () => row.GetTree().ProcessFrame += Update;
-        row.TreeExiting += () => row.GetTree().ProcessFrame -= Update;
-        energyCounter.AddChild(row);
+        root.TreeEntered += () => root.GetTree().ProcessFrame += Update;
+        root.TreeExiting += () => root.GetTree().ProcessFrame -= Update;
+        energyCounter.AddChild(root);
     }
 
-    private static TextureRect Badge(CopyAbilityPower power, bool pop)
+    private static Control Badge(Texture2D? texture, string? name, CopyAbilityPower? power, int index, bool animate)
     {
-        var badge = new TextureRect
+        var panel = new Control
         {
-            Texture = BadgeTexture(power),
-            CustomMinimumSize = new Vector2(BadgeSize, BadgeSize),
+            Size = new Vector2(BadgeSize, BadgeSize),
+            Position = Origin + new Vector2(index * (BadgeSize + BadgeGap), 0f),
             PivotOffset = new Vector2(BadgeSize, BadgeSize) / 2,
+            MouseFilter = power == null ? Control.MouseFilterEnum.Ignore : Control.MouseFilterEnum.Stop,
+        };
+
+        var icon = new TextureRect
+        {
+            Texture = texture,
             ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize,
             StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered,
-            MouseFilter = Control.MouseFilterEnum.Stop,
+            MouseFilter = Control.MouseFilterEnum.Ignore,
         };
-        badge.MouseEntered += () => NHoverTipSet.CreateAndShow(badge, HoverTipFactory.FromPower(power));
-        badge.MouseExited += () => NHoverTipSet.Remove(badge);
+        icon.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+        panel.AddChild(icon);
 
-        if (pop)
+        if (name != null)
         {
-            badge.Scale = Vector2.Zero;
-            badge.TreeEntered += () =>
+            var label = new Label
             {
-                var tween = badge.CreateTween();
-                tween.TweenProperty(badge, "scale", Vector2.One * 1.25f, 0.18).SetEase(Tween.EaseType.Out);
-                tween.TweenProperty(badge, "scale", Vector2.One, 0.12).SetEase(Tween.EaseType.In);
+                Text = name,
+                Position = new Vector2(0f, 16f),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                MouseFilter = Control.MouseFilterEnum.Ignore,
+                LabelSettings = new LabelSettings
+                {
+                    FontSize = 28,
+                    FontColor = new Color("f6f6f6"),
+                    OutlineSize = 12,
+                    OutlineColor = new Color("eb7295"),
+                },
+            };
+            label.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+            panel.AddChild(label);
+        }
+
+        if (power != null)
+        {
+            panel.MouseEntered += () =>
+            {
+                var tips = NHoverTipSet.CreateAndShow(panel, HoverTipFactory.FromPower(power));
+                if (tips != null)
+                    tips.GlobalPosition = panel.GlobalPosition + TipOffset;
+            };
+            panel.MouseExited += () => NHoverTipSet.Remove(panel);
+        }
+
+        if (animate)
+        {
+            panel.Scale = Vector2.Zero;
+            panel.TreeEntered += () =>
+            {
+                var tween = panel.CreateTween();
+                tween.TweenProperty(panel, "scale", Vector2.One * 1.2f, 0.25).SetEase(Tween.EaseType.InOut);
+                tween.TweenProperty(panel, "scale", Vector2.One, 0.06).SetEase(Tween.EaseType.In);
             };
         }
 
-        return badge;
+        return panel;
+    }
+
+    /// <summary>"复制能力：剑" / "Copy Ability: Sword" -> "剑" / "Sword".</summary>
+    private static string ShortName(CopyAbilityPower power)
+    {
+        var title = power.Title.GetFormattedText();
+        var cut = Math.Max(title.LastIndexOf('：'), title.LastIndexOf(':'));
+        return cut >= 0 ? title[(cut + 1)..].Trim() : title;
     }
 
     /// <summary>The ability's badge, or its power icon when the badges are not there (public build).</summary>
     private static Texture2D? BadgeTexture(CopyAbilityPower power)
     {
         var badge = Badges + SnakeCase(power.Kind.ToString()) + ".png";
-        var path = ResourceLoader.Exists(badge) ? badge : power.AssetProfile.BigIconPath ?? power.AssetProfile.IconPath;
-        return path != null && ResourceLoader.Exists(path) ? ResourceLoader.Load<Texture2D>(path) : null;
+        return Load(ResourceLoader.Exists(badge) ? badge : power.AssetProfile.BigIconPath ?? power.AssetProfile.IconPath);
     }
+
+    private static Texture2D? Load(string? path) =>
+        path != null && ResourceLoader.Exists(path) ? ResourceLoader.Load<Texture2D>(path) : null;
 
     private static string SnakeCase(string name) =>
         string.Concat(name.Select((c, i) => i > 0 && char.IsUpper(c) ? "_" + char.ToLowerInvariant(c) : char.ToLowerInvariant(c).ToString()));

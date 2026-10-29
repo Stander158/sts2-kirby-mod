@@ -56,6 +56,9 @@ public abstract class CopyAbilityPower : ModPowerTemplate
     /// <summary>Whether a heavy hit makes Kirby lose this ability (Star Rod: no).</summary>
     public virtual bool LostToHeavyHits => true;
 
+    // Shown as a badge next to the energy counter instead (KirbyAbilityHud).
+    protected override bool IsVisibleInternal => false;
+
     public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
         DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
     {

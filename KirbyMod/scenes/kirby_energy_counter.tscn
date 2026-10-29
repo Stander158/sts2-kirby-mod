@@ -43,7 +43,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Star" type="TextureRect" parent="Layers/RotationLayers"]
+[node name="Star" type="TextureRect" parent="Layers"]
 material = ExtResource("2_dark")
 layout_mode = 1
 anchors_preset = 15
