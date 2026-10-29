@@ -312,3 +312,53 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
   - 致命太阳 Deadly Sun（技能）：获得 3(4) 能量，抽牌直到手牌满。
   - 美梦 Pleasant Dream（技能）：使一名敌人晕眩（升级：所有敌人），画面震动。
   - 虚无败北 Void Defeat（能力）：下回合虚无的 60 下中，每一下也让所有敌人直接失去 2 点生命（不受力量、易伤影响）。
+- 冰块的「攻击 / 防御」二选一卡也显示冰块卡图。英文说明修正单复数（霜冻、梦之泉、超级能力）。
+
+### 改版（v1.9，2026-10-29）
+
+**卡比专属药水**（卡比的药水池，只有卡比能获得；商店价格按稀有度：普通 50、稀有 100）
+| 稀有度 | 名字 | 效果 |
+|---|---|---|
+| 普通 | 星星药水 | 获得 20 层满嘴，将一张吐星星放入手牌 |
+| 普通 | 复制能力药水 | 从 3 张随机复制能力牌中选 1 张放入手牌，本回合 0 费（重返梦幻岛削弱前的效果） |
+| 稀有 | 虚无精华 | 将一张 V-O-I-D 放入手牌 |
+
+- 重返梦幻岛削弱：选中的复制能力牌改为洗入抽牌堆（不再进手牌、不再 0 费）。
+
+## 实现备注（待反编译确认）
+
+- 吸入免伤：在伤害计算阶段（`ModifyDamageCap` / `ModifyDamage*`）把来自被吸入敌人的第一下改成 0，记录修正后的伤害值作为满嘴。
+- 遗物：`AfterDamageReceived`，判断受击者是自己且实际失去生命 > 0、来源是攻击。
+- 被吸入秒杀：敌方回合 / 行动前检查生命。
+- 读意图：`MonsterModel.NextMove` 的意图列表（SingleAttackIntent / MultiAttackIntent / DefendIntent / BuffIntent / DebuffIntent / StatusIntent / ...）。
+- 拦截状态牌：可能需要 Harmony patch 加入牌堆的流程。
+- 冰块：先选敌人，再弹出"攻击 / 防御"二选一。
+- 复制能力 power 都继承 `CopyAbilityPower`；能力给的牌实现 `ICopyAbilityCard`；有能力加成的牌实现 `IAbilitySynergyCard`（回合结束前由能力 power 给单回合保留）。
+- **临时（第四阶段前）**：卡比卡池还没覆盖齐 攻击/技能/能力 × 普通/罕见/稀有 时，卡牌奖励、商店、变化等"从角色卡池随机拿牌"的效果会额外混入铁甲战士已解锁的牌（`KirbyCardPool.FilterThroughEpochs`）。否则游戏会在生成奖励时报错卡死（例：涅奥的沉重石板）。卡池凑齐后自动停用。
+
+## 开发阶段
+
+0. 环境：.NET 9 SDK、MegaDot 4.5.1、ilspycmd；反编译 sts2.dll / RitsuLib / Hornet 到 `D:\StS2Modding\decompiled`。
+1. 骨架：角色、三个池、打击 / 防御、占位图、中英本地化。验收：选角界面出现卡比，能开局打一场。
+2. 核心机制：吸入、4 个状态、吐星星 / 吞咽、起始遗物。
+3. 6 种复制能力及其衍生牌。
+4. 卡池（每批约 10 张）、遗物、药水。
+5. 美术：序列帧动画（参考 Hornet 的 Sprite2D 做法）、卡图、图标、能量球、选角背景。
+6. 英文本地化、平衡、发布。
+
+## 美术来源
+
+- 人物图（战斗形象、选角立绘、顶栏图标、地图标记、能量球星星）取自 KindAiden 的 mod "CustomCharacterKirby" v0.6.2（BaseLib 版，2026-06），从它的 pck 里解出 WebP 再转成 PNG，放在 `KirbyMod/images/character/`。
+- **仅限自己玩。** 发布到 Workshop / Nexus 之前必须先取得 KindAiden 的许可（而且这些图看起来是任天堂素材，本身就有版权风险），否则换成自己画的图。
+- 场景（`KirbyMod/scenes/`）是自己写的：静态精灵图，没有攻击/受击动画。能量球场景引用了游戏自带的材质和字体，所以 `project.godot` 里关闭了导出时转二进制。
+- 卡图 26 张、状态图标 6 个、遗物图标 1 个也取自同一个 mod（`KirbyMod/images/{cards,powers,relics}`），对应关系集中在 `KirbyModCode/Characters/KirbyArt.cs`。它的打击、防御、劈斩、天空能量剑、跳跃本身就是作者的占位图，没有用。巨大锋翼鸟指的是 Dynablade（大鸟），那个 mod 里没有对应的图，暂用占位图。
+- 2026-10-27 卡图调整：原图四周有透明边的 6 张（古伊/无能力吸入、梦之泉 / 星之杖、能力保护罩、星之齿轮、大乱斗卡比、向银河许愿）裁掉透明边并放大铺满 1000×760 卡图框；原图备份在 `D:\StS2Modding\backups\card-images-2026-10-27`。超新星吸入是远古卡，游戏把远古卡图拉伸到整张卡（598×842 的竖框，`scenes/cards/card.tscn` 的 AncientPortrait），所以改成 1196×1684 的竖图，卡比放在上半部分。波动拳原来用的是大炮卡比（crackler），不对，改回占位图，等找到格斗家发波的图再换。
+- 还没替换的：打击 / 防御 / 劈斩等十几张卡图（RitsuLib 默认占位图）、其余状态图标（借用原版）、多人模式手势、选角背景（2026-10-27 起：粉色径向渐变 + 原 mod 的 hover 大图，`scenes/kirby_select_bg.tscn`）。
+
+- **2026-10-27 起公开版与本地版分开**：借来的图全部放在仓库外的 `D:\StS2Modding\KirbyArt-private\images\`（不进 git）。仓库里只有自己画的占位图 `art/public/images/`（人物 / 能量星星 / 选角图标）和预览图 `art/preview/preview.png`。`KirbyMod/images/` 是生成目录：发布时 `.csproj` 的 AssembleArt 先拷占位图，再用私有美术覆盖（`Directory.Build.props` 的 `KirbyPrivateArtDir`）。所以本地打包仍是完整美术；从 GitHub 克隆、或用 `-p:KirbyPrivateArtDir=` 打包时只有占位图，卡图 / 状态 / 遗物图在运行时找不到就回落到 RitsuLib 占位图和原版图标（`KirbyArt` 里用 `ResourceLoader.Exists` 判断）。
+
+## 测试约定
+
+- 测试用空存档位，不用和朋友联机的那个。
+- 和朋友联机前，在 mod 列表里关掉 KirbyMod。
+- 存档备份：`D:\StS2Modding\backups\saves-2026-10-26`。

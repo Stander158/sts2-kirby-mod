@@ -118,6 +118,11 @@ internal static class KirbyArt
         $"res://images/atlases/relic_outline_atlas.sprites/{name}.tres",
         $"res://images/relics/{name}.png");
 
+    public static PotionAssetProfile Potion(string name) =>
+        Exists($"{Images}potions/{name}.png")
+            ? new($"{Images}potions/{name}.png", $"{Images}potions/{name}_outline.png")
+            : PotionAssetProfile.Empty;
+
     public static RelicAssetProfile Relic(string name) =>
         Exists($"{Images}relics/{name}.png")
             ? new($"{Images}relics/{name}.png", $"{Images}relics/{name}_outline.png", $"{Images}relics/big/{name}.png")

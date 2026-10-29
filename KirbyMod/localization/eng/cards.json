@@ -60,7 +60,7 @@
   "KIRBY_MOD_CARD_ULTIMATE_FRUIT.title": "Ultimate Fruit",
   "KIRBY_MOD_CARD_ULTIMATE_FRUIT.description": "This combat, the first attack an [gold]Inhaled[/gold] enemy makes against you deals 0 (you still gain that much [gold]Mouthful[/gold]).",
   "KIRBY_MOD_CARD_RETURN_TO_DREAM_LAND.title": "Return to Dream Land",
-  "KIRBY_MOD_CARD_RETURN_TO_DREAM_LAND.description": "Choose 1 of 3 random {IfUpgraded:show:upgraded |}Copy Ability cards and put it into your [gold]Hand[/gold]. It costs 0 this turn.",
+  "KIRBY_MOD_CARD_RETURN_TO_DREAM_LAND.description": "Choose 1 of 3 random {IfUpgraded:show:upgraded |}Copy Ability cards and shuffle it into your [gold]Draw Pile[/gold].",
   "KIRBY_MOD_CARD_META_KNIGHT_AID.title": "Helping Hand",
   "KIRBY_MOD_CARD_META_KNIGHT_AID.description": "You or an ally gains {VigorPower:diff()} [gold]Vigor[/gold].",
   "KIRBY_MOD_CARD_META_KNIGHT_REVENGE.title": "Meta Knight's Revenge",

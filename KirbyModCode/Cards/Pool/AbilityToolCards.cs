@@ -3,6 +3,7 @@ using KirbyMod.Mechanics;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
@@ -87,7 +88,7 @@ public sealed class UltimateFruit() : KirbyCard(2, CardType.Power, CardRarity.Un
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>重返梦幻岛: choose 1 of 3 random copy ability cards (upgraded: upgraded ones) to add to hand; it costs 0 this turn. Exhaust.</summary>
+/// <summary>重返梦幻岛: choose 1 of 3 random copy ability cards (upgraded: upgraded ones) and shuffle it into your draw pile. Exhaust.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class ReturnToDreamLand() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -97,25 +98,28 @@ public sealed class ReturnToDreamLand() : KirbyCard(1, CardType.Skill, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        var rng = Owner.RunState.Rng.CombatCardGeneration;
+        var choice = await ChooseAbilityCard(ctx, Owner, IsUpgraded);
+        if (choice != null)
+            await CardPileCmd.AddGeneratedCardToCombat(choice, PileType.Draw, Owner, CardPilePosition.Random);
+    }
+
+    /// <summary>Choose 1 of 3 random copy ability cards (all different, upgraded if asked). Also the Copy Ability Potion.</summary>
+    public static async Task<CardModel?> ChooseAbilityCard(PlayerChoiceContext ctx, Player owner, bool upgraded)
+    {
+        var rng = owner.RunState.Rng.CombatCardGeneration;
         var pool = CopyAbilities.All.ToList();
         var options = new List<CardModel>();
         while (options.Count < Choices && pool.Count > 0)
         {
             var kind = rng.NextItem(pool);
             pool.Remove(kind);
-            var card = CopyAbilities.CreateAbilityCard(Owner, kind);
-            if (IsUpgraded && card.IsUpgradable)
+            var card = CopyAbilities.CreateAbilityCard(owner, kind);
+            if (upgraded && card.IsUpgradable)
                 CardCmd.Upgrade(card);
             options.Add(card);
         }
 
-        var choice = await CardSelectCmd.FromChooseACardScreen(ctx, options, Owner);
-        if (choice != null)
-        {
-            await CardPileCmd.AddGeneratedCardToCombat(choice, PileType.Hand, Owner);
-            choice.SetToFreeThisTurn();
-        }
+        return await CardSelectCmd.FromChooseACardScreen(ctx, options, owner);
     }
 
     // Upgrade only offers upgraded cards (see OnPlay).

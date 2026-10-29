@@ -1,0 +1,8 @@
+{
+  "KIRBY_MOD_POTION_KIRBY_STAR_POTION.title": "星星药水",
+  "KIRBY_MOD_POTION_KIRBY_STAR_POTION.description": "获得{Mouthful}层[gold]满嘴[/gold]，将一张[gold]吐星星[/gold]放入你的[gold]手牌[/gold]。",
+  "KIRBY_MOD_POTION_COPY_ABILITY_POTION.title": "复制能力药水",
+  "KIRBY_MOD_POTION_COPY_ABILITY_POTION.description": "从3张随机的复制能力牌中选择1张放入你的[gold]手牌[/gold]。本回合它耗能为0。",
+  "KIRBY_MOD_POTION_VOID_ESSENCE.title": "虚无精华",
+  "KIRBY_MOD_POTION_VOID_ESSENCE.description": "将一张[gold]V-O-I-D[/gold]放入你的[gold]手牌[/gold]。"
+}

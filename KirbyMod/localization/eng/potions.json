@@ -1,0 +1,8 @@
+{
+  "KIRBY_MOD_POTION_KIRBY_STAR_POTION.title": "Star Potion",
+  "KIRBY_MOD_POTION_KIRBY_STAR_POTION.description": "Gain {Mouthful} [gold]Mouthful[/gold] and put a [gold]Star Spit[/gold] into your [gold]Hand[/gold].",
+  "KIRBY_MOD_POTION_COPY_ABILITY_POTION.title": "Copy Ability Potion",
+  "KIRBY_MOD_POTION_COPY_ABILITY_POTION.description": "Choose 1 of 3 random Copy Ability cards and put it into your [gold]Hand[/gold]. It costs 0 this turn.",
+  "KIRBY_MOD_POTION_VOID_ESSENCE.title": "Void Essence",
+  "KIRBY_MOD_POTION_VOID_ESSENCE.description": "Put a [gold]V-O-I-D[/gold] into your [gold]Hand[/gold]."
+}
