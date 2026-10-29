@@ -136,7 +136,7 @@
   "KIRBY_MOD_CARD_DRAGON_STORM.title": "究极火龙",
   "KIRBY_MOD_CARD_DRAGON_STORM.description": "获得复制能力：[gold]火[/gold]。然后你每有一张[gold]灼伤[/gold]，造成{ExtraDamage:diff()}点伤害。\n[gold]火[/gold]：[gold]保留[/gold]。打出后，将[gold]弃牌堆[/gold]中的[gold]灼伤[/gold]放入[gold]手牌[/gold]，直到手牌满。",
   "KIRBY_MOD_CARD_SNOW_BOWL.title": "究极冰球",
-  "KIRBY_MOD_CARD_SNOW_BOWL.description": "[gold]消耗[/gold]你所有其他手牌，每消耗一张，将一张{IfUpgraded:show:[gold]冰块+[/gold]|[gold]冰块[/gold]}放入你的[gold]手牌[/gold]。然后获得复制能力：[gold]冰[/gold]。\n[gold]冰[/gold]：[gold]保留[/gold]，本场战斗中，你的[gold]冰块[/gold]同时造成伤害并获得格挡。",
+  "KIRBY_MOD_CARD_SNOW_BOWL.description": "[gold]消耗[/gold]你所有其他手牌，每消耗一张，将一张{IfUpgraded:show:[gold]冰块+[/gold]|[gold]冰块[/gold]}放入你的[gold]手牌[/gold]。\n[gold]冰[/gold]：[gold]保留[/gold]，本场战斗中，你的[gold]冰块[/gold]同时造成伤害并获得格挡。\n获得复制能力：[gold]冰[/gold]。",
   "KIRBY_MOD_CARD_CURLING_STONE.title": "冰壶",
   "KIRBY_MOD_CARD_CURLING_STONE.description": "你或一名队友失去所有[gold]格挡[/gold]，每失去{BlockPerBuffer:diff()}点获得1层[gold]缓冲[/gold]。[gold]消耗[/gold]。\n[gold]石头[/gold]：[gold]保留[/gold]，不再被消耗。",
   "KIRBY_MOD_CARD_PINK_DEMON.title": "粉红恶魔",
