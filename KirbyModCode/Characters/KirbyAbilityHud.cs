@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Godot;
 using KirbyMod.Mechanics;
 using KirbyMod.Powers;
@@ -9,10 +10,11 @@ namespace KirbyMod.Characters;
 
 /// <summary>
 /// Kirby's current copy ability as a big badge with its name, at the lower right of the energy counter (one badge per
-/// ability with Smash Bros. Kirby or Void). Kirby's head shows while he has none; other characters (given an ability
-/// by Ability Offering) only show badges while they hold one. A badge flips in when the abilities change, and
-/// hovering one shows the ability's tip above it to the left. It is a child of the energy counter, so it slides in
-/// and out with it. The abilities themselves are hidden from the status bar (<see cref="CopyAbilityPower" />).
+/// ability with Smash Bros. Kirby). Kirby's head shows while he has none; other characters (given an ability by
+/// Ability Offering) only show badges while they hold one. New badges flip in, and hovering a real one shows the
+/// ability's tip above it to the left. Badges can also be shown for abilities that are not held (<see cref="ShowPhantom" />,
+/// V-O-I-D's display). It is a child of the energy counter, so it slides in and out with it. The abilities themselves
+/// are hidden from the status bar (<see cref="CopyAbilityPower" />).
 /// </summary>
 internal static class KirbyAbilityHud
 {
@@ -23,32 +25,52 @@ internal static class KirbyAbilityHud
     private static readonly Vector2 Origin = new(75f, 75f);
     private static readonly Vector2 TipOffset = new(-70f, -200f);
 
+    /// <summary>Badges shown after the held abilities without the abilities being held.</summary>
+    private static readonly ConditionalWeakTable<Player, List<CopyAbilityKind>> Phantoms = new();
+
+    public static void ShowPhantom(Player player, CopyAbilityKind kind) => Phantoms.GetOrCreateValue(player).Add(kind);
+
+    public static void ClearPhantoms(Player player) => Phantoms.GetOrCreateValue(player).Clear();
+
+    private sealed record Entry(CopyAbilityKind Kind, CopyAbilityPower? Held);
+
     public static void Attach(Control energyCounter, Player player)
     {
         var root = new Control { Name = "KirbyAbilityHud", MouseFilter = Control.MouseFilterEnum.Ignore };
         var isKirby = player.Character is Kirby;
 
-        List<CopyAbilityPower>? shown = null;
+        List<Entry>? shown = null;
         void Update()
         {
-            var held = player.Creature.CombatState == null ? [] : CopyAbilities.Held(player).ToList();
-            if (shown != null && held.SequenceEqual(shown))
+            List<Entry> entries = player.Creature.CombatState == null
+                ? []
+                :
+                [
+                    .. CopyAbilities.Held(player).Select(power => new Entry(power.Kind, power)),
+                    .. Phantoms.GetOrCreateValue(player).Select(kind => new Entry(kind, null)),
+                ];
+            if (shown != null && entries.SequenceEqual(shown))
                 return;
 
-            var animate = shown != null;
-            shown = held;
+            var before = shown;
+            shown = entries;
             foreach (var child in root.GetChildren())
                 child.QueueFree();
 
-            if (held.Count == 0)
+            if (entries.Count == 0)
             {
                 if (isKirby)
-                    root.AddChild(Badge(Load(KirbyHead), null, null, 0, animate));
+                    root.AddChild(Badge(Load(KirbyHead), null, null, 0, before != null));
                 return;
             }
 
-            for (var i = 0; i < held.Count; i++)
-                root.AddChild(Badge(BadgeTexture(held[i]), ShortName(held[i]), held[i], i, animate));
+            for (var i = 0; i < entries.Count; i++)
+            {
+                var entry = entries[i];
+                var model = entry.Held ?? (CopyAbilityPower)CopyAbilities.CanonicalPower(entry.Kind);
+                var isNew = before != null && !before.Contains(entry);
+                root.AddChild(Badge(BadgeTexture(model), ShortName(model), entry.Held, i, isNew));
+            }
         }
 
         root.TreeEntered += () => root.GetTree().ProcessFrame += Update;

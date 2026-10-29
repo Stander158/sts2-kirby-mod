@@ -3,11 +3,10 @@ using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.CardPools;
+using MegaCrit.Sts2.Core.Nodes;
+using MegaCrit.Sts2.Core.Nodes.Vfx.Utilities;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
@@ -15,8 +14,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// The five cards V-O-I-D puts into your hand: colorless, Ancient frame, 1 cost, with garbled names and only a hint of
-/// what they do. Named after Void Termina's moves.
+/// The five cards V-O-I-D puts into your hand (made Ethereal and Exhaust there): colorless, Ancient frame, 1 cost, with
+/// names of block characters and only a hint of what they do. Named after Void Termina's moves.
 /// </summary>
 public abstract class VoidMoveCard(CardType type, TargetType target)
     : ModCardTemplate(1, type, CardRarity.Ancient, target)
@@ -25,12 +24,6 @@ public abstract class VoidMoveCard(CardType type, TargetType target)
         [typeof(VoidShooterCutter), typeof(VoidLoudSong), typeof(VoidDeadlySun), typeof(VoidPleasantDream), typeof(VoidDefeat)];
 
     public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
-
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [TrueEffect(this)];
-
-    /// <summary>What the card really does, in a tip written in Zalgo text (<c>trueTitle</c> / <c>trueDescription</c>).</summary>
-    public static IHoverTip TrueEffect(CardModel card) =>
-        new HoverTip(new LocString("cards", card.Id.Entry + ".trueTitle"), new LocString("cards", card.Id.Entry + ".trueDescription"));
 }
 
 /// <summary>Shooter Cutter: 1 damage to a random enemy 9(11) times.</summary>
@@ -63,7 +56,7 @@ public sealed class VoidLoudSong() : VoidMoveCard(CardType.Attack, TargetType.An
     protected override void OnUpgrade() => DynamicVars.Repeat.UpgradeValueBy(2);
 }
 
-/// <summary>Deadly Sun: gain 3 energy, then draw until your hand is full.</summary>
+/// <summary>Deadly Sun: gain 3(4) energy, then draw until your hand is full.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class VoidDeadlySun() : VoidMoveCard(CardType.Skill, TargetType.Self)
 {
@@ -76,20 +69,28 @@ public sealed class VoidDeadlySun() : VoidMoveCard(CardType.Skill, TargetType.Se
         if (room > 0)
             await CardPileCmd.Draw(ctx, room, Owner);
     }
+
+    protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
 }
 
-/// <summary>Pleasant Dream: stun an enemy, with a loud thud.</summary>
+/// <summary>Pleasant Dream: stun an enemy (upgraded: every enemy), with a loud thud and a shake.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class VoidPleasantDream() : VoidMoveCard(CardType.Skill, TargetType.AnyEnemy)
 {
+    public override TargetType TargetType => IsUpgraded ? TargetType.AllEnemies : TargetType.AnyEnemy;
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         SfxCmd.Play("event:/sfx/enemy/enemy_attacks/ceremonial_beast/ceremonial_beast_stun");
-        await CreatureCmd.Stun(cardPlay.Target!);
+        NGame.Instance?.ScreenShake(IsUpgraded ? ShakeStrength.Strong : ShakeStrength.Medium, ShakeDuration.Short);
+
+        var targets = IsUpgraded ? CombatState!.HittableEnemies.ToList() : [cardPlay.Target!];
+        foreach (var target in targets)
+            await CreatureCmd.Stun(target);
     }
 }
 
-/// <summary>Void Defeat (power): while Void's 60 hits land next turn, each one also takes 1 HP from every enemy.</summary>
+/// <summary>Void Defeat (power): while Void's 60 hits land next turn, each one also takes 2 HP from every enemy.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class VoidDefeat() : VoidMoveCard(CardType.Power, TargetType.Self)
 {
