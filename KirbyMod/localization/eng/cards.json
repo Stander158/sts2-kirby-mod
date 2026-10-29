@@ -136,7 +136,7 @@
   "KIRBY_MOD_CARD_DRAGON_STORM.title": "Dragon Storm",
   "KIRBY_MOD_CARD_DRAGON_STORM.description": "Gain the [gold]Fire[/gold] Copy Ability. Then deal {ExtraDamage:diff()} damage for each [gold]Burn[/gold] you have.\n[gold]Fire[/gold]: [gold]Retain[/gold]. Afterwards, put [gold]Burns[/gold] from your [gold]Discard Pile[/gold] into your [gold]Hand[/gold] until it is full.",
   "KIRBY_MOD_CARD_SNOW_BOWL.title": "Snow Bowl",
-  "KIRBY_MOD_CARD_SNOW_BOWL.description": "Gain the [gold]Ice[/gold] Copy Ability. [gold]Exhaust[/gold] all other cards in your [gold]Hand[/gold], then fill it with {IfUpgraded:show:[gold]Ice Block+[/gold]|[gold]Ice Blocks[/gold]}.\n[gold]Ice[/gold]: [gold]Retain[/gold]. For the rest of combat, your [gold]Ice Blocks[/gold] deal damage AND give [gold]Block[/gold].",
+  "KIRBY_MOD_CARD_SNOW_BOWL.description": "[gold]Exhaust[/gold] all other cards in your [gold]Hand[/gold] and add an {IfUpgraded:show:[gold]Ice Block+[/gold]|[gold]Ice Block[/gold]} to it for each. Then gain the [gold]Ice[/gold] Copy Ability.\n[gold]Ice[/gold]: [gold]Retain[/gold]. For the rest of combat, your [gold]Ice Blocks[/gold] deal damage AND give [gold]Block[/gold].",
   "KIRBY_MOD_CARD_CURLING_STONE.title": "Curling Stone",
   "KIRBY_MOD_CARD_CURLING_STONE.description": "You or an ally loses all [gold]Block[/gold] and gains 1 [gold]Buffer[/gold] for every {BlockPerBuffer:diff()} Block lost. [gold]Exhaust[/gold].\n[gold]Stone[/gold]: [gold]Retain[/gold], and it is no longer Exhausted.",
   "KIRBY_MOD_CARD_PINK_DEMON.title": "Pink Demon",

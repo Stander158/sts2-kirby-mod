@@ -165,11 +165,13 @@ public sealed class DragonStorm() : KirbyCard(3, CardType.Attack, CardRarity.Rar
 }
 
 /// <summary>
-/// 究极冰球 (3 cost, Exhaust): gain the Ice copy ability, exhaust every other card in your hand, then fill it with Ice
-/// Blocks (upgraded when this is). Ice: Retain, and for the rest of combat Ice Blocks deal damage AND give Block.
+/// 究极冰球 (2 cost, Exhaust): exhaust every other card in your hand and add that many Ice Blocks (Ice Block+ when
+/// upgraded), then gain the Ice copy ability (after the Ice Blocks, so its on-gain Ice Blocks prompt has nothing left
+/// to pick from); if you already held Ice, it is kept as is. Ice (held when played): Retain, and for the rest of
+/// combat Ice Blocks deal damage AND give Block.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class SnowBowl() : KirbyCard(3, CardType.Skill, CardRarity.Rare, TargetType.None)
+public sealed class SnowBowl() : KirbyCard(2, CardType.Skill, CardRarity.Rare, TargetType.None)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Ice];
 
@@ -180,18 +182,19 @@ public sealed class SnowBowl() : KirbyCard(3, CardType.Skill, CardRarity.Rare, T
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Ice, upgraded: false, this);
+        var heldIce = SynergyActive;
 
-        var hand = PileType.Hand.GetPile(Owner);
-        foreach (var card in hand.Cards.Where(card => card != this).ToList())
+        var others = PileType.Hand.GetPile(Owner).Cards.Where(card => card != this).ToList();
+        foreach (var card in others)
             await CardCmd.Exhaust(ctx, card);
-
-        while (hand.Cards.Count < CardPile.MaxCardsInHand)
+        for (var i = 0; i < others.Count; i++)
             await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<IceBlock>(Owner, IsUpgraded),
                 PileType.Hand, Owner);
 
-        if (SynergyActive)
+        if (heldIce)
             await PowerCmd.Apply<SnowBowlPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
+        else
+            await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Ice, upgraded: false, this);
     }
 }
 
