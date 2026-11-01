@@ -30,6 +30,7 @@ internal static class KirbyFx
     public const string SleepSound = "sleep.wav";
     public const string AbilityGainSound = "ability_gain.wav";
     public const string AbilityDropSound = "ability_drop.wav";
+    public const string DynabladeSound = "dynablade.wav";
 
     private const float SoundVolume = 0.6f;
 

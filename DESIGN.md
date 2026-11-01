@@ -398,3 +398,4 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 获得睡眠能力：SE_ENESLEEP。
 - 获得其他能力：SE_PWUP。
 - 打出舍弃能力：SE_PWSELECT。
+- 打出巨大锋翼鸟：SE_DYNASAKEBI。
