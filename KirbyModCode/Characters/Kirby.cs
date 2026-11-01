@@ -1,3 +1,4 @@
+using KirbyMod.Mechanics;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Nodes.Combat;
@@ -29,7 +30,8 @@ public sealed class Kirby : ModCharacterTemplate<KirbyCardPool, KirbyRelicPool, 
             CharacterSelectBgPath: KirbyTheme.Scenes + "kirby_select_bg.tscn",
             CharacterSelectIconPath: KirbyTheme.CharacterImages + "char_select.png",
             CharacterSelectLockedIconPath: KirbyTheme.CharacterImages + "char_select_locked.png",
-            MapMarkerPath: KirbyTheme.CharacterImages + "map_marker.png"));
+            MapMarkerPath: KirbyTheme.CharacterImages + "map_marker.png"),
+        Audio: new CharacterAudioAssetSet(CharacterSelectSfx: KirbyFx.SelectSfx));
 
     public override string? PlaceholderCharacterId => "ironclad";
 

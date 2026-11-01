@@ -1,8 +1,10 @@
 using System.Reflection;
 using HarmonyLib;
+using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Modding;
 using STS2RitsuLib;
+using STS2RitsuLib.Audio;
 using STS2RitsuLib.Interop;
 
 namespace KirbyMod;
@@ -21,6 +23,8 @@ public static class Entry
         Logger = RitsuLibFramework.CreateLogger(ModId);
         ModTypeDiscoveryHub.RegisterModAssembly(ModId, assembly);
         new Harmony("com.kirbymod.sts2").PatchAll(assembly);
+        VirtualFmodEventRegistry.RegisterOneShot(KirbyFx.SelectSfx, KirbyFx.SoundFolder + KirbyFx.SelectSound,
+            volume: KirbyFx.SoundVolume);
 
         Logger.Info("KirbyMod initialized.");
     }

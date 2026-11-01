@@ -32,7 +32,12 @@ internal static class KirbyFx
     public const string AbilityDropSound = "ability_drop.wav";
     public const string DynabladeSound = "dynablade.wav";
 
-    private const float SoundVolume = 0.6f;
+    /// <summary>Played by the character select screen, which only takes an event path (registered in Entry).</summary>
+    public const string SelectSfx = "event:/sfx/kirby/select";
+    public const string SelectSound = "select.wav";
+
+    public const string SoundFolder = "res://KirbyMod/audio/";
+    public const float SoundVolume = 0.6f;
 
     /// <summary>Plays one of Kirby's own sounds, at the game's SFX volume.</summary>
     public static void PlaySound(string file)
@@ -41,7 +46,7 @@ internal static class KirbyFx
             return;
 
         var sfxVolume = SaveManager.Instance.SettingsSave.VolumeSfx;
-        FmodStudioStreamingFiles.TryPlayResourceSound("res://KirbyMod/audio/" + file, SoundVolume * sfxVolume * sfxVolume);
+        FmodStudioStreamingFiles.TryPlayResourceSound(SoundFolder + file, SoundVolume * sfxVolume * sfxVolume);
     }
 
     /// <summary>Plasma attacks: a lightning strike with its sound.</summary>
