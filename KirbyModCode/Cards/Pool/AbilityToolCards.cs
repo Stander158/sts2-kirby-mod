@@ -64,6 +64,8 @@ public sealed class MixAbility() : KirbyCard(1, CardType.Skill, CardRarity.Uncom
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class DededeInhale() : KirbyCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
+    public override bool CanBeGeneratedInCombat => false;
+
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<EnhancedInhalePower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
