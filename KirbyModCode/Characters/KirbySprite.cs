@@ -39,8 +39,8 @@ internal static class KirbySprite
         [CopyAbilityKind.Plasma] = 2.4f,
         [CopyAbilityKind.Car] = 2.2f,
         [CopyAbilityKind.StarRod] = 2.6f,
-        [CopyAbilityKind.Galaxia] = 2.4f,
-        [CopyAbilityKind.Doctor] = 2f,
+        [CopyAbilityKind.Galaxia] = 2f,
+        [CopyAbilityKind.Doctor] = 1.7f,
         [CopyAbilityKind.Wheel] = 1.2f,
         [CopyAbilityKind.Void] = VoidScale,
     };
