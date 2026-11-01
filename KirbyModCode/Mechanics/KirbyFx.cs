@@ -23,6 +23,7 @@ internal static class KirbyFx
 
     // Kirby's own sounds (KirbyMod/audio, assembled from the private art folder like the card art).
     public const string InhaleSound = "inhale.wav";
+    public const string ScanSound = "scan.wav";
     public const string SpitStarSound = "spit_star.wav";
     public const string MouthfulSound = "mouthful.wav";
     public const string GuardSound = "guard.wav";

@@ -391,7 +391,7 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 ## 音效
 
 自带音效放在私有美术目录的 `audio/`（`.wav.import` 设为 keep，保留原始 wav），由 `KirbyFx.PlaySound` 播放：
-- 吸入：所有吸入牌打出时（SE_SUIKOMI 前 2 秒）。
+- 吸入：吸入牌打出时（SE_SUIKOMI 前 2 秒）；扫描用 SE_COPYHAZURE。
 - 吐星星：打出时（SE_STARSHOT 接 SE_PARIN）。
 - 获得满嘴：SE_HOOBARI。
 - 卡比获得格挡：SE_GUARD，替换原版格挡音效。
