@@ -113,7 +113,7 @@
   "KIRBY_MOD_CARD_PLASMA_CHARGE.title": "等离子蓄力",
   "KIRBY_MOD_CARD_PLASMA_CHARGE.description": "获得{Energy:energyIcons()}。\n[gold]等离子[/gold]：[gold]保留[/gold]，获得{Block:diff()}点[gold]格挡[/gold]。",
   "KIRBY_MOD_CARD_ULTIMATE_FLASH.title": "究极闪光",
-  "KIRBY_MOD_CARD_ULTIMATE_FLASH.description": "对所有敌人造成{Damage:diff()}点伤害。\n[gold]等离子[/gold]：[gold]保留[/gold]，若杀死了敌人，获得{Energy:energyIcons()}。",
+  "KIRBY_MOD_CARD_ULTIMATE_FLASH.description": "对所有敌人造成{CalculatedDamage:diff()}点伤害。本回合你每打出过一张牌，伤害+{ExtraDamage:diff()}。\n[gold]等离子[/gold]：[gold]保留[/gold]，若杀死了敌人，获得{Energy:energyIcons()}。",
   "KIRBY_MOD_CARD_ROBOBOT.title": "萝卜机甲",
   "KIRBY_MOD_CARD_ROBOBOT.description": "获得{AbilityConservationPower:diff()}层[gold]能力守恒[/gold]和[gold]萝卜机甲[/gold]。\n你的[gold]吸入[/gold]变为[gold]扫描[/gold]。",
   "KIRBY_MOD_CARD_INVINCIBLE_LOLLIPOP.title": "无敌棒棒糖",

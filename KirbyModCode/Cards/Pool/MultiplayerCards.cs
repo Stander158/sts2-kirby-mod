@@ -10,7 +10,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>喂食 (multiplayer only): spend up to 20(30) Mouthful to heal an ally half that much (rounded up). Exhaust.</summary>
+/// <summary>喂食 (multiplayer only): spend up to 20(30) Mouthful to heal an ally half that much (rounded down). Exhaust.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class Feed() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyAlly)
 {
@@ -34,7 +34,9 @@ public sealed class Feed() : KirbyCard(1, CardType.Skill, CardRarity.Common, Tar
 
         // Only the Mouthful actually fed is spent.
         await PowerCmd.ModifyAmount(ctx, mouthful, -amount, kirby, this);
-        await CreatureCmd.Heal(cardPlay.Target!, Math.Ceiling(amount / 2m));
+        var heal = Math.Floor(amount / 2m);
+        if (heal > 0)
+            await CreatureCmd.Heal(cardPlay.Target!, heal);
     }
 
     protected override void OnUpgrade() => DynamicVars.Heal.UpgradeValueBy(10);

@@ -113,7 +113,7 @@
   "KIRBY_MOD_CARD_PLASMA_CHARGE.title": "Plasma Charge",
   "KIRBY_MOD_CARD_PLASMA_CHARGE.description": "Gain {Energy:energyIcons()}.\n[gold]Plasma[/gold]: [gold]Retain[/gold], gain {Block:diff()} [gold]Block[/gold].",
   "KIRBY_MOD_CARD_ULTIMATE_FLASH.title": "Ultimate Flash",
-  "KIRBY_MOD_CARD_ULTIMATE_FLASH.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Plasma[/gold]: [gold]Retain[/gold]. If this kills an enemy, gain {Energy:energyIcons()}.",
+  "KIRBY_MOD_CARD_ULTIMATE_FLASH.description": "Deal {CalculatedDamage:diff()} damage to ALL enemies. +{ExtraDamage:diff()} damage for each card you played this turn.\n[gold]Plasma[/gold]: [gold]Retain[/gold]. If this kills an enemy, gain {Energy:energyIcons()}.",
   "KIRBY_MOD_CARD_ROBOBOT.title": "Robobot Armor",
   "KIRBY_MOD_CARD_ROBOBOT.description": "Gain {AbilityConservationPower:diff()} [gold]Ability Conservation[/gold] and [gold]Robobot Armor[/gold].\nYour [gold]Inhale[/gold] becomes [gold]Scan[/gold].",
   "KIRBY_MOD_CARD_INVINCIBLE_LOLLIPOP.title": "Invincible Lollipop",
