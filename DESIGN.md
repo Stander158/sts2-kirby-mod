@@ -403,4 +403,6 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 获得其他能力：SE_PWUP。
 - 打出舍弃能力：SE_PWSELECT。
 - 打出巨大锋翼鸟：SE_DYNASAKEBI。
+- 打出回旋镖：SE_CUTTER。
+- 打出波动拳：SE_HADOUTAME；打出发射：SE_HADOU。
 - 选角色时：SE_WARPSTAR2（前 2.5 秒，结尾淡出）。

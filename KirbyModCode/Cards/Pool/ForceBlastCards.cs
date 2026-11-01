@@ -27,6 +27,8 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Uncom
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.ForceBlastSound);
+
         if (!Launches().Any())
         {
             var launch = KirbyMouth.CreateCard<Launch>(Owner, false);
@@ -60,6 +62,8 @@ public sealed class Launch() : KirbyCard(0, CardType.Attack, CardRarity.Token, T
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.LaunchSound);
+
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
             .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_hyperbeam_impact").Execute(ctx);
     }

@@ -31,6 +31,9 @@ internal static class KirbyFx
     public const string AbilityGainSound = "ability_gain.wav";
     public const string AbilityDropSound = "ability_drop.wav";
     public const string DynabladeSound = "dynablade.wav";
+    public const string BoomerangSound = "boomerang.wav";
+    public const string LaunchSound = "launch.wav";
+    public const string ForceBlastSound = "force_blast.wav";
 
     /// <summary>Played by the character select screen, which only takes an event path (registered in Entry).</summary>
     public const string SelectSfx = "event:/sfx/kirby/select";

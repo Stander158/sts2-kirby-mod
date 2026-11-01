@@ -22,6 +22,8 @@ public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.BoomerangSound);
+
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
             .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
         for (var i = 0; i < DynamicVars.Repeat.IntValue; i++)
