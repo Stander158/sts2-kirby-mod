@@ -13,17 +13,15 @@ namespace KirbyMod.Cards;
 
 /// <summary>
 /// 波动拳: like the Regent's Forge, if there is no Launch in your hand, add one to it; every Launch in your hand gets
-/// +2(3) hits (and +1 damage while you have Fighter). Then it returns to your hand, like Particle Wall.
+/// +2(3) hits. Fighter: Retain. Then it returns to your hand, like Particle Wall.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
-    private const int FighterDamageBonus = 1;
-
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fighter];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Hits", 2), new DynamicVar("FighterBonus", FighterDamageBonus)];
+        [new DynamicVar("Hits", 2)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<Launch>()];
 
@@ -35,13 +33,8 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
             await CardPileCmd.AddGeneratedCardToCombat(launch, PileType.Hand, Owner);
         }
 
-        var fighter = SynergyActive;
         foreach (var launch in Launches().ToList())
-        {
             launch.DynamicVars.Repeat.UpgradeValueBy(DynamicVars["Hits"].BaseValue);
-            if (fighter)
-                launch.DynamicVars.Damage.UpgradeValueBy(FighterDamageBonus);
-        }
     }
 
     protected override void OnUpgrade() => DynamicVars["Hits"].UpgradeValueBy(1);
