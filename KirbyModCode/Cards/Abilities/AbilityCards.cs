@@ -104,9 +104,9 @@ public sealed class PlasmaAbility() : AbilityCard(CardRarity.Uncommon)
     protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(PlasmaPower.Energy)];
 }
 
-/// <summary>汽车卡比: Common. On gain deal 13(18) damage to ALL enemies; 6 more at the start of each turn.</summary>
+/// <summary>汽车卡比: Common, 2 cost. On gain deal 13(18) damage to ALL enemies; 6 more at the start of each turn; 2 Dexterity while held.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class CarKirby() : AbilityCard(CardRarity.Common)
+public sealed class CarKirby() : AbilityCard(CardRarity.Common, 2)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.Car;
 
@@ -114,11 +114,8 @@ public sealed class CarKirby() : AbilityCard(CardRarity.Common)
         [new DamageVar(CarPower.DamageOnGain, MegaCrit.Sts2.Core.ValueProps.ValueProp.Unpowered),
          new DynamicVar("TurnDamage", CarPower.DamagePerTurn)];
 
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(CarPower.UpgradeBonus);
-    }
+    // Upgrade raises the damage only; the cost stays 2.
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(CarPower.UpgradeBonus);
 }
 
 /// <summary>星之杖: Rare. Upgraded, its Star Spit is upgraded.</summary>

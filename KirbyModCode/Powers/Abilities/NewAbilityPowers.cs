@@ -41,13 +41,17 @@ public sealed class CarPower : CopyAbilityPower
     public const int DamageOnGain = 13;
     public const int UpgradeBonus = 5;
     public const int DamagePerTurn = 6;
+    public const int Dexterity = 2;
 
     public override CopyAbilityKind Kind => CopyAbilityKind.Car;
 
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("speedster_power");
 
-    public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
-        Ram(ctx, DamageOnGain + (Upgraded ? UpgradeBonus : 0));
+    public override async Task OnGained(PlayerChoiceContext ctx, Player player)
+    {
+        await Grant<DexterityPower>(ctx, Dexterity);
+        await Ram(ctx, DamageOnGain + (Upgraded ? UpgradeBonus : 0));
+    }
 
     // Like Poison, turn-start damage goes in AfterSideTurnStart: killing earlier breaks the turn-start loop.
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants,
