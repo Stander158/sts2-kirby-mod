@@ -123,7 +123,7 @@ public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Comm
 
 /// <summary>急速转弯 (0 cost): -3 Dexterity and +3(5) Strength this turn. Wheel: Retain, and more Strength this turn equal to your Dexterity (after the loss).</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class HardTurn() : KirbyCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class HardTurn() : KirbyCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Wheel];
 
