@@ -53,7 +53,7 @@ public sealed class InhalingPower : ModPowerTemplate
         public ValueProp PendingProps;
     }
 
-    public override PowerAssetProfile AssetProfile => KirbyArt.Power("hover");
+    public override PowerAssetProfile AssetProfile => KirbyArt.Power("inhaling");
 
     public override PowerType Type => PowerType.Buff;
 
@@ -62,6 +62,18 @@ public sealed class InhalingPower : ModPowerTemplate
     private Data State => GetInternalData<Data>();
 
     protected override object InitInternalData() => new Data();
+
+    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        KirbySprite.SetInhaling(Owner, true);
+        return Task.CompletedTask;
+    }
+
+    public override Task AfterRemoved(Creature oldOwner)
+    {
+        KirbySprite.SetInhaling(oldOwner, false);
+        return Task.CompletedTask;
+    }
 
     public void Begin(Creature target, InhaleOutcome outcome, bool upgradedTokens, bool negateAll)
     {

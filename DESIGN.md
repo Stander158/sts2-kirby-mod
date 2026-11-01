@@ -388,6 +388,10 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 和朋友联机前，在 mod 列表里关掉 KirbyMod。
 - 存档备份：`D:\StS2Modding\backups\saves-2026-10-26`。
 
+## 吸入立绘
+
+吸入成功前卡比用吸入立绘（kirby_inhale），吸到满嘴后换回满嘴立绘。有复制能力或穿着机器人装甲时不换。吸入状态的图标也用这张图。
+
 ## 音效
 
 自带音效放在私有美术目录的 `audio/`（`.wav.import` 设为 keep，保留原始 wav），由 `KirbyFx.PlaySound` 播放：

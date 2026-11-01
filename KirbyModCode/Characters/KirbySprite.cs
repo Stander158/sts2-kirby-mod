@@ -5,8 +5,9 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 namespace KirbyMod.Characters;
 
 /// <summary>
-/// Kirby's combat sprite, in order of priority: the first-gained copy ability he holds (Void huge), Mouthful (twice as
-/// big), the Robobot Armor, else the normal one. A picture that is not there (public build) is skipped. Ability pictures
+/// Kirby's combat sprite, in order of priority: the first-gained copy ability he holds (Void huge), inhaling (not in the
+/// Robobot Armor), Mouthful (twice as big), the Robobot Armor, else the normal one. A picture that is not there (public
+/// build) is skipped. Ability pictures
 /// fill the same canvas whatever else is in them (a long sword, a wheel...), so each has its own scale that brings
 /// Kirby's body to the size of the normal sprite (Carby is simply big). The sprite is anchored at Kirby's feet, so bigger
 /// ones grow upward. Each state is remembered on the sprite node.
@@ -16,14 +17,17 @@ internal static class KirbySprite
     private const string Normal = KirbyTheme.CharacterImages + "kirby_combat.png";
     private const string FullMouth = KirbyTheme.CharacterImages + "kirby_mouthful.png";
     private const string Robobot = KirbyTheme.CharacterImages + "kirby_robobot.png";
+    private const string Inhaling = KirbyTheme.CharacterImages + "kirby_inhale.png";
     private const string Void = KirbyTheme.CharacterImages + "kirby_void.png";
     private const string AbilityPrefix = KirbyTheme.CharacterImages + "kirby_ability_";
     private const float FullMouthScale = 2f;
     private const float RobobotScale = 1.5f;
+    private const float InhalingScale = 1.1f;
     private const float VoidScale = 2.6f;
     private const string BaseScaleMeta = "kirby_base_scale";
     private const string MouthfulMeta = "kirby_mouthful";
     private const string RobobotMeta = "kirby_robobot";
+    private const string InhalingMeta = "kirby_inhaling";
     private const string AbilityMeta = "kirby_ability";
     private const string AbilityScaleMeta = "kirby_ability_scale";
 
@@ -49,6 +53,8 @@ internal static class KirbySprite
 
     public static void SetRobobot(Creature creature, bool on) => Set(creature, RobobotMeta, on);
 
+    public static void SetInhaling(Creature creature, bool on) => Set(creature, InhalingMeta, on);
+
     /// <summary><paramref name="kind" />: the ability that now decides the sprite, or null for none.</summary>
     public static void SetAbility(Creature creature, CopyAbilityKind? kind)
     {
@@ -71,10 +77,12 @@ internal static class KirbySprite
         sprite.SetMeta(state, value);
 
         var ability = sprite.GetMeta(AbilityMeta, "").AsString();
+        var robobot = sprite.GetMeta(RobobotMeta, false).AsBool();
         var (path, scale) =
             ability != "" && ResourceLoader.Exists(ability) ? (ability, sprite.GetMeta(AbilityScaleMeta, 1f).AsSingle())
+            : !robobot && sprite.GetMeta(InhalingMeta, false).AsBool() && ResourceLoader.Exists(Inhaling) ? (Inhaling, InhalingScale)
             : sprite.GetMeta(MouthfulMeta, false).AsBool() && ResourceLoader.Exists(FullMouth) ? (FullMouth, FullMouthScale)
-            : sprite.GetMeta(RobobotMeta, false).AsBool() && ResourceLoader.Exists(Robobot) ? (Robobot, RobobotScale)
+            : robobot && ResourceLoader.Exists(Robobot) ? (Robobot, RobobotScale)
             : (Normal, 1f);
         sprite.Texture = ResourceLoader.Load<Texture2D>(path);
         sprite.Scale = baseScale * scale;

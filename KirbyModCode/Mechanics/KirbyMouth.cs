@@ -1,4 +1,5 @@
 using KirbyMod.Cards;
+using KirbyMod.Characters;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -69,6 +70,9 @@ public static class KirbyMouth
         var player = kirby.Player;
         if (player == null || kirby.IsDead)
             return;
+
+        // Inhaling lasts until Kirby's next turn, but the mouth is already full.
+        KirbySprite.SetInhaling(kirby, false);
 
         var before = MouthfulOf(kirby);
         await PowerCmd.Apply<MouthfulPower>(ctx, kirby, Math.Max(mouthful, 0), kirby, null);
