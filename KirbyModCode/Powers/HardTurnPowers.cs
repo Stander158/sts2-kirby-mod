@@ -11,7 +11,7 @@ namespace KirbyMod.Powers;
 [RegisterPower]
 public sealed class HardTurnDexterityPower : ModTemporaryAppliedPowerTemplate<HardTurn, DexterityPower>
 {
-    public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("dexterity_power");
+    public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("frail_power");
 
     protected override bool IsPositive => false;
 
