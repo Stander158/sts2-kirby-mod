@@ -170,5 +170,9 @@
   "KIRBY_MOD_CARD_VOID_PLEASANT_DREAM.title": "┼▕▏▂▍▁▎■ ╳█▊▂▊",
   "KIRBY_MOD_CARD_VOID_PLEASANT_DREAM.description": "Cause ...?",
   "KIRBY_MOD_CARD_VOID_DEFEAT.title": "▋▆▃▍ ▉╳▔╳▌▏",
-  "KIRBY_MOD_CARD_VOID_DEFEAT.description": "At the start of your next turn, while ...?"
+  "KIRBY_MOD_CARD_VOID_DEFEAT.description": "At the start of your next turn, while ...?",
+  "KIRBY_MOD_CARD_WHEEL_CRUSH.title": "Wheel Crush",
+  "KIRBY_MOD_CARD_WHEEL_CRUSH.description": "Deal {Damage:diff()} damage.\n[gold]Dexterity[/gold] also counts as [gold]Strength[/gold] on this card.\n[gold]Wheel[/gold]: [gold]Retain[/gold], other enemies take the same damage.",
+  "KIRBY_MOD_CARD_HARD_TURN.title": "Hard Turn",
+  "KIRBY_MOD_CARD_HARD_TURN.description": "Lose {DexLoss:diff()} [gold]Dexterity[/gold] and gain {StrGain:diff()} [gold]Strength[/gold] this turn.\n[gold]Wheel[/gold]: [gold]Retain[/gold], also gain [gold]Strength[/gold] equal to your current [gold]Dexterity[/gold] this turn."
 }

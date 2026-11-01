@@ -3,9 +3,11 @@ using KirbyMod.Mechanics;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -89,4 +91,55 @@ public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
 
     // Upgrade raises the damage only; the cost stays 2.
     protected override void OnUpgrade() => DynamicVars["DexDamage"].UpgradeValueBy(2);
+}
+
+/// <summary>轮子碾压: deal 9(13); Dexterity also counts as Strength on this card. Wheel: Retain, and every other enemy takes it too.</summary>
+[RegisterCard(typeof(KirbyCardPool))]
+public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+{
+    public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Wheel];
+
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(9, ValueProp.Move)];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<DexterityPower>(), HoverTipFactory.FromPower<StrengthPower>()];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).WithHitFx("vfx/vfx_heavy_blunt");
+        await (SynergyActive ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
+    }
+
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,
+        CardModel? cardSource)
+    {
+        if (cardSource != this || !IsMutable || dealer != Owner.Creature || !props.IsPoweredAttack())
+            return 0m;
+        return dealer.GetPowerAmount<DexterityPower>();
+    }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4);
+}
+
+/// <summary>急速转弯 (0 cost): -3 Dexterity and +3(4) Strength this turn. Wheel: Retain, and temporary Strength equal to your Dexterity (after the loss).</summary>
+[RegisterCard(typeof(KirbyCardPool))]
+public sealed class HardTurn() : KirbyCard(0, CardType.Skill, CardRarity.Rare, TargetType.Self)
+{
+    public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Wheel];
+
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("DexLoss", 3), new DynamicVar("StrGain", 3)];
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        var kirby = Owner.Creature;
+        await PowerCmd.Apply<HardTurnDexterityPower>(ctx, kirby, DynamicVars["DexLoss"].BaseValue, kirby, this);
+
+        var strength = DynamicVars["StrGain"].BaseValue;
+        if (SynergyActive)
+            strength += Math.Max(0, kirby.GetPowerAmount<DexterityPower>());
+        await PowerCmd.Apply<HardTurnStrengthPower>(ctx, kirby, strength, kirby, this);
+    }
+
+    protected override void OnUpgrade() => DynamicVars["StrGain"].UpgradeValueBy(1);
 }

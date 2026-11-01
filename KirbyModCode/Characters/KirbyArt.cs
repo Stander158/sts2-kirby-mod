@@ -22,6 +22,8 @@ internal static class KirbyArt
         [typeof(GalaxyWish)] = "galactic_nova",
         [typeof(UltimateInhale)] = "ultimate_inhale",
         [typeof(VoidCard)] = "void_card",
+        [typeof(WheelCrush)] = "wk_wheel_crush",
+        [typeof(HardTurn)] = "wk_hard_turn",
         [typeof(VoidShooterCutter)] = "void_shooter_cutter",
         [typeof(VoidLoudSong)] = "void_loud_song",
         [typeof(VoidDeadlySun)] = "void_deadly_sun",
