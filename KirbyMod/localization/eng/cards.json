@@ -70,7 +70,7 @@
   "KIRBY_MOD_CARD_MINE_BATTLE.title": "The Great Cave Offensive",
   "KIRBY_MOD_CARD_MINE_BATTLE.description": "Gain {Block:diff()} [gold]Block[/gold].\nIf you have a Copy Ability, drop it and gain {Energy:energyIcons()}.",
   "KIRBY_MOD_CARD_SPRING_BREEZE.title": "Spring Breeze",
-  "KIRBY_MOD_CARD_SPRING_BREEZE.description": "If you have a Copy Ability, gain {Energy:energyIcons()}.\nOtherwise, draw {Cards:diff()} cards.",
+  "KIRBY_MOD_CARD_SPRING_BREEZE.description": "If you have a Copy Ability, gain {Energy:energyIcons()}{IfUpgraded:show: and draw 1 card|}.\nOtherwise, draw {Cards:diff()} cards.",
   "KIRBY_MOD_CARD_STEEL_WING.title": "Dynablade",
   "KIRBY_MOD_CARD_STEEL_WING.description": "Deal {Damage:diff()} damage.\nTurn every Strike {IfUpgraded:show:you have|in your [gold]Hand[/gold]} into a [gold]Peck[/gold] for this combat (upgraded Strikes become upgraded Pecks).",
   "KIRBY_MOD_CARD_FOUNTAIN_OF_DREAMS.title": "Fountain of Dreams",

@@ -31,7 +31,7 @@ public sealed class MineBattle() : KirbyCard(2, CardType.Skill, CardRarity.Commo
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(5);
 }
 
-/// <summary>春风 (0-cost starter card, never offered): with a copy ability, gain 2 energy; without one, draw 2(3) cards instead.</summary>
+/// <summary>春风 (0-cost starter card, never offered): with a copy ability, gain 2 energy (upgraded: and draw 1 card); without one, draw 2 cards instead.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 [RegisterCharacterStarterCard(typeof(Kirby), 1, Order = 40)]
 public sealed class SpringBreeze() : KirbyCard(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
@@ -40,13 +40,21 @@ public sealed class SpringBreeze() : KirbyCard(0, CardType.Skill, CardRarity.Bas
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        if (CopyAbilities.HasAny(Owner))
-            await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
-        else
+        if (!CopyAbilities.HasAny(Owner))
+        {
             await CardPileCmd.Draw(ctx, DynamicVars.Cards.BaseValue, Owner);
+            return;
+        }
+
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, Owner);
+        if (IsUpgraded)
+            await CardPileCmd.Draw(ctx, 1, Owner);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1);
+    // Upgrade adds the draw (see OnPlay).
+    protected override void OnUpgrade()
+    {
+    }
 }
 
 /// <summary>巨大锋翼鸟 (Dynablade, 0 cost): deal 7(9). Every Strike in your hand (upgraded: in all your piles) becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
