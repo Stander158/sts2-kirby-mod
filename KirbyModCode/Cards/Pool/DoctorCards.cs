@@ -131,7 +131,7 @@ public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarit
 /// becomes your Test Subject. Doctor: costs 1 less (in <see cref="DoctorPower" />), Retain. Upgrade: cost 2.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class Experiment() : KirbyCard(2, CardType.Power, CardRarity.Rare, CustomTargetType.Anyone)
+public sealed class Experiment() : KirbyCard(2, CardType.Power, CardRarity.Uncommon, CustomTargetType.Anyone)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Doctor];
 
