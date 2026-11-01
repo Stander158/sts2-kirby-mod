@@ -8,7 +8,7 @@ namespace KirbyMod.Characters;
 /// Kirby's combat sprite, in order of priority: the first-gained copy ability he holds (Void huge), Mouthful (twice as
 /// big), the Robobot Armor, else the normal one. A picture that is not there (public build) is skipped. Ability pictures
 /// fill the same canvas whatever else is in them (a long sword, a wheel...), so each has its own scale that brings
-/// Kirby's body to the size of the normal sprite (Carby stays a car). The sprite is anchored at Kirby's feet, so bigger
+/// Kirby's body to the size of the normal sprite (Carby is simply big). The sprite is anchored at Kirby's feet, so bigger
 /// ones grow upward. Each state is remembered on the sprite node.
 /// </summary>
 internal static class KirbySprite
@@ -36,11 +36,11 @@ internal static class KirbySprite
         [CopyAbilityKind.Ice] = 1.45f,
         [CopyAbilityKind.Fire] = 2f,
         [CopyAbilityKind.Sleep] = 1.2f,
-        [CopyAbilityKind.Plasma] = 1.95f,
-        [CopyAbilityKind.Car] = 1f,
+        [CopyAbilityKind.Plasma] = 2.4f,
+        [CopyAbilityKind.Car] = 2.2f,
         [CopyAbilityKind.StarRod] = 2.6f,
         [CopyAbilityKind.Galaxia] = 2.4f,
-        [CopyAbilityKind.Doctor] = 2.5f,
+        [CopyAbilityKind.Doctor] = 2f,
         [CopyAbilityKind.Wheel] = 1.2f,
         [CopyAbilityKind.Void] = VoidScale,
     };
