@@ -1,4 +1,5 @@
 using KirbyMod.Mechanics;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Nodes;
 using MegaCrit.Sts2.Core.Nodes.Vfx.Utilities;
@@ -36,7 +37,8 @@ public sealed class VoidDoomPower : ModPowerTemplate
         {
             Flash();
             var defeat = Owner.HasPower<VoidDefeatPower>();
-            for (var i = 0; i < Hits && Owner.IsAlive; i++)
+            // Void Defeat can win the fight partway through: the hits stop there.
+            for (var i = 0; i < Hits && Owner.IsAlive && CombatManager.Instance.IsInProgress; i++)
             {
                 await LoseHp(Owner, 1, i);
                 if (!defeat)
@@ -45,6 +47,8 @@ public sealed class VoidDoomPower : ModPowerTemplate
                     await LoseHp(enemy, VoidDefeatPower.Damage, i);
             }
 
+            if (!CombatManager.Instance.IsInProgress)
+                return;
             if (Owner.IsAlive)
                 await KirbyMouth.LoseCopyAbility(choiceContext, player);
         }
@@ -69,7 +73,7 @@ public sealed class VoidDoomPower : ModPowerTemplate
             NGame.Instance?.ScreenShake(ShakeStrength.Weak, ShakeDuration.Short);
         }
         await CreatureCmd.TriggerAnim(creature, "Hit", 0f);
-        await CreatureCmd.SetCurrentHp(creature, creature.CurrentHp - amount);
+        await CreatureCmd.SetCurrentHp(creature, Math.Max(0, creature.CurrentHp - amount));
         await Cmd.Wait(0.03f);
     }
 }

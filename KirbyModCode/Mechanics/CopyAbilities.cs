@@ -74,8 +74,8 @@ public static class CopyAbilities
         [CopyAbilityKind.Boomerang] = [typeof(BoomerangThrow), typeof(FinalCutter), typeof(RisingSlash)],
         [CopyAbilityKind.Stone] = [typeof(InvincibleGuard), typeof(StonePunch)],
         [CopyAbilityKind.Fighter] = [typeof(ChargeUp), typeof(ForceBlast)],
-        [CopyAbilityKind.Ice] = [typeof(IceBreath), typeof(IceBlock)],
-        [CopyAbilityKind.Fire] = [typeof(IceBreath), typeof(Burn)],
+        [CopyAbilityKind.Ice] = [typeof(IceBreath)],
+        [CopyAbilityKind.Fire] = [typeof(IceBreath)],
         [CopyAbilityKind.Sleep] = [],
         [CopyAbilityKind.Plasma] = [typeof(PlasmaCannon), typeof(PlasmaCharge), typeof(UltimateFlash)],
         [CopyAbilityKind.Car] = [],
@@ -313,8 +313,8 @@ public static class CopyAbilities
     }
 
     /// <summary>
-    /// Puts 1 random card of <paramref name="kind" /> into hand (upgraded if the ability is), Ethereal and Exhaust except
-    /// a Burn. Losing the ability leaves it where it is.
+    /// Puts 1 random card of <paramref name="kind" /> into hand (upgraded if the ability is), Ethereal and Exhaust.
+    /// Losing the ability leaves it where it is.
     /// </summary>
     private static async Task GrantAbilityCard(Player player, CopyAbilityKind kind, bool upgraded)
     {
@@ -328,7 +328,7 @@ public static class CopyAbilities
             CardCmd.Upgrade(card);
     }
 
-    /// <summary>Creates a card of <paramref name="type" /> in hand for a copy ability: Ethereal and Exhaust, except a Burn.</summary>
+    /// <summary>Creates a card of <paramref name="type" /> in hand for a copy ability: Ethereal and Exhaust.</summary>
     public static async Task<CardModel?> GrantCard(Player player, Type type)
     {
         var combatState = player.Creature.CombatState;
@@ -336,11 +336,8 @@ public static class CopyAbilities
             return null;
 
         var card = combatState.CreateCard(ModelDb.GetById<CardModel>(ModelDb.GetId(type)), player);
-        if (card is not Burn)
-        {
-            card.AddKeyword(CardKeyword.Ethereal);
-            card.AddKeyword(CardKeyword.Exhaust);
-        }
+        card.AddKeyword(CardKeyword.Ethereal);
+        card.AddKeyword(CardKeyword.Exhaust);
         await CardPileCmd.AddGeneratedCardToCombat(card, PileType.Hand, player);
         return card;
     }
