@@ -16,7 +16,7 @@ namespace KirbyMod.Cards;
 /// +2(3) hits. Fighter: Retain. Then it returns to your hand, like Particle Wall.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fighter];
 
