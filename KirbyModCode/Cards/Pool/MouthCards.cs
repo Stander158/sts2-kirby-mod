@@ -24,12 +24,10 @@ public sealed class GooeyInhale() : KirbyCard(1, CardType.Skill, CardRarity.Comm
     protected override void OnUpgrade() => AddKeyword(CardKeyword.Retain);
 }
 
-/// <summary>泡泡储存 (power, Innate): Swallow no longer clears Mouthful. Upgrade: cost 0.</summary>
+/// <summary>泡泡储存 (power): Swallow no longer clears Mouthful. Upgrade: Innate.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class BubbleStorage() : KirbyCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Innate];
-
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<Swallow>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
@@ -37,7 +35,7 @@ public sealed class BubbleStorage() : KirbyCard(1, CardType.Power, CardRarity.Un
         await PowerCmd.Apply<BubbleStoragePower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
 }
 
 /// <summary>超级能力 (power): double the benefits of the next 1(2) copy abilities you gain.</summary>

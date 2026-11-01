@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// A "gain copy ability X" card: a 1-cost skill unless noted (Stone is a 2-cost power, Star Rod / Galaxia cost 2).
+/// A "gain copy ability X" card: a 1-cost skill unless noted (Stone is a 2-cost power).
 /// Upgrading lowers the cost by 1 only for the 2-cost ones (1-cost cards keep their cost), and an upgraded card
 /// hands out an upgraded card of the ability. It is exhausted, or discarded (playable again) with upgraded Milky Way Wishes.
 /// </summary>

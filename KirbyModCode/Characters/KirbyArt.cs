@@ -118,6 +118,9 @@ internal static class KirbyArt
         $"res://images/atlases/relic_outline_atlas.sprites/{name}.tres",
         $"res://images/relics/{name}.png");
 
+    public static string SnakeCase(string name) =>
+        string.Concat(name.Select((c, i) => i > 0 && char.IsUpper(c) ? "_" + char.ToLowerInvariant(c) : char.ToLowerInvariant(c).ToString()));
+
     public static PotionAssetProfile Potion(string name) =>
         Exists($"{Images}potions/{name}.png")
             ? new($"{Images}potions/{name}.png", $"{Images}potions/{name}_outline.png")

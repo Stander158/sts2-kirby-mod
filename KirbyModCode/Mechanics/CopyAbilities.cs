@@ -65,23 +65,23 @@ public static class CopyAbilities
         Enum.GetValues<CopyAbilityKind>().Where(kind => kind != CopyAbilityKind.Void).ToList();
 
     /// <summary>
-    /// Cards an ability hands out when gained: 1 of its lowest-rarity ones, or from an upgraded ability card 1 of its
-    /// Uncommon-or-better ones.
+    /// Cards an ability hands out when gained: its Common and Rare ones (Wheel has only Uncommon ones). Ice Blocks and
+    /// Burns are not Ice's or Fire's cards. An upgraded ability hands out the card upgraded.
     /// </summary>
     private static readonly Dictionary<CopyAbilityKind, Type[]> AbilityCardTypes = new()
     {
-        [CopyAbilityKind.Sword] = [typeof(Slash), typeof(SpinSlash), typeof(RisingSlash), typeof(MachTornado)],
-        [CopyAbilityKind.Boomerang] = [typeof(BoomerangThrow), typeof(FinalCutter), typeof(RisingSlash)],
-        [CopyAbilityKind.Stone] = [typeof(InvincibleGuard), typeof(StonePunch)],
-        [CopyAbilityKind.Fighter] = [typeof(ChargeUp), typeof(ForceBlast)],
+        [CopyAbilityKind.Sword] = [typeof(Slash), typeof(RisingSlash), typeof(MachTornado)],
+        [CopyAbilityKind.Boomerang] = [typeof(BoomerangThrow), typeof(RisingSlash)],
+        [CopyAbilityKind.Stone] = [typeof(StonePunch)],
+        [CopyAbilityKind.Fighter] = [typeof(ForceBlast), typeof(VacuumStrike)],
         [CopyAbilityKind.Ice] = [typeof(IceBreath)],
         [CopyAbilityKind.Fire] = [typeof(IceBreath)],
         [CopyAbilityKind.Sleep] = [],
-        [CopyAbilityKind.Plasma] = [typeof(PlasmaCannon), typeof(PlasmaCharge), typeof(UltimateFlash)],
+        [CopyAbilityKind.Plasma] = [typeof(PlasmaCannon)],
         [CopyAbilityKind.Car] = [],
         [CopyAbilityKind.StarRod] = [],
         [CopyAbilityKind.Galaxia] = [],
-        [CopyAbilityKind.Doctor] = [typeof(PillThrow), typeof(MakeMedicine), typeof(Experiment)],
+        [CopyAbilityKind.Doctor] = [typeof(PillThrow), typeof(Experiment)],
         [CopyAbilityKind.Wheel] = [typeof(WheelDash), typeof(WheelCharge)],
         [CopyAbilityKind.Void] = [],
     };

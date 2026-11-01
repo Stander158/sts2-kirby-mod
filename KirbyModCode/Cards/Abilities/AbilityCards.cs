@@ -121,9 +121,9 @@ public sealed class CarKirby() : AbilityCard(CardRarity.Common)
     }
 }
 
-/// <summary>星之杖: Rare, 2(1) cost.</summary>
+/// <summary>星之杖: Rare. Upgraded, its Star Spit is upgraded.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class StarRodAbility() : AbilityCard(CardRarity.Rare, 2)
+public sealed class StarRodAbility() : AbilityCard(CardRarity.Rare)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.StarRod;
 
@@ -131,12 +131,12 @@ public sealed class StarRodAbility() : AbilityCard(CardRarity.Rare, 2)
         [new DynamicVar("Mouthful", StarRodPower.Mouthful), new DynamicVar("MouthfulPerTurn", StarRodPower.MouthfulPerTurn)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        [.. base.AdditionalHoverTips, HoverTipFactory.FromCard<SpitStar>(true)];
+        [.. base.AdditionalHoverTips, HoverTipFactory.FromCard<SpitStar>(IsUpgraded)];
 }
 
-/// <summary>万能剑 (Galaxia): Rare, 2(1) cost.</summary>
+/// <summary>万能剑 (Galaxia): Rare. Upgraded, the Sword cards it hands out are upgraded.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class GalaxiaAbility() : AbilityCard(CardRarity.Rare, 2)
+public sealed class GalaxiaAbility() : AbilityCard(CardRarity.Rare)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.Galaxia;
 

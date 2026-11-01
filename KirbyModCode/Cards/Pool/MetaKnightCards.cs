@@ -28,10 +28,12 @@ public sealed class MetaKnightAid() : KirbyCard(1, CardType.Skill, CardRarity.Co
     protected override void OnUpgrade() => DynamicVars[nameof(VigorPower)].UpgradeValueBy(2);
 }
 
-/// <summary>魅塔骑士的复仇: deal 25(37). Sword: costs 0 (done in <see cref="Powers.SwordPower" />). Counts as a Sword card.</summary>
+/// <summary>魅塔骑士的复仇: deal 25(37). Sword: costs 1 (done in <see cref="Powers.SwordPower" />). Counts as a Sword card.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class MetaKnightRevenge() : KirbyCard(3, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
 {
+    public const decimal SwordCost = 1m;
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(25, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)

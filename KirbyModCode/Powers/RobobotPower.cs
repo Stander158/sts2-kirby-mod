@@ -29,6 +29,18 @@ public sealed class RobobotPower : ModPowerTemplate
         CardPlay? cardPlay) =>
         IsOwnCard(cardSource, CardTag.Defend) ? Bonus : 0m;
 
+    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        KirbySprite.SetRobobot(Owner, true);
+        return Task.CompletedTask;
+    }
+
+    public override Task AfterRemoved(Creature oldOwner)
+    {
+        KirbySprite.SetRobobot(oldOwner, false);
+        return Task.CompletedTask;
+    }
+
     private bool IsOwnCard(CardModel? card, CardTag tag) =>
         card != null && card.Owner == Owner.Player && card.Tags.Contains(tag);
 }

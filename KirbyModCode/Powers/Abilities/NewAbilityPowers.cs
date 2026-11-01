@@ -24,8 +24,6 @@ public sealed class PlasmaPower : CopyAbilityPower
 
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("high_voltage_power");
 
-    public override Task OnGained(PlayerChoiceContext ctx, Player player) => PlayerCmd.GainEnergy(Energy, player);
-
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (player != Owner.Player)
@@ -89,7 +87,7 @@ public sealed class StarRodPower : CopyAbilityPower
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
         await PowerCmd.Apply<MouthfulPower>(ctx, Owner, Mouthful, Owner, null);
-        await KirbyMouth.AddToHandIfMissing<SpitStar>(player, upgraded: true);
+        await KirbyMouth.AddToHandIfMissing<SpitStar>(player, Upgraded);
     }
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -129,7 +127,11 @@ public sealed class GalaxiaPower : CopyAbilityPower
             var type = rng.NextItem(pool)!;
             pool.Remove(type);
             var card = await CopyAbilities.GrantCard(player, type);
-            card?.SetToFreeThisTurn();
+            if (card == null)
+                continue;
+            if (Upgraded && card.IsUpgradable)
+                CardCmd.Upgrade(card);
+            card.SetToFreeThisTurn();
         }
     }
 
@@ -142,11 +144,11 @@ public sealed class GalaxiaPower : CopyAbilityPower
         await Grant<StrengthPower>(choiceContext, Strength);
     }
 
-    // Counts as Sword: Meta Knight's Revenge costs 0 here too (see SwordPower).
+    // Counts as Sword: Meta Knight's Revenge costs 1 here too (see SwordPower).
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
         var applies = card is MetaKnightRevenge && card.Owner == Owner.Player;
-        modifiedCost = applies ? 0m : originalCost;
+        modifiedCost = applies ? Math.Min(originalCost, MetaKnightRevenge.SwordCost) : originalCost;
         return applies;
     }
 }

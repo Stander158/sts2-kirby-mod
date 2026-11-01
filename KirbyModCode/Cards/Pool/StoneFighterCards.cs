@@ -33,7 +33,7 @@ public sealed class InvincibleGuard() : KirbyCard(2, CardType.Skill, CardRarity.
     protected override void OnUpgrade() => DynamicVars[nameof(BufferPower)].UpgradeValueBy(1);
 }
 
-/// <summary>石头拳: deal 15(21) damage per Buffer you have and gain 7 Block. Stone: Retain.</summary>
+/// <summary>石头拳: gain 8(10) Block. Stone: Retain, and deal 15(21) damage per Buffer you have.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class StonePunch() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
@@ -44,17 +44,22 @@ public sealed class StonePunch() : KirbyCard(1, CardType.Attack, CardRarity.Comm
         new CalculationBaseVar(0),
         new ExtraDamageVar(15),
         new CalculatedDamageVar(ValueProp.Move).WithMultiplier(BufferStacks),
-        new BlockVar(7, ValueProp.Move),
+        new BlockVar(8, ValueProp.Move),
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
-            .WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
+        if (SynergyActive)
+            await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+                .WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
     }
 
-    protected override void OnUpgrade() => DynamicVars.ExtraDamage.UpgradeValueBy(6);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.ExtraDamage.UpgradeValueBy(6);
+        DynamicVars.Block.UpgradeValueBy(2);
+    }
 
     private static decimal BufferStacks(CardModel card, Creature? _) =>
         card.Owner.Creature.GetPower<BufferPower>()?.Amount ?? 0;
@@ -80,13 +85,13 @@ public sealed class ChargeUp() : KirbyCard(1, CardType.Power, CardRarity.Uncommo
     protected override void OnUpgrade() => DynamicVars.Strength.UpgradeValueBy(1);
 }
 
-/// <summary>真空打击: deal 1 damage 6(8) times. Fighter: Retain.</summary>
+/// <summary>真空打击: deal 1 damage 8(10) times. Fighter: Retain.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class VacuumStrike() : KirbyCard(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fighter];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(1, ValueProp.Move), new RepeatVar(6)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(1, ValueProp.Move), new RepeatVar(8)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {

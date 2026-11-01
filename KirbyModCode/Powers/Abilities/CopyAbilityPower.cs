@@ -1,3 +1,4 @@
+using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -55,6 +56,18 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
     /// <summary>Whether a heavy hit makes Kirby lose this ability (Star Rod: no).</summary>
     public virtual bool LostToHeavyHits => true;
+
+    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        KirbySprite.SetAbility(Owner, CopyAbilities.Held(Owner.Player!).FirstOrDefault()?.Kind);
+        return Task.CompletedTask;
+    }
+
+    public override Task AfterRemoved(Creature oldOwner)
+    {
+        KirbySprite.SetAbility(oldOwner, CopyAbilities.Held(oldOwner.Player!).FirstOrDefault(power => power != this)?.Kind);
+        return Task.CompletedTask;
+    }
 
     // Shown as a badge next to the energy counter instead (KirbyAbilityHud).
     protected override bool IsVisibleInternal => false;

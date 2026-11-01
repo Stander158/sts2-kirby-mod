@@ -93,12 +93,12 @@ public sealed class MedicineWeak() : ModCardTemplate(1, CardType.Skill, CardRari
     protected override void OnUpgrade() => DynamicVars[nameof(WeakPower)].UpgradeValueBy(1);
 }
 
-/// <summary>投掷药丸: an enemy takes 7(9) damage and 3(4) Poison; you or an ally heals 3(4). Exhaust. Doctor: Retain, Replay 1.</summary>
+/// <summary>投掷药丸: an enemy takes 7(9) damage and 3(4) Poison; you or an ally heals 4(5). Exhaust. Doctor: Retain, Replay 1.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarity.Common)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(7, ValueProp.Move), new PowerVar<PoisonPower>(3), new HealVar(3)];
+        [new DamageVar(7, ValueProp.Move), new PowerVar<PoisonPower>(3), new HealVar(4)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<PoisonPower>()];
 

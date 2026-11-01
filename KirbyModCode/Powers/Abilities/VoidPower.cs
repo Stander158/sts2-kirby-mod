@@ -2,7 +2,6 @@ using KirbyMod.Cards;
 using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
@@ -37,18 +36,6 @@ public sealed class VoidPower : CopyAbilityPower
 
     public override PowerAssetProfile AssetProfile => KirbyArt.Power("void");
 
-    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
-    {
-        KirbySprite.SetVoid(Owner, true);
-        return Task.CompletedTask;
-    }
-
-    public override Task AfterRemoved(Creature oldOwner)
-    {
-        KirbySprite.SetVoid(oldOwner, false);
-        return Task.CompletedTask;
-    }
-
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
         await Grant<StrengthPower>(ctx, SwordPower.Strength + BoomerangPower.Strength + FighterPower.Strength);
@@ -58,7 +45,7 @@ public sealed class VoidPower : CopyAbilityPower
         await CreatureCmd.GainBlock(Owner, WheelPower.BlockOnGain, ValueProp.Unpowered, null);
     }
 
-    // Counts as Sword and Doctor: Meta Knight's Revenge costs 0, Experiment 1 less (see SwordPower, DoctorPower).
+    // Counts as Sword and Doctor: Meta Knight's Revenge costs 1, Experiment 1 less (see SwordPower, DoctorPower).
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
         modifiedCost = originalCost;
@@ -66,7 +53,7 @@ public sealed class VoidPower : CopyAbilityPower
             return false;
 
         if (card is MetaKnightRevenge)
-            modifiedCost = 0m;
+            modifiedCost = Math.Min(originalCost, MetaKnightRevenge.SwordCost);
         else if (card is Experiment)
             modifiedCost = Math.Max(0m, originalCost - 1);
         else

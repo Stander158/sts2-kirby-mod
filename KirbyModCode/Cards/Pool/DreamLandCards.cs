@@ -31,7 +31,7 @@ public sealed class MineBattle() : KirbyCard(2, CardType.Skill, CardRarity.Commo
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(5);
 }
 
-/// <summary>春风 (0-cost starter card, never offered): with a copy ability, gain 2(3) energy; without one, draw 2 cards instead.</summary>
+/// <summary>春风 (0-cost starter card, never offered): with a copy ability, gain 2 energy; without one, draw 2(3) cards instead.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 [RegisterCharacterStarterCard(typeof(Kirby), 1, Order = 40)]
 public sealed class SpringBreeze() : KirbyCard(0, CardType.Skill, CardRarity.Basic, TargetType.Self)
@@ -46,10 +46,10 @@ public sealed class SpringBreeze() : KirbyCard(0, CardType.Skill, CardRarity.Bas
             await CardPileCmd.Draw(ctx, DynamicVars.Cards.BaseValue, Owner);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1);
 }
 
-/// <summary>巨大锋翼鸟 (Dynablade, 0 cost): deal 7(9). Every Strike in your hand becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
+/// <summary>巨大锋翼鸟 (Dynablade, 0 cost): deal 7(9). Every Strike in your hand (upgraded: in all your piles) becomes a Peck for this combat; an upgraded Strike becomes a Peck+.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
@@ -62,7 +62,8 @@ public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Commo
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
 
-        var strikes = PileType.Hand.GetPile(Owner).Cards.Where(card => card.Tags.Contains(CardTag.Strike)).ToList();
+        var piles = IsUpgraded ? KirbyMouth.LivePiles : [PileType.Hand];
+        var strikes = piles.SelectMany(pile => pile.GetPile(Owner).Cards).Where(card => card.Tags.Contains(CardTag.Strike)).ToList();
         foreach (var strike in strikes)
             await CardCmd.Transform(strike, KirbyMouth.CreateCard<VanillaCards.Peck>(Owner, strike.IsUpgraded));
     }
@@ -72,7 +73,7 @@ public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Commo
 
 /// <summary>梦之泉: shuffle 1(2) Wish into your draw pile.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class FountainOfDreams() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.Self)
+public sealed class FountainOfDreams() : KirbyCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
 

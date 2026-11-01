@@ -19,7 +19,7 @@ namespace KirbyMod.Cards;
 
 /// <summary>霜冻: turn up to 1(2) cards in hand into Ice Blocks. Ice: Retain, and this turn Ice Blocks deal +4(6) damage and give +3(5) Block.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class Frost() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+public sealed class Frost() : KirbyCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Ice];
 
@@ -79,7 +79,7 @@ public sealed class KirbyFireball() : KirbyCard(1, CardType.Attack, CardRarity.U
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(8);
 }
 
-/// <summary>究极剑斩: Exhaust. Deal 14(20); Vigor affects this card 3(5) times; then gain Sword if not held. Sword: Retain, Replay 1.</summary>
+/// <summary>究极剑斩: Exhaust. Deal 17(24); Vigor affects this card 3(5) times; then gain Sword if not held. Sword: Retain, Replay 1.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
 {
@@ -88,7 +88,7 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(14, ValueProp.Move), new DynamicVar("VigorTimes", 3)];
+        [new DamageVar(17, ValueProp.Move), new DynamicVar("VigorTimes", 3)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<VigorPower>(), HoverTipFactory.FromPower<SwordPower>()];
@@ -116,7 +116,7 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(6);
+        DynamicVars.Damage.UpgradeValueBy(7);
         DynamicVars["VigorTimes"].UpgradeValueBy(2);
     }
 }
@@ -198,13 +198,13 @@ public sealed class SnowBowl() : KirbyCard(2, CardType.Skill, CardRarity.Rare, T
     }
 }
 
-/// <summary>冰壶 (0 cost): you or an ally loses all Block and gains 1 Buffer per 15(10) Block lost. Exhaust. Stone: Retain, and it is not exhausted.</summary>
+/// <summary>冰壶 (0 cost): you or an ally loses all Block and gains 1 Buffer per 10(8) Block lost. Exhaust. Stone: Retain, and it is not exhausted.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class CurlingStone() : KirbyCard(0, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Stone];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("BlockPerBuffer", 15)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("BlockPerBuffer", 10)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<BufferPower>()];
 
@@ -226,7 +226,7 @@ public sealed class CurlingStone() : KirbyCard(0, CardType.Skill, CardRarity.Unc
     protected override PileType GetResultPileTypeForCardPlay() =>
         SynergyActive ? base.GetResultPileTypeForCardPlay() : PileType.Exhaust;
 
-    protected override void OnUpgrade() => DynamicVars["BlockPerBuffer"].UpgradeValueBy(-5);
+    protected override void OnUpgrade() => DynamicVars["BlockPerBuffer"].UpgradeValueBy(-2);
 }
 
 /// <summary>粉红恶魔: apply 1(2) Vulnerable and 1 Weak. If you have a copy ability, draw 1(2).</summary>

@@ -12,7 +12,7 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>车轮驰骋: gain 4 Block 3(4) times. Wheel: Retain, and gain 1 Dexterity.</summary>
+/// <summary>车轮驰骋: gain 5 Block 3(4) times. Wheel: Retain, and gain 1 Dexterity.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class WheelDash() : KirbyCard(2, CardType.Skill, CardRarity.Uncommon, TargetType.Self)
 {
@@ -21,7 +21,7 @@ public sealed class WheelDash() : KirbyCard(2, CardType.Skill, CardRarity.Uncomm
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new BlockVar(4, ValueProp.Move), new RepeatVar(3), new PowerVar<DexterityPower>(1)];
+        [new BlockVar(5, ValueProp.Move), new RepeatVar(3), new PowerVar<DexterityPower>(1)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {

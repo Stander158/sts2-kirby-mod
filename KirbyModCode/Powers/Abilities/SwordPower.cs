@@ -34,7 +34,7 @@ public sealed class SwordPower : CopyAbilityPower
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
         var applies = card is MetaKnightRevenge && card.Owner == Owner.Player;
-        modifiedCost = applies ? 0m : originalCost;
+        modifiedCost = applies ? Math.Min(originalCost, MetaKnightRevenge.SwordCost) : originalCost;
         return applies;
     }
 }

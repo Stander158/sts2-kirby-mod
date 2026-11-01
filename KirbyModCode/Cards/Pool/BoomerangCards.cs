@@ -36,27 +36,31 @@ public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.
     }
 }
 
-/// <summary>终极切割: deal 2(3) damage to ALL enemies 4 times, gain 6 Block. Boomerang: Retain, +2(3) per hit.</summary>
+/// <summary>终极切割: deal 3(4) damage to ALL enemies 4 times, gain 2(3) Block 3 times. Boomerang: Retain, +2(3) per hit.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class FinalCutter() : KirbyCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
+    private const int BlockHits = 3;
+
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Boomerang];
 
     public override bool GainsBlock => true;
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [.. SynergyDamage(2, 2), new RepeatVar(4), new BlockVar(6, ValueProp.Move)];
+        [.. SynergyDamage(3, 2), new RepeatVar(4), new BlockVar(2, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
             .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_big_slash").Execute(ctx);
-        await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
+        for (var i = 0; i < BlockHits; i++)
+            await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.CalculationBase.UpgradeValueBy(1);
         DynamicVars.ExtraDamage.UpgradeValueBy(1);
+        DynamicVars.Block.UpgradeValueBy(1);
     }
 }
