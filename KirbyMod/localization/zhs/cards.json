@@ -95,7 +95,7 @@
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.title": "星之齿轮",
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.description": "[gold]吐星星[/gold]的伤害增加{StarBulletPower:diff()}%。\n伤害在{SplashThreshold}以上的吐星星，对其他敌人造成相同的伤害。",
   "KIRBY_MOD_CARD_FORCE_BLAST.title": "波动拳",
-  "KIRBY_MOD_CARD_FORCE_BLAST.description": "若你的[gold]手牌[/gold]中没有[gold]发射[/gold]，生成一张[gold]发射[/gold]放入你的[gold]手牌[/gold]。\n你[gold]手牌[/gold]中的[gold]发射[/gold]攻击次数+{Hits:diff()}。\n[gold]格斗家[/gold]：它们的伤害再+{FighterBonus}。\n将此牌返回你的[gold]手牌[/gold]。",
+  "KIRBY_MOD_CARD_FORCE_BLAST.description": "若你的[gold]手牌[/gold]中没有[gold]发射[/gold]，生成一张[gold]发射[/gold]放入你的[gold]手牌[/gold]。\n你[gold]手牌[/gold]中的[gold]发射[/gold]攻击次数+{Hits:diff()}。\n[gold]格斗家[/gold]：[gold]保留[/gold]，它们的伤害再+{FighterBonus}。\n将此牌返回你的[gold]手牌[/gold]。",
   "KIRBY_MOD_CARD_LAUNCH.title": "发射",
   "KIRBY_MOD_CARD_LAUNCH.description": "造成{Damage:diff()}点伤害{Repeat:diff()}次。",
   "KIRBY_MOD_CARD_SCAN.title": "扫描",

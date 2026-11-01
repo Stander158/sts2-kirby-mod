@@ -95,7 +95,7 @@
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.title": "Star Gear",
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.description": "[gold]Star Spit[/gold] deals {StarBulletPower:diff()}% more damage.\nA Star Spit of {SplashThreshold}+ damage also hits every other enemy.",
   "KIRBY_MOD_CARD_FORCE_BLAST.title": "Force Blast",
-  "KIRBY_MOD_CARD_FORCE_BLAST.description": "If there is no [gold]Launch[/gold] in your [gold]Hand[/gold], add one to your [gold]Hand[/gold].\n[gold]Launches[/gold] in your [gold]Hand[/gold] hit {Hits:diff()} more {Hits:plural:time|times}.\n[gold]Fighter[/gold]: they also deal {FighterBonus} more damage.\nReturn this card to your [gold]Hand[/gold].",
+  "KIRBY_MOD_CARD_FORCE_BLAST.description": "If there is no [gold]Launch[/gold] in your [gold]Hand[/gold], add one to your [gold]Hand[/gold].\n[gold]Launches[/gold] in your [gold]Hand[/gold] hit {Hits:diff()} more {Hits:plural:time|times}.\n[gold]Fighter[/gold]: [gold]Retain[/gold], they also deal {FighterBonus} more damage.\nReturn this card to your [gold]Hand[/gold].",
   "KIRBY_MOD_CARD_LAUNCH.title": "Launch",
   "KIRBY_MOD_CARD_LAUNCH.description": "Deal {Damage:diff()} damage {Repeat:diff()} times.",
   "KIRBY_MOD_CARD_SCAN.title": "Scan",

@@ -20,8 +20,7 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
 {
     private const int FighterDamageBonus = 1;
 
-    // Fighter boosts Launch, but this card itself is not retained (no SynergyAbilities).
-    private static readonly CopyAbilityKind[] Fighter = [CopyAbilityKind.Fighter];
+    public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Fighter];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
         [new DynamicVar("Hits", 2), new DynamicVar("FighterBonus", FighterDamageBonus)];
@@ -36,7 +35,7 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Commo
             await CardPileCmd.AddGeneratedCardToCombat(launch, PileType.Hand, Owner);
         }
 
-        var fighter = CopyAbilities.Has(Owner, Fighter);
+        var fighter = SynergyActive;
         foreach (var launch in Launches().ToList())
         {
             launch.DynamicVars.Repeat.UpgradeValueBy(DynamicVars["Hits"].BaseValue);
