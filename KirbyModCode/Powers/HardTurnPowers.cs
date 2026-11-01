@@ -1,4 +1,5 @@
 using KirbyMod.Cards;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models.Powers;
 using STS2RitsuLib.Combat.Powers;
 using STS2RitsuLib.Interop.AutoRegistration;
@@ -13,6 +14,11 @@ public sealed class HardTurnDexterityPower : ModTemporaryAppliedPowerTemplate<Ha
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("dexterity_power");
 
     protected override bool IsPositive => false;
+
+    // The base game's temporary Dexterity text.
+    public override LocString Description => new("powers", "TEMPORARY_DEXTERITY_DOWN.description");
+
+    protected override string SmartDescriptionLocKey => "TEMPORARY_DEXTERITY_DOWN.smartDescription";
 }
 
 /// <summary>急速转弯: Strength up until the end of the turn.</summary>
@@ -22,4 +28,9 @@ public sealed class HardTurnStrengthPower : ModTemporaryAppliedPowerTemplate<Har
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("strength_power");
 
     protected override bool IsPositive => true;
+
+    // The base game's temporary Strength text.
+    public override LocString Description => new("powers", "TEMPORARY_STRENGTH_POWER.description");
+
+    protected override string SmartDescriptionLocKey => "TEMPORARY_STRENGTH_POWER.smartDescription";
 }
