@@ -15,10 +15,10 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// V-O-I-D (Ancient frame, from Darv's Dusty Tome): 3(2) cost, Ethereal, Exhaust; its text is garbled on purpose. In
+/// V-O-I-D (Ancient frame, from Darv's Dusty Tome): 3 cost, Ethereal, Exhaust; its text is garbled on purpose. In
 /// order: lose every copy ability (other powers such as Smash Bros. Kirby stay); discard your hand except Drop Ability;
 /// every ability's badge appears one after another, for show only; gain the Void ability (<see cref="VoidPower" />,
-/// leftmost) with a shake and a flash, and 5 energy; the other badges vanish; add one of each Void card (upgraded with
+/// leftmost) with a shake and a flash, and 3 energy; the other badges vanish; add one of each Void card (upgraded with
 /// this), Ethereal and Exhaust; and at the start of your next turn Void's 60 hits land (<see cref="VoidDoomPower" />).
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
@@ -31,7 +31,7 @@ public sealed class VoidCard() : ModCardTemplate(3, CardType.Skill, CardRarity.A
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(5)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(3)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<VoidPower>(), HoverTipFactory.FromPower<VoidDoomPower>()];
@@ -67,6 +67,4 @@ public sealed class VoidCard() : ModCardTemplate(3, CardType.Skill, CardRarity.A
         if (!Owner.Creature.HasPower<VoidDoomPower>())
             await PowerCmd.Apply<VoidDoomPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }

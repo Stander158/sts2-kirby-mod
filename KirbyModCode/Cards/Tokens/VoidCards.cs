@@ -56,21 +56,19 @@ public sealed class VoidLoudSong() : VoidMoveCard(CardType.Attack, TargetType.An
     protected override void OnUpgrade() => DynamicVars.Repeat.UpgradeValueBy(2);
 }
 
-/// <summary>Deadly Sun: gain 3(4) energy, then draw until your hand is full.</summary>
+/// <summary>Deadly Sun: (upgraded: gain 1 energy, then) draw until your hand is full.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class VoidDeadlySun() : VoidMoveCard(CardType.Skill, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new EnergyVar(3)];
-
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
+        if (IsUpgraded)
+            await PlayerCmd.GainEnergy(1, Owner);
+
         var room = CardPile.MaxCardsInHand - PileType.Hand.GetPile(Owner).Cards.Count;
         if (room > 0)
             await CardPileCmd.Draw(ctx, room, Owner);
     }
-
-    protected override void OnUpgrade() => DynamicVars.Energy.UpgradeValueBy(1);
 }
 
 /// <summary>Pleasant Dream: stun an enemy (upgraded: every enemy), with a loud thud and a shake.</summary>

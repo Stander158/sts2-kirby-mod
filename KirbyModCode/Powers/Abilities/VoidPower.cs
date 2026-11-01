@@ -16,7 +16,8 @@ namespace KirbyMod.Powers;
 /// 虚无 (from the Void card): every ability at once, folded into one. It keeps the stat bonuses of the abilities it
 /// soaked up (none of their cards, energy, Burns or Ice Blocks; Sleep, Carby, Star Rod and Master are left out) and
 /// counts as each of them for "X: ..." cards. It cannot be lost to damage or dropped (see
-/// <see cref="KirbyMouth.DropCopyAbility" />); <see cref="VoidDoomPower" /> ends it. While held, Kirby's sprite is Void.
+/// <see cref="KirbyMouth.DropCopyAbility" />) and no other ability can be gained on top of it (see
+/// <see cref="CopyAbilities.Gain" />); <see cref="VoidDoomPower" /> ends it. While held, Kirby's sprite is Void.
 /// When a new copy ability is added to the mod, add its on-gain stat bonus to <see cref="OnGained" /> and its kind to
 /// <see cref="CountsAs" /> (and update the V-O-I-D texts and DESIGN.md).
 /// </summary>

@@ -174,7 +174,7 @@ public static class KirbyMouth
         return true;
     }
 
-    /// <summary>True (and Ability Lock applied) when <paramref name="player" /> holds Void, which cannot be given up.</summary>
+    /// <summary>True (and Ability Lock applied) when <paramref name="player" /> holds Void, which cannot be given up or changed.</summary>
     public static async Task<bool> BlockedByVoid(PlayerChoiceContext ctx, Player player)
     {
         var kirby = player.Creature;

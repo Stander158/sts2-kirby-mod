@@ -249,12 +249,15 @@ public static class CopyAbilities
     /// Gives Kirby the copy ability <paramref name="kind" />. Without Smash Bros. Kirby the previous abilities are lost
     /// first (their cards exhausted); with it they stay, and regaining a held ability repeats its on-gain effect.
     /// Under Super Ability the same ability is gained twice: everything below happens a second time, as if it were
-    /// regained while held.
+    /// regained while held. While Kirby holds Void nothing else can be gained: he gets Ability Lock instead.
     /// </summary>
     public static async Task Gain(PlayerChoiceContext ctx, Player player, CopyAbilityKind kind, bool upgraded,
         CardModel? source, PileType dropAbilityPile = PileType.Hand, bool keepOthers = false, bool allowEndTurn = true)
     {
         var kirby = player.Creature;
+
+        if (kind != CopyAbilityKind.Void && await KirbyMouth.BlockedByVoid(ctx, player))
+            return;
 
         // Sleep has its own sound (SleepPower).
         if (kind != CopyAbilityKind.Sleep)
