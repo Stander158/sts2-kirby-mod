@@ -59,13 +59,13 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
     public override Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
-        KirbySprite.SetAbility(Owner, CopyAbilities.Held(Owner.Player!).FirstOrDefault()?.Kind);
+        KirbySprite.SetAbility(Owner, CopyAbilities.Held(Owner.Player!).LastOrDefault()?.Kind);
         return Task.CompletedTask;
     }
 
     public override Task AfterRemoved(Creature oldOwner)
     {
-        KirbySprite.SetAbility(oldOwner, CopyAbilities.Held(oldOwner.Player!).FirstOrDefault(power => power != this)?.Kind);
+        KirbySprite.SetAbility(oldOwner, CopyAbilities.Held(oldOwner.Player!).LastOrDefault(power => power != this)?.Kind);
         return Task.CompletedTask;
     }
 

@@ -5,7 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 namespace KirbyMod.Characters;
 
 /// <summary>
-/// Kirby's combat sprite, in order of priority: the first-gained copy ability he holds (Void huge), inhaling (not in the
+/// Kirby's combat sprite, in order of priority: the latest copy ability he gained and still holds (Void huge), inhaling (not in the
 /// Robobot Armor), Mouthful (twice as big), the Robobot Armor, else the normal one. A picture that is not there (public
 /// build) is skipped. Ability pictures
 /// fill the same canvas whatever else is in them (a long sword, a wheel...), so each has its own scale that brings
