@@ -20,17 +20,3 @@ public sealed class HardTurnDexterityPower : ModTemporaryAppliedPowerTemplate<Ha
 
     protected override string SmartDescriptionLocKey => "TEMPORARY_DEXTERITY_DOWN.smartDescription";
 }
-
-/// <summary>急速转弯: Strength up until the end of the turn.</summary>
-[RegisterPower]
-public sealed class HardTurnStrengthPower : ModTemporaryAppliedPowerTemplate<HardTurn, StrengthPower>
-{
-    public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("strength_power");
-
-    protected override bool IsPositive => true;
-
-    // The base game's temporary Strength text.
-    public override LocString Description => new("powers", "TEMPORARY_STRENGTH_POWER.description");
-
-    protected override string SmartDescriptionLocKey => "TEMPORARY_STRENGTH_POWER.smartDescription";
-}

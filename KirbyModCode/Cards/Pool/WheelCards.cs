@@ -138,7 +138,7 @@ public sealed class HardTurn() : KirbyCard(0, CardType.Skill, CardRarity.Rare, T
         var strength = DynamicVars["StrGain"].BaseValue;
         if (SynergyActive)
             strength += Math.Max(0, kirby.GetPowerAmount<DexterityPower>());
-        await PowerCmd.Apply<HardTurnStrengthPower>(ctx, kirby, strength, kirby, this);
+        await PowerCmd.Apply<SetupStrikePower>(ctx, kirby, strength, kirby, this);
     }
 
     protected override void OnUpgrade() => DynamicVars["StrGain"].UpgradeValueBy(2);
