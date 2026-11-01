@@ -396,3 +396,5 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 获得满嘴：SE_HOOBARI。
 - 卡比获得格挡：SE_GUARD，替换原版格挡音效。
 - 获得睡眠能力：SE_ENESLEEP。
+- 获得其他能力：SE_PWUP。
+- 打出舍弃能力：SE_PWSELECT。

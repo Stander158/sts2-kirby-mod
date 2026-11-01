@@ -27,6 +27,8 @@ internal static class KirbyFx
     public const string MouthfulSound = "mouthful.wav";
     public const string GuardSound = "guard.wav";
     public const string SleepSound = "sleep.wav";
+    public const string AbilityGainSound = "ability_gain.wav";
+    public const string AbilityDropSound = "ability_drop.wav";
 
     private const float SoundVolume = 0.6f;
 

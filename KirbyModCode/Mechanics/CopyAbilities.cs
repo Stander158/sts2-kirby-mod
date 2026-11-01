@@ -256,6 +256,10 @@ public static class CopyAbilities
     {
         var kirby = player.Creature;
 
+        // Sleep has its own sound (SleepPower).
+        if (kind != CopyAbilityKind.Sleep)
+            KirbyFx.PlaySound(KirbyFx.AbilityGainSound);
+
         var times = 1;
         if (kirby.GetPower<SuperAbilityPower>() is { } super)
         {

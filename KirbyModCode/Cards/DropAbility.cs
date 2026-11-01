@@ -21,6 +21,7 @@ public sealed class DropAbility() : ModCardTemplate(0, CardType.Power, CardRarit
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.AbilityDropSound);
         await KirbyMouth.DropCopyAbility(ctx, Owner);
     }
 }
