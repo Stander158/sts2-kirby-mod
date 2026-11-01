@@ -36,7 +36,7 @@ internal static class KirbySprite
         [CopyAbilityKind.Ice] = 1.45f,
         [CopyAbilityKind.Fire] = 2f,
         [CopyAbilityKind.Sleep] = 1.2f,
-        [CopyAbilityKind.Plasma] = 2.4f,
+        [CopyAbilityKind.Plasma] = 1.9f,
         [CopyAbilityKind.Car] = 2.2f,
         [CopyAbilityKind.StarRod] = 2.6f,
         [CopyAbilityKind.Galaxia] = 2f,
