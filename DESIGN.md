@@ -387,3 +387,12 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 测试用空存档位，不用和朋友联机的那个。
 - 和朋友联机前，在 mod 列表里关掉 KirbyMod。
 - 存档备份：`D:\StS2Modding\backups\saves-2026-10-26`。
+
+## 音效
+
+自带音效放在私有美术目录的 `audio/`（`.wav.import` 设为 keep，保留原始 wav），由 `KirbyFx.PlaySound` 播放：
+- 吸入：所有吸入牌打出时（SE_SUIKOMI 前 2 秒）。
+- 吐星星：打出时（SE_STARSHOT 接 SE_PARIN）。
+- 获得满嘴：SE_HOOBARI。
+- 卡比获得格挡：SE_GUARD，替换原版格挡音效。
+- 获得睡眠能力：SE_ENESLEEP。

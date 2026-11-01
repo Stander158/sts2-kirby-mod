@@ -1,4 +1,5 @@
 using KirbyMod.Characters;
+using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
@@ -20,6 +21,7 @@ public sealed class MouthfulPower : ModPowerTemplate
     public override Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
         KirbySprite.SetMouthful(Owner, true);
+        KirbyFx.PlaySound(KirbyFx.MouthfulSound);
         return Task.CompletedTask;
     }
 

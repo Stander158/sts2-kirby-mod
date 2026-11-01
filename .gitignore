@@ -8,3 +8,4 @@ publish/
 
 # Generated from art/public + the private art folder (see AssembleArt in KirbyMod.csproj)
 KirbyMod/images/
+KirbyMod/audio/

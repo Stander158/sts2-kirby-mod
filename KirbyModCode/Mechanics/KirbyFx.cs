@@ -1,8 +1,11 @@
 using Godot;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands.Builders;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Nodes;
 using MegaCrit.Sts2.Core.Nodes.Vfx;
+using MegaCrit.Sts2.Core.Saves;
+using STS2RitsuLib.Audio;
 
 namespace KirbyMod.Mechanics;
 
@@ -17,6 +20,25 @@ internal static class KirbyFx
 
     /// <summary>A quick blade hit (the Kin's minion).</summary>
     public const string SlashSfx = "event:/sfx/enemy/enemy_attacks/the_kin_minion/the_kin_minion_quick_slash";
+
+    // Kirby's own sounds (KirbyMod/audio, assembled from the private art folder like the card art).
+    public const string InhaleSound = "inhale.wav";
+    public const string SpitStarSound = "spit_star.wav";
+    public const string MouthfulSound = "mouthful.wav";
+    public const string GuardSound = "guard.wav";
+    public const string SleepSound = "sleep.wav";
+
+    private const float SoundVolume = 0.6f;
+
+    /// <summary>Plays one of Kirby's own sounds, at the game's SFX volume.</summary>
+    public static void PlaySound(string file)
+    {
+        if (NonInteractiveMode.IsActive || CombatManager.Instance.IsEnding)
+            return;
+
+        var sfxVolume = SaveManager.Instance.SettingsSave.VolumeSfx;
+        FmodStudioStreamingFiles.TryPlayResourceSound("res://KirbyMod/audio/" + file, SoundVolume * sfxVolume * sfxVolume);
+    }
 
     /// <summary>Plasma attacks: a lightning strike with its sound.</summary>
     public static AttackCommand WithLightningHit(this AttackCommand attack) =>

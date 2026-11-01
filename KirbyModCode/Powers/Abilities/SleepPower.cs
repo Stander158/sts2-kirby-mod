@@ -34,6 +34,12 @@ public sealed class SleepPower : CopyAbilityPower
 
     public override bool EndsTurnOnGain => true;
 
+    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        KirbyFx.PlaySound(KirbyFx.SleepSound);
+        return base.AfterApplied(applier, cardSource);
+    }
+
     public override Task OnGained(PlayerChoiceContext ctx, Player player)
     {
         State.TimesGained++;

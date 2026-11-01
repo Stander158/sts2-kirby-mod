@@ -49,6 +49,7 @@
         <ItemGroup>
             <PublicArt Include="art/public/images/**/*.png"/>
             <PrivateArt Include="$(KirbyPrivateArtDir)images/**/*.png" Condition="'$(KirbyPrivateArtDir)' != '' and Exists('$(KirbyPrivateArtDir)images')"/>
+            <PrivateAudio Include="$(KirbyPrivateArtDir)audio/**/*" Condition="'$(KirbyPrivateArtDir)' != '' and Exists('$(KirbyPrivateArtDir)audio')"/>
         </ItemGroup>
         <Message Text="Art: $(KirbyPrivateArtDir)images found, using private art over placeholders" Importance="high"
                  Condition="'@(PrivateArt)' != ''"/>
@@ -56,6 +57,8 @@
         <Copy SourceFiles="@(PublicArt)" DestinationFiles="@(PublicArt->'KirbyMod/images/%(RecursiveDir)%(Filename)%(Extension)')"
               SkipUnchangedFiles="true"/>
         <Copy SourceFiles="@(PrivateArt)" DestinationFiles="@(PrivateArt->'KirbyMod/images/%(RecursiveDir)%(Filename)%(Extension)')"
+              SkipUnchangedFiles="true"/>
+        <Copy SourceFiles="@(PrivateAudio)" DestinationFiles="@(PrivateAudio->'KirbyMod/audio/%(RecursiveDir)%(Filename)%(Extension)')"
               SkipUnchangedFiles="true"/>
     </Target>
 

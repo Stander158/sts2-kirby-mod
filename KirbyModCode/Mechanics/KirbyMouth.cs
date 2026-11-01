@@ -30,6 +30,8 @@ public static class KirbyMouth
         Entry.Logger.Info($"[Inhale] {target.Monster?.Id.Entry} move={target.Monster?.NextMove.Id} " +
                           $"hp={target.CurrentHp}/{target.MaxHp} -> ability={kind}{(readKind == null ? " (random)" : "")}, outcome={outcome}");
 
+        KirbyFx.PlaySound(KirbyFx.InhaleSound);
+
         // Hypernova Inhale: Frenzied Inhaled (dies at 33 HP or less) instead of Inhaled.
         if (source is UltimateInhale)
             await PowerCmd.Apply<FrenziedInhaledPower>(ctx, target, 1, kirby, source);

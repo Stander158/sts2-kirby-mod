@@ -37,6 +37,8 @@ public sealed class SpitStar() : ModCardTemplate(1, CardType.Attack, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.SpitStarSound);
+
         var attack = DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).WithHitFx("vfx/vfx_starry_impact");
         var splash = Owner.Creature.HasPower<StarBulletPower>()
                      && DynamicVars.CalculatedDamage.Calculate(cardPlay.Target) >= StarBulletPower.SplashThreshold;
