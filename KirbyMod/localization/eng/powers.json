@@ -1,4 +1,6 @@
 {
+  "KIRBY_MOD_NO_ABILITY.title": "No Ability",
+  "KIRBY_MOD_NO_ABILITY.description": "You have no ability right now. Try [gold]Inhaling[/gold] an enemy, then [gold]Swallow[/gold] next turn!",
   "KIRBY_MOD_POWER_INHALED_POWER.title": "Inhaled",
   "KIRBY_MOD_POWER_INHALED_POWER.description": "Before acting, dies if its HP is [blue]16[/blue] or less. Lasts until the applier's next turn.",
   "KIRBY_MOD_POWER_INHALED_POWER.smartDescription": "Before acting, dies if its HP is [blue]16[/blue] or less. Lasts until the applier's next turn.",

@@ -1,4 +1,6 @@
 {
+  "KIRBY_MOD_NO_ABILITY.title": "无能力",
+  "KIRBY_MOD_NO_ABILITY.description": "当前没有能力；去试试[gold]吸入[/gold]一个敌人，下回合[gold]吞咽[/gold]！",
   "KIRBY_MOD_POWER_INHALED_POWER.title": "被吸入",
   "KIRBY_MOD_POWER_INHALED_POWER.description": "行动前，若生命不高于[blue]16[/blue]，则死亡。持续到施加者的下回合开始。",
   "KIRBY_MOD_POWER_INHALED_POWER.smartDescription": "行动前，若生命不高于[blue]16[/blue]，则死亡。持续到施加者的下回合开始。",

@@ -4,13 +4,14 @@ using KirbyMod.Mechanics;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Nodes.HoverTips;
 
 namespace KirbyMod.Characters;
 
 /// <summary>
 /// Kirby's current copy ability as a big badge with its name, at the lower right of the energy counter (one badge per
-/// ability with Smash Bros. Kirby). Kirby's head shows while he has none; other characters (given an ability by
+/// ability with Smash Bros. Kirby). Kirby's head shows while he has none, with its own tip; other characters (given an ability by
 /// Ability Offering) only show badges while they hold one. New badges flip in, and hovering a real one shows the
 /// ability's tip above it to the left, growing upward so a long tip stays on screen. Badges can also be shown for abilities that are not held (<see cref="ShowPhantom" />,
 /// V-O-I-D's display). It is a child of the energy counter, so it slides in and out with it. The abilities themselves
@@ -62,7 +63,7 @@ internal static class KirbyAbilityHud
             if (entries.Count == 0)
             {
                 if (isKirby)
-                    root.AddChild(Badge(Load(KirbyHead), null, null, 0, before != null));
+                    root.AddChild(Badge(Load(KirbyHead), null, NoAbilityTip, 0, before != null));
                 return;
             }
 
@@ -71,7 +72,8 @@ internal static class KirbyAbilityHud
                 var entry = entries[i];
                 var model = entry.Held ?? (CopyAbilityPower)CopyAbilities.CanonicalPower(entry.Kind);
                 var isNew = before != null && !before.Contains(entry);
-                root.AddChild(Badge(BadgeTexture(model), ShortName(model), entry.Held, i, isNew));
+                root.AddChild(Badge(BadgeTexture(model), ShortName(model),
+                    entry.Held == null ? null : () => HoverTipFactory.FromPower(entry.Held), i, isNew));
             }
         }
 
@@ -80,14 +82,17 @@ internal static class KirbyAbilityHud
         energyCounter.AddChild(root);
     }
 
-    private static Control Badge(Texture2D? texture, string? name, CopyAbilityPower? power, int index, bool animate)
+    private static IHoverTip NoAbilityTip() => new HoverTip(new LocString("powers", "KIRBY_MOD_NO_ABILITY.title"),
+        new LocString("powers", "KIRBY_MOD_NO_ABILITY.description"));
+
+    private static Control Badge(Texture2D? texture, string? name, Func<IHoverTip>? tip, int index, bool animate)
     {
         var panel = new Control
         {
             Size = new Vector2(BadgeSize, BadgeSize),
             Position = Origin + new Vector2(index * (BadgeSize + BadgeGap), 0f),
             PivotOffset = new Vector2(BadgeSize, BadgeSize) / 2,
-            MouseFilter = power == null ? Control.MouseFilterEnum.Ignore : Control.MouseFilterEnum.Stop,
+            MouseFilter = tip == null ? Control.MouseFilterEnum.Ignore : Control.MouseFilterEnum.Stop,
         };
 
         var icon = new TextureRect
@@ -121,11 +126,11 @@ internal static class KirbyAbilityHud
             panel.AddChild(label);
         }
 
-        if (power != null)
+        if (tip != null)
         {
             panel.MouseEntered += () =>
             {
-                if (NHoverTipSet.CreateAndShow(panel, HoverTipFactory.FromPower(power)) is { } tips)
+                if (NHoverTipSet.CreateAndShow(panel, tip()) is { } tips)
                     PlaceAbove(tips, panel);
             };
             panel.MouseExited += () => NHoverTipSet.Remove(panel);
