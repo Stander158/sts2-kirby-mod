@@ -6,8 +6,10 @@ namespace KirbyMod.Characters;
 
 /// <summary>
 /// Kirby's combat sprite, in order of priority: the first-gained copy ability he holds (Void huge), Mouthful (twice as
-/// big), the Robobot Armor, else the normal one. A picture that is not there (public build) is skipped. The sprite is
-/// anchored at Kirby's feet, so bigger ones grow upward. Each state is remembered on the sprite node.
+/// big), the Robobot Armor, else the normal one. A picture that is not there (public build) is skipped. Ability pictures
+/// fill the same canvas whatever else is in them (a long sword, a wheel...), so each has its own scale that brings
+/// Kirby's body to the size of the normal sprite (Carby stays a car). The sprite is anchored at Kirby's feet, so bigger
+/// ones grow upward. Each state is remembered on the sprite node.
 /// </summary>
 internal static class KirbySprite
 {
@@ -23,14 +25,37 @@ internal static class KirbySprite
     private const string MouthfulMeta = "kirby_mouthful";
     private const string RobobotMeta = "kirby_robobot";
     private const string AbilityMeta = "kirby_ability";
+    private const string AbilityScaleMeta = "kirby_ability_scale";
+
+    private static readonly Dictionary<CopyAbilityKind, float> AbilityScales = new()
+    {
+        [CopyAbilityKind.Sword] = 1.5f,
+        [CopyAbilityKind.Boomerang] = 1.25f,
+        [CopyAbilityKind.Stone] = 1.9f,
+        [CopyAbilityKind.Fighter] = 1.5f,
+        [CopyAbilityKind.Ice] = 1.45f,
+        [CopyAbilityKind.Fire] = 2f,
+        [CopyAbilityKind.Sleep] = 1.2f,
+        [CopyAbilityKind.Plasma] = 1.95f,
+        [CopyAbilityKind.Car] = 1f,
+        [CopyAbilityKind.StarRod] = 2.6f,
+        [CopyAbilityKind.Galaxia] = 2.4f,
+        [CopyAbilityKind.Doctor] = 2.5f,
+        [CopyAbilityKind.Wheel] = 1.2f,
+        [CopyAbilityKind.Void] = VoidScale,
+    };
 
     public static void SetMouthful(Creature creature, bool full) => Set(creature, MouthfulMeta, full);
 
     public static void SetRobobot(Creature creature, bool on) => Set(creature, RobobotMeta, on);
 
     /// <summary><paramref name="kind" />: the ability that now decides the sprite, or null for none.</summary>
-    public static void SetAbility(Creature creature, CopyAbilityKind? kind) =>
+    public static void SetAbility(Creature creature, CopyAbilityKind? kind)
+    {
+        if (creature.GetCreatureNode()?.Body is Sprite2D sprite)
+            sprite.SetMeta(AbilityScaleMeta, kind == null ? 1f : AbilityScales.GetValueOrDefault(kind.Value, 1f));
         Set(creature, AbilityMeta, kind == null ? "" : AbilityPath(kind.Value));
+    }
 
     private static string AbilityPath(CopyAbilityKind kind) =>
         kind == CopyAbilityKind.Void ? Void : AbilityPrefix + KirbyArt.SnakeCase(kind.ToString()) + ".png";
@@ -47,7 +72,7 @@ internal static class KirbySprite
 
         var ability = sprite.GetMeta(AbilityMeta, "").AsString();
         var (path, scale) =
-            ability != "" && ResourceLoader.Exists(ability) ? (ability, ability == Void ? VoidScale : 1f)
+            ability != "" && ResourceLoader.Exists(ability) ? (ability, sprite.GetMeta(AbilityScaleMeta, 1f).AsSingle())
             : sprite.GetMeta(MouthfulMeta, false).AsBool() && ResourceLoader.Exists(FullMouth) ? (FullMouth, FullMouthScale)
             : sprite.GetMeta(RobobotMeta, false).AsBool() && ResourceLoader.Exists(Robobot) ? (Robobot, RobobotScale)
             : (Normal, 1f);
