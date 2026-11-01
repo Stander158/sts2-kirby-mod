@@ -21,6 +21,7 @@ internal static class KirbyAbilityHud
 {
     private const string Badges = "res://KirbyMod/images/abilities/";
     private const string KirbyHead = "res://KirbyMod/images/character/icon.png";
+    private const string NoAbilityBadge = Badges + "none.png";
     private const float BadgeSize = 96f;
     private const float BadgeGap = 4f;
     private static readonly Vector2 Origin = new(75f, 75f);
@@ -63,7 +64,7 @@ internal static class KirbyAbilityHud
             if (entries.Count == 0)
             {
                 if (isKirby)
-                    root.AddChild(Badge(Load(KirbyHead), null, NoAbilityTip, 0, before != null));
+                    root.AddChild(Badge(Load(NoAbilityBadge) ?? Load(KirbyHead), null, NoAbilityTip, 0, before != null));
                 return;
             }
 
