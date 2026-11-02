@@ -21,7 +21,7 @@ internal static class KirbySprite
     private const string Void = KirbyTheme.CharacterImages + "kirby_void.png";
     private const string AbilityPrefix = KirbyTheme.CharacterImages + "kirby_ability_";
     private const float FullMouthScale = 2f;
-    private const float RobobotScale = 1.5f;
+    private const float RobobotScale = 2f;
     private const float InhalingScale = 1.1f;
     private const float VoidScale = 2.6f;
     private const string BaseScaleMeta = "kirby_base_scale";
@@ -44,7 +44,7 @@ internal static class KirbySprite
         [CopyAbilityKind.Car] = 2.2f,
         [CopyAbilityKind.StarRod] = 2.6f,
         [CopyAbilityKind.Galaxia] = 2f,
-        [CopyAbilityKind.Doctor] = 1.7f,
+        [CopyAbilityKind.Doctor] = 1.5f,
         [CopyAbilityKind.Wheel] = 1.2f,
         [CopyAbilityKind.Void] = VoidScale,
     };
