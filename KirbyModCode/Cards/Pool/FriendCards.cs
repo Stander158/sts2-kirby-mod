@@ -64,11 +64,11 @@ public abstract class FriendCard(int cost, CardType type, TargetType target) : K
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Ethereal, CardKeyword.Exhaust];
 }
 
-/// <summary>朋友火车: deal 7(8); this turn Friend Train hits on that enemy are doubled, stacking like Hang.</summary>
+/// <summary>朋友火车: deal 10(12); this turn Friend Train hits on that enemy are doubled, stacking like Hang.</summary>
 [RegisterCard(typeof(TokenCardPool))]
 public sealed class FriendTrain() : FriendCard(1, CardType.Attack, TargetType.AnyEnemy)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(7, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10, ValueProp.Move)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
@@ -84,7 +84,7 @@ public sealed class FriendTrain() : FriendCard(1, CardType.Attack, TargetType.An
         await PowerCmd.Apply<FriendTrainPower>(ctx, target, Math.Max(2, current), Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(1);
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2);
 }
 
 /// <summary>朋友桥梁: every other player gains 4(5) Plating.</summary>
