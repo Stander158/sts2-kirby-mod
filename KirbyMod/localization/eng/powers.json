@@ -148,5 +148,11 @@
   "KIRBY_MOD_POWER_VOID_DEFEAT_POWER.smartDescription": "At the start of your next turn, while ...?",
   "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.title": "Ability Unloseable",
   "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.description": "This ability can't be dropped!",
-  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.smartDescription": "This ability can't be dropped!"
+  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.smartDescription": "This ability can't be dropped!",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.title": "Friend Train",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.description": "[gold]Friend Train[/gold] deals [blue]X[/blue]x damage to this enemy. Removed at the end of your turn.",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.smartDescription": "[gold]Friend Train[/gold] deals [blue]{Amount}[/blue]x damage to this enemy. Removed at the end of your turn.",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.title": "Holding Bomb",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.description": "The [gold]Bomb Rally[/gold] in your hand deals [blue]X[/blue] damage. If it is still in your hand at the end of your turn, you take damage.",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.smartDescription": "The [gold]Bomb Rally[/gold] in your hand deals [blue]{Amount}[/blue] damage. If it is still in your hand at the end of your turn, you take damage."
 }

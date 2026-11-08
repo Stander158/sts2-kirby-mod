@@ -174,5 +174,19 @@
   "KIRBY_MOD_CARD_WHEEL_CRUSH.title": "Wheel Crush",
   "KIRBY_MOD_CARD_WHEEL_CRUSH.description": "Deal {Damage:diff()} damage.\n[gold]Dexterity[/gold] also counts as [gold]Strength[/gold] on this card.\n[gold]Wheel[/gold]: [gold]Retain[/gold], other enemies take the same damage.",
   "KIRBY_MOD_CARD_HARD_TURN.title": "Hard Turn",
-  "KIRBY_MOD_CARD_HARD_TURN.description": "This turn, lose {DexLoss:diff()} [gold]Dexterity[/gold] and gain {StrGain:diff()} temporary [gold]Strength[/gold].\n[gold]Wheel[/gold]: [gold]Retain[/gold], also gain temporary [gold]Strength[/gold] equal to your current [gold]Dexterity[/gold]."
+  "KIRBY_MOD_CARD_HARD_TURN.description": "This turn, lose {DexLoss:diff()} [gold]Dexterity[/gold] and gain {StrGain:diff()} temporary [gold]Strength[/gold].\n[gold]Wheel[/gold]: [gold]Retain[/gold], also gain temporary [gold]Strength[/gold] equal to your current [gold]Dexterity[/gold].",
+  "KIRBY_MOD_CARD_FRIEND_PLATFORM.title": "Friend Platform",
+  "KIRBY_MOD_CARD_FRIEND_PLATFORM.description": "Each player chooses 1 of 3 {IfUpgraded:show:upgraded |}Friend cards to add to their [gold]hand[/gold].",
+  "KIRBY_MOD_CARD_FRIEND_TRAIN.title": "Friend Train",
+  "KIRBY_MOD_CARD_FRIEND_TRAIN.description": "Deal {Damage:diff()} damage.\nDouble the damage [gold]Friend Train[/gold] deals to this enemy this turn.",
+  "KIRBY_MOD_CARD_FRIEND_BRIDGE.title": "Friend Bridge",
+  "KIRBY_MOD_CARD_FRIEND_BRIDGE.description": "All other players gain {PlatingPower:diff()} [gold]Plating[/gold].",
+  "KIRBY_MOD_CARD_FRIEND_CIRCLE.title": "Friend Circle",
+  "KIRBY_MOD_CARD_FRIEND_CIRCLE.description": "An ally gains {Energy:energyIcons()} and draws {Cards:diff()} {Cards:plural:card|cards}.",
+  "KIRBY_MOD_CARD_QUICK_DRAW.title": "Quick Draw",
+  "KIRBY_MOD_CARD_QUICK_DRAW.description": "Costs 1 more for each turn that has passed.\nIf you have not lost HP this combat, deal {Damage:diff()} damage.\nIf it is turn 1, apply {WeakPower:diff()} [gold]Weak[/gold] and {VulnerablePower:diff()} [gold]Vulnerable[/gold].",
+  "KIRBY_MOD_CARD_MEGATON_PUNCH.title": "Megaton Punch",
+  "KIRBY_MOD_CARD_MEGATON_PUNCH.description": "Deal {Damage:diff()} damage.\nIf this is the 4th card you've played this turn, deal {MegatonDamage:diff()} damage instead.",
+  "KIRBY_MOD_CARD_BOMB_RALLY.title": "Bomb Rally",
+  "KIRBY_MOD_CARD_BOMB_RALLY.description": "Choose an ally or an enemy.\nAlly: give them this card; it deals {BombBase:diff()} more damage.\nEnemy: deal {Damage:diff()} damage, then reset it to {BombBase:diff()}.\nAt the end of your turn, if this is in your hand, take {BombBase:diff()} damage."
 }

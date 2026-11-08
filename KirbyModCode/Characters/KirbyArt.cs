@@ -100,6 +100,13 @@ internal static class KirbyArt
         [typeof(WheelDash)] = "wk_wheel_dash",
         [typeof(WheelCharge)] = "wk_wheel_charge",
         [typeof(WheelieRider)] = "wk_wheelie_rider",
+        [typeof(FriendPlatform)] = "wk_friend_platform",
+        [typeof(FriendTrain)] = "wk_friend_train",
+        [typeof(FriendBridge)] = "wk_friend_bridge",
+        [typeof(FriendCircle)] = "wk_friend_circle",
+        [typeof(QuickDraw)] = "wk_quick_draw",
+        [typeof(MegatonPunch)] = "wk_megaton_punch",
+        [typeof(BombRally)] = "wk_bomb_rally",
     };
 
     private static bool Exists(string path) => Godot.ResourceLoader.Exists(path);

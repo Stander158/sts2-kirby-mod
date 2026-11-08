@@ -148,5 +148,11 @@
   "KIRBY_MOD_POWER_VOID_DEFEAT_POWER.smartDescription": "下回合开始时...的同时？",
   "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.title": "能力失去不能",
   "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.description": "这个能力不能丢掉！",
-  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.smartDescription": "这个能力不能丢掉！"
+  "KIRBY_MOD_POWER_ABILITY_LOCK_POWER.smartDescription": "这个能力不能丢掉！",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.title": "朋友火车",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.description": "[gold]朋友火车[/gold]对此敌人造成的伤害乘以[blue]X[/blue]。在你的回合结束时移除。",
+  "KIRBY_MOD_POWER_FRIEND_TRAIN_POWER.smartDescription": "[gold]朋友火车[/gold]对此敌人造成的伤害乘以[blue]{Amount}[/blue]。在你的回合结束时移除。",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.title": "持有炸弹",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.description": "你手中的[gold]炸弹接力[/gold]当前可造成[blue]X[/blue]点伤害。回合结束时若它还在你手中，你会受到伤害。",
+  "KIRBY_MOD_POWER_BOMB_HOLDER_POWER.smartDescription": "你手中的[gold]炸弹接力[/gold]当前可造成[blue]{Amount}[/blue]点伤害。回合结束时若它还在你手中，你会受到伤害。"
 }
