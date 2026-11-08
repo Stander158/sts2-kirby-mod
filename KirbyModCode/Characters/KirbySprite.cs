@@ -33,7 +33,7 @@ internal static class KirbySprite
 
     private static readonly Dictionary<CopyAbilityKind, float> AbilityScales = new()
     {
-        [CopyAbilityKind.Sword] = 1.5f,
+        [CopyAbilityKind.Sword] = 2f,
         [CopyAbilityKind.Boomerang] = 1.25f,
         [CopyAbilityKind.Stone] = 1.9f,
         [CopyAbilityKind.Fighter] = 1.5f,
@@ -46,6 +46,7 @@ internal static class KirbySprite
         [CopyAbilityKind.Galaxia] = 2f,
         [CopyAbilityKind.Doctor] = 1.5f,
         [CopyAbilityKind.Wheel] = 1.2f,
+        [CopyAbilityKind.Beam] = 1.7f,
         [CopyAbilityKind.Void] = VoidScale,
     };
 

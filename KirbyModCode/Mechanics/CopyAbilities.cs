@@ -28,6 +28,7 @@ public enum CopyAbilityKind
     Galaxia,
     Doctor,
     Wheel,
+    Beam,
 
     /// <summary>Only from the V-O-I-D card; never random.</summary>
     Void,
@@ -83,6 +84,7 @@ public static class CopyAbilities
         [CopyAbilityKind.Galaxia] = [],
         [CopyAbilityKind.Doctor] = [typeof(PillThrow), typeof(Experiment)],
         [CopyAbilityKind.Wheel] = [typeof(WheelCrush), typeof(HardTurn)],
+        [CopyAbilityKind.Beam] = [typeof(BeamAttack), typeof(TimeChargeBeam)],
         [CopyAbilityKind.Void] = [],
     };
 
@@ -102,6 +104,7 @@ public static class CopyAbilities
         [CopyAbilityKind.Galaxia] = typeof(GalaxiaAbility),
         [CopyAbilityKind.Doctor] = typeof(DoctorAbility),
         [CopyAbilityKind.Wheel] = typeof(WheelieRider),
+        [CopyAbilityKind.Beam] = typeof(BeamAbility),
     };
 
     private static readonly Dictionary<CopyAbilityKind, Type> AbilityPowers = new()
@@ -119,6 +122,7 @@ public static class CopyAbilities
         [CopyAbilityKind.Galaxia] = typeof(GalaxiaPower),
         [CopyAbilityKind.Doctor] = typeof(DoctorPower),
         [CopyAbilityKind.Wheel] = typeof(WheelPower),
+        [CopyAbilityKind.Beam] = typeof(BeamPower),
         [CopyAbilityKind.Void] = typeof(VoidPower),
     };
 
@@ -128,9 +132,12 @@ public static class CopyAbilities
     // Base-game moves that give Burn. A Burn actually stopped by Inhale also switches the ability to Fire.
     private static readonly HashSet<string> BurnMoves = ["FLAMETHROWER_MOVE", "BURNING_GROWL_MOVE"];
 
+    // Aeonglass's move that shuffles Wither into your deck.
+    private static readonly HashSet<string> BeamMoves = ["INCREASING_INTENSITY_MOVE"];
+
     /// <summary>
     /// Reads the enemy's current intents (DESIGN.md, 意图对应表). Mouthful prefers damage; the ability goes by
-    /// priority: raw hit ≥ 30 (Galaxia) &gt; 5+ hits (Star Rod) &gt; Burn &gt; summon (Plasma) &gt; defend &gt; buff
+    /// priority: raw hit ≥ 30 (Galaxia) &gt; 5+ hits (Star Rod) &gt; Burn &gt; Wither (Beam) &gt; summon (Plasma) &gt; defend &gt; buff
     /// &gt; debuff &gt; attack &gt; Sleep.
     /// </summary>
     /// <summary>The ability and outcome for inhaling <paramref name="enemy" />; a null ability means a random one (unknown intent).</summary>
@@ -150,6 +157,7 @@ public static class CopyAbilities
         var status = intents.Any(i => i is StatusIntent);
         var debuff = intents.Any(i => i is DebuffIntent or CardDebuffIntent);
         var burn = status && move != null && BurnMoves.Contains(move.Id);
+        var beam = status && move != null && BeamMoves.Contains(move.Id);
         var unknown = intents.Any(i => i is UnknownIntent or HiddenIntent);
 
         if (intents.Any(i => i is EscapeIntent))
@@ -158,6 +166,7 @@ public static class CopyAbilities
         CopyAbilityKind? kind = maxRawDamage >= GalaxiaRawDamage ? CopyAbilityKind.Galaxia
             : maxHits >= StarRodHits ? CopyAbilityKind.StarRod
             : burn ? CopyAbilityKind.Fire
+            : beam ? CopyAbilityKind.Beam
             : summon ? CopyAbilityKind.Plasma
             : defend ? CopyAbilityKind.Stone
             : buff ? CopyAbilityKind.Fighter

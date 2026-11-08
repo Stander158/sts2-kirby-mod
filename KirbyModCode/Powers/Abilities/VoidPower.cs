@@ -30,7 +30,7 @@ public sealed class VoidPower : CopyAbilityPower
     [
         CopyAbilityKind.Void, CopyAbilityKind.Sword, CopyAbilityKind.Boomerang, CopyAbilityKind.Stone,
         CopyAbilityKind.Fighter, CopyAbilityKind.Ice, CopyAbilityKind.Fire, CopyAbilityKind.Plasma,
-        CopyAbilityKind.Doctor, CopyAbilityKind.Wheel,
+        CopyAbilityKind.Doctor, CopyAbilityKind.Wheel, CopyAbilityKind.Beam,
     ];
 
     public override bool LostToHeavyHits => false;

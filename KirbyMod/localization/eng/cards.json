@@ -188,5 +188,13 @@
   "KIRBY_MOD_CARD_MEGATON_PUNCH.title": "Megaton Punch",
   "KIRBY_MOD_CARD_MEGATON_PUNCH.description": "Deal {Damage:diff()} damage.\nIf this is the 4th card you've played this turn, deal {MegatonDamage:diff()} damage instead.",
   "KIRBY_MOD_CARD_BOMB_RALLY.title": "Bomb Rally",
-  "KIRBY_MOD_CARD_BOMB_RALLY.description": "Choose an ally or an enemy.\nAlly: give them this card; it deals {BombBase:diff()} more damage.\nEnemy: deal {Damage:diff()} damage, then reset it to {BombBase:diff()}.\nAt the end of your turn, if this is in your hand, take {BombBase:diff()} damage."
+  "KIRBY_MOD_CARD_BOMB_RALLY.description": "Choose an ally or an enemy.\nAlly: give them this card; it deals {BombBase:diff()} more damage.\nEnemy: deal {Damage:diff()} damage, then reset it to {BombBase:diff()}.\nAt the end of your turn, if this is in your hand, take {BombBase:diff()} damage.",
+  "KIRBY_MOD_CARD_BEAM_ABILITY.title": "Beam Ability",
+  "KIRBY_MOD_CARD_BEAM_ABILITY.description": "Gain the {IfUpgraded:show:upgraded |}[gold]Beam[/gold] Copy Ability.",
+  "KIRBY_MOD_CARD_BEAM_ATTACK.title": "Beam Attack",
+  "KIRBY_MOD_CARD_BEAM_ATTACK.description": "Deal {Damage:diff()} damage.\nIf the enemy intends to attack, apply {WeakPower:diff()} [gold]Weak[/gold].\n[gold]Beam[/gold]: [gold]Retain[/gold], apply {Clock} [gold]Clock[/gold].",
+  "KIRBY_MOD_CARD_TIME_CHARGE_BEAM.title": "Time Charge Beam",
+  "KIRBY_MOD_CARD_TIME_CHARGE_BEAM.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Beam[/gold]: [gold]Retain[/gold], apply {Clock} [gold]Clock[/gold] to ALL enemies.",
+  "KIRBY_MOD_CARD_ULTIMATE_BEAM.title": "Ultimate Beam",
+  "KIRBY_MOD_CARD_ULTIMATE_BEAM.description": "Deal {Damage:diff()} damage to a random enemy twice, applying {WeakPower:diff()} [gold]Weak[/gold] each time.\nGain the [gold]Beam[/gold] Copy Ability. At the start of each turn, gain 1 [gold]Clock[/gold].\n[gold]Beam[/gold]: each hit also applies {Clock:diff()} [gold]Clock[/gold]."
 }

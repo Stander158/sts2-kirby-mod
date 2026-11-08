@@ -107,6 +107,10 @@ internal static class KirbyArt
         [typeof(QuickDraw)] = "wk_quick_draw",
         [typeof(MegatonPunch)] = "wk_megaton_punch",
         [typeof(BombRally)] = "wk_bomb_rally",
+        [typeof(BeamAbility)] = "wk_beam_ability",
+        [typeof(BeamAttack)] = "wk_beam_attack",
+        [typeof(TimeChargeBeam)] = "wk_time_charge_beam",
+        [typeof(UltimateBeam)] = "wk_ultimate_beam",
     };
 
     private static bool Exists(string path) => Godot.ResourceLoader.Exists(path);
