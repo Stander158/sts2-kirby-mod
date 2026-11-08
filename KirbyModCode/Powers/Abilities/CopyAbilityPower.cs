@@ -1,13 +1,16 @@
 using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Runs;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -67,6 +70,22 @@ public abstract class CopyAbilityPower : ModPowerTemplate
     {
         KirbySprite.SetAbility(oldOwner, CopyAbilities.Held(oldOwner.Player!).LastOrDefault(power => power != this)?.Kind);
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// The tip's {HeavyHit}: the holder's threshold, or the local player's for a canonical tip (ability cards). Ability
+    /// powers have no smartDescription, so every tip (the HUD badge, card hover tips) comes through here.
+    /// </summary>
+    public override LocString Description
+    {
+        get
+        {
+            var text = base.Description;
+            var player = IsMutable && Owner != null ? Owner.Player : null;
+            player ??= LocalContext.GetMe(RunManager.Instance.DebugOnlyGetState());
+            text.Add("HeavyHit", player == null ? CopyAbilities.DefaultHeavyHit : CopyAbilities.HeavyHitThreshold(player));
+            return text;
+        }
     }
 
     // Shown as a badge next to the energy counter instead (KirbyAbilityHud).

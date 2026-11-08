@@ -213,9 +213,12 @@ public static class CopyAbilities
         return true;
     }
 
+    /// <summary>Damage within one round that makes Kirby lose his abilities without Copy Essence Deluxe.</summary>
+    public const int DefaultHeavyHit = 6;
+
     /// <summary>Damage within one round that makes Kirby lose his abilities (12 with Copy Essence Deluxe).</summary>
     public static int HeavyHitThreshold(Player player) =>
-        player.GetRelic<CopyEssenceDeluxe>() != null ? CopyEssenceDeluxe.HeavyHit : 6;
+        player.GetRelic<CopyEssenceDeluxe>() != null ? CopyEssenceDeluxe.HeavyHit : DefaultHeavyHit;
 
     /// <summary>
     /// Enough damage this round: every held ability that can be lost this way is lost (its cards exhausted), or 1
