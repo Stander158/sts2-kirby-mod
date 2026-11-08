@@ -81,10 +81,12 @@ public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Commo
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(2);
 }
 
-/// <summary>梦之泉: shuffle 1(2) Wish into your draw pile.</summary>
+/// <summary>梦之泉: shuffle 1(2) Wish into your draw pile. Exhaust.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class FountainOfDreams() : KirbyCard(0, CardType.Skill, CardRarity.Common, TargetType.Self)
 {
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
+
     protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(1)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<VanillaCards.Wish>()];
