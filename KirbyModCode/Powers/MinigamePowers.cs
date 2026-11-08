@@ -1,4 +1,5 @@
 using KirbyMod.Cards;
+using KirbyMod.Characters;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -17,7 +18,7 @@ namespace KirbyMod.Powers;
 [RegisterPower]
 public sealed class FriendTrainPower : ModPowerTemplate
 {
-    public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("hang_power");
+    public override PowerAssetProfile AssetProfile => KirbyArt.Power("friend_train");
 
     public override PowerType Type => PowerType.Debuff;
 
