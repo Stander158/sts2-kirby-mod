@@ -5,10 +5,14 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Commands.Builders;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
 using MegaCrit.Sts2.Core.ValueProps;
 using STS2RitsuLib.Interop.AutoRegistration;
 
@@ -43,10 +47,11 @@ public sealed class BeamAttack() : KirbyCard(1, CardType.Attack, CardRarity.Comm
         var target = cardPlay.Target!;
         var attacking = target.Monster?.NextMove?.Intents.Any(intent => intent is AttackIntent) ?? false;
 
+        KirbyFx.PlaySound(KirbyFx.BeamSound);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this)
             .Targeting(target)
-            .WithHitFx("vfx/vfx_attack_slash")
+            .WithBeam(Owner.Creature, () => [target])
             .Execute(ctx);
         if (!target.IsAlive)
             return;
@@ -78,10 +83,11 @@ public sealed class TimeChargeBeam() : KirbyCard(2, CardType.Attack, CardRarity.
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        KirbyFx.PlaySound(KirbyFx.TimeChargeBeamSound);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
             .FromCard(this)
             .TargetingAllOpponents(CombatState!)
-            .WithHitFx("vfx/vfx_attack_slash")
+            .WithBeam(Owner.Creature, () => CombatState!.HittableEnemies.ToList(), impact: true)
             .Execute(ctx);
 
         if (SynergyActive)
@@ -125,7 +131,7 @@ public sealed class UltimateBeam() : KirbyCard(2, CardType.Attack, CardRarity.Ra
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
                 .FromCard(this)
                 .Targeting(target)
-                .WithHitFx("vfx/vfx_attack_slash")
+                .WithBeam(Owner.Creature, () => [target], impact: true)
                 .Execute(ctx);
             if (!target.IsAlive)
                 continue;
@@ -144,4 +150,32 @@ public sealed class UltimateBeam() : KirbyCard(2, CardType.Attack, CardRarity.Ra
         DynamicVars.Damage.UpgradeValueBy(2);
         DynamicVars["Clock"].UpgradeValueBy(2);
     }
+}
+
+/// <summary>Beam hit effects: Defect's Sweeping Beam from Kirby to the targets (it has no sound of its own).</summary>
+internal static class BeamFx
+{
+    /// <param name="impact">Also burst Hyperbeam's impact on each target (the big beams).</param>
+    public static AttackCommand WithBeam(this AttackCommand attack, Creature owner, Func<List<Creature>> targets,
+        bool impact = false) =>
+        attack.WithHitFx("vfx/vfx_attack_lightning").BeforeDamage(async () =>
+        {
+            var hit = targets();
+            var container = NCombatRoom.Instance?.CombatVfxContainer;
+            if (container == null || hit.Count == 0)
+                return;
+
+            var beam = NSweepingBeamVfx.Create(owner, hit);
+            if (beam == null)
+                return;
+
+            container.AddChildSafely(beam);
+            await Cmd.Wait(0.4f);
+            if (!impact)
+                return;
+
+            foreach (var target in hit)
+                if (NHyperbeamImpactVfx.Create(owner, target) is { } burst)
+                    container.AddChildSafely(burst);
+        });
 }

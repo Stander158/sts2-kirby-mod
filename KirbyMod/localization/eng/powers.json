@@ -159,8 +159,8 @@
   "KIRBY_MOD_POWER_BEAM_POWER.description": "When gained, add an [gold]Ethereal[/gold], [gold]Exhaust[/gold] [gold]Beam[/gold] card to your [gold]Hand[/gold].\nWhile held, apply [blue]1[/blue] [gold]Clock[/gold] to ALL enemies at the start of each turn.\nLost when you take 6 or more damage in one turn.\n[gold]Beam[/gold] cards gain [gold]Retain[/gold] and their bonus.",
   "KIRBY_MOD_POWER_BEAM_POWER.smartDescription": "When gained, add an [gold]Ethereal[/gold], [gold]Exhaust[/gold] [gold]Beam[/gold] card to your [gold]Hand[/gold].\nWhile held, apply [blue]1[/blue] [gold]Clock[/gold] to ALL enemies at the start of each turn.\nLost when you take 6 or more damage in one turn.\n[gold]Beam[/gold] cards gain [gold]Retain[/gold] and their bonus.",
   "KIRBY_MOD_POWER_CLOCK_POWER.title": "Clock",
-  "KIRBY_MOD_POWER_CLOCK_POWER.description": "[blue]X[/blue] stacks. At [blue]12[/blue] (+12 per [gold]Timing Immunity[/gold]), remove all Clock and gain 1 [gold]Timing Immunity[/gold]: an enemy goes into [gold]Stasis[/gold] and skips its next move; a player ends their turn.",
-  "KIRBY_MOD_POWER_CLOCK_POWER.smartDescription": "[blue]{Amount}[/blue] stacks. At [blue]12[/blue] (+12 per [gold]Timing Immunity[/gold]), remove all Clock and gain 1 [gold]Timing Immunity[/gold]: an enemy goes into [gold]Stasis[/gold] and skips its next move; a player ends their turn.",
+  "KIRBY_MOD_POWER_CLOCK_POWER.description": "At [blue]12[/blue] stacks, enter [gold]Stasis[/gold].",
+  "KIRBY_MOD_POWER_CLOCK_POWER.smartDescription": "At [blue]{Threshold}[/blue] stacks, enter [gold]Stasis[/gold].",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.title": "Timing Immunity",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.description": "Each stack makes [gold]Clock[/gold] need 12 more stacks to trigger.",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.smartDescription": "Each stack makes [gold]Clock[/gold] need 12 more stacks to trigger.",
@@ -168,5 +168,8 @@
   "KIRBY_MOD_POWER_ULTIMATE_BEAM_POWER.description": "At the start of your turn, gain [blue]X[/blue] [gold]Clock[/gold].",
   "KIRBY_MOD_POWER_ULTIMATE_BEAM_POWER.smartDescription": "At the start of your turn, gain [blue]{Amount}[/blue] [gold]Clock[/gold].",
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.title": "Ability in Mouth: Beam",
-  "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]Swallow[/gold] grants the Beam ability."
+  "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]Swallow[/gold] grants the Beam ability.",
+  "KIRBY_MOD_POWER_STASIS_POWER.title": "Stasis",
+  "KIRBY_MOD_POWER_STASIS_POWER.description": "Frozen in time. An enemy skips its next move; a player can't play cards until the end of their turn.",
+  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "You can't play cards until the end of your turn."
 }

@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
@@ -21,7 +22,8 @@ namespace KirbyMod.Powers;
 
 /// <summary>
 /// 时钟计时 (enemies and players): at <see cref="Threshold" /> (plus that again per Timing Immunity) it is all removed
-/// and the owner gains 1 Timing Immunity; an enemy is put in Stasis (a stun with its own intent), a player's turn ends.
+/// and the owner gains 1 Timing Immunity and goes into Stasis: an enemy gets a stun with its own intent, a player gets
+/// <see cref="StasisPower" /> (no cards can be played until the end of their turn).
 /// </summary>
 [RegisterPower]
 public sealed class ClockPower : ModPowerTemplate
@@ -34,18 +36,34 @@ public sealed class ClockPower : ModPowerTemplate
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<TimeImmunityPower>()];
+    // The tip shows the stacks needed right now.
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Threshold", Threshold)];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [HoverTipFactory.FromPower<StasisPower>(), HoverTipFactory.FromPower<TimeImmunityPower>()];
 
     public override Task AfterApplied(Creature? applier, CardModel? cardSource) => Check(new BlockingPlayerChoiceContext());
 
     public override Task AfterPowerAmountChanged(PlayerChoiceContext choiceContext, PowerModel power, decimal amount,
-        Creature? applier, CardModel? cardSource) =>
-        power == this ? Check(choiceContext) : Task.CompletedTask;
+        Creature? applier, CardModel? cardSource)
+    {
+        if (power == this)
+            return Check(choiceContext);
+        if (power is TimeImmunityPower && power.Owner == Owner)
+            UpdateThreshold();
+        return Task.CompletedTask;
+    }
+
+    private int UpdateThreshold()
+    {
+        var needed = Threshold * (1 + Owner.GetPowerAmount<TimeImmunityPower>());
+        DynamicVars["Threshold"].BaseValue = needed;
+        return needed;
+    }
 
     private async Task Check(PlayerChoiceContext ctx)
     {
-        var needed = Threshold * (1 + Owner.GetPowerAmount<TimeImmunityPower>());
-        if (Amount < needed || !Owner.IsAlive)
+        if (Amount < UpdateThreshold() || !Owner.IsAlive)
             return;
 
         await PowerCmd.Remove(this);
@@ -53,8 +71,31 @@ public sealed class ClockPower : ModPowerTemplate
 
         if (Owner.Monster != null)
             Stasis.Apply(Owner);
-        else if (Owner.Player is { } player && Owner.CombatState?.CurrentSide == CombatSide.Player)
-            PlayerCmd.EndTurn(player, canBackOut: false);
+        else if (Owner.Player != null)
+            await PowerCmd.Apply<StasisPower>(ctx, Owner, 1, Owner, null);
+    }
+}
+
+/// <summary>
+/// 停滞 on a player (from Clock): none of their cards can be played until the end of their turn, like the Ringing roar
+/// of the Ceremonial Beast. Gained on the enemy turn, it lasts through the next player turn.
+/// </summary>
+[RegisterPower]
+public sealed class StasisPower : ModPowerTemplate
+{
+    public override PowerAssetProfile AssetProfile => KirbyArt.Power("stasis");
+
+    public override PowerType Type => PowerType.Debuff;
+
+    public override PowerStackType StackType => PowerStackType.Single;
+
+    public override bool ShouldPlay(CardModel card, AutoPlayType autoPlayType) => card.Owner.Creature != Owner;
+
+    public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side,
+        IEnumerable<Creature> participants)
+    {
+        if (participants.Contains(Owner))
+            await PowerCmd.Remove(this);
     }
 }
 

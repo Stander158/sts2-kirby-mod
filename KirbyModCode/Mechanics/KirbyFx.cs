@@ -34,6 +34,8 @@ internal static class KirbyFx
     public const string BoomerangSound = "boomerang.wav";
     public const string LaunchSound = "launch.wav";
     public const string ForceBlastSound = "force_blast.wav";
+    public const string BeamSound = "beam.wav";
+    public const string TimeChargeBeamSound = "time_charge_beam.wav";
 
     /// <summary>Played by the character select screen, which only takes an event path (registered in Entry).</summary>
     public const string SelectSfx = "event:/sfx/kirby/select";

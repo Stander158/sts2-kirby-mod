@@ -159,8 +159,8 @@
   "KIRBY_MOD_POWER_BEAM_POWER.description": "获得能力时，获得一张[gold]消耗[/gold]、[gold]虚无[/gold]的[gold]光束[/gold]牌。\n持有时，每回合开始时，给予所有敌人[blue]1[/blue]层[gold]时钟计时[/gold]。\n一回合内受到总共6点或以上伤害时，失去复制能力。\n[gold]光束[/gold]相关的牌获得[gold]保留[/gold]和加成。",
   "KIRBY_MOD_POWER_BEAM_POWER.smartDescription": "获得能力时，获得一张[gold]消耗[/gold]、[gold]虚无[/gold]的[gold]光束[/gold]牌。\n持有时，每回合开始时，给予所有敌人[blue]1[/blue]层[gold]时钟计时[/gold]。\n一回合内受到总共6点或以上伤害时，失去复制能力。\n[gold]光束[/gold]相关的牌获得[gold]保留[/gold]和加成。",
   "KIRBY_MOD_POWER_CLOCK_POWER.title": "时钟计时",
-  "KIRBY_MOD_POWER_CLOCK_POWER.description": "[blue]X[/blue]层。达到[blue]12[/blue]层时（每有1层[gold]计时免疫[/gold]再+12），清空时钟计时并获得1层[gold]计时免疫[/gold]：敌人进入[gold]停滞[/gold]，跳过下一次行动；玩家立即结束回合。",
-  "KIRBY_MOD_POWER_CLOCK_POWER.smartDescription": "[blue]{Amount}[/blue]层。达到[blue]12[/blue]层时（每有1层[gold]计时免疫[/gold]再+12），清空时钟计时并获得1层[gold]计时免疫[/gold]：敌人进入[gold]停滞[/gold]，跳过下一次行动；玩家立即结束回合。",
+  "KIRBY_MOD_POWER_CLOCK_POWER.description": "到达[blue]12[/blue]层时，进入[gold]停滞[/gold]。",
+  "KIRBY_MOD_POWER_CLOCK_POWER.smartDescription": "到达[blue]{Threshold}[/blue]层时，进入[gold]停滞[/gold]。",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.title": "计时免疫",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.description": "每层使[gold]时钟计时[/gold]触发所需的层数+12。",
   "KIRBY_MOD_POWER_TIME_IMMUNITY_POWER.smartDescription": "每层使[gold]时钟计时[/gold]触发所需的层数+12。",
@@ -168,5 +168,8 @@
   "KIRBY_MOD_POWER_ULTIMATE_BEAM_POWER.description": "每回合开始时，获得[blue]X[/blue]层[gold]时钟计时[/gold]。",
   "KIRBY_MOD_POWER_ULTIMATE_BEAM_POWER.smartDescription": "每回合开始时，获得[blue]{Amount}[/blue]层[gold]时钟计时[/gold]。",
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.title": "复制能力入嘴：光束",
-  "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]吞咽[/gold]时获得复制能力：光束。"
+  "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]吞咽[/gold]时获得复制能力：光束。",
+  "KIRBY_MOD_POWER_STASIS_POWER.title": "停滞",
+  "KIRBY_MOD_POWER_STASIS_POWER.description": "被时间停住了。敌人跳过下一次行动；玩家在本回合结束前不能打出任何牌。",
+  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "在本回合结束前，你不能打出任何牌。"
 }
