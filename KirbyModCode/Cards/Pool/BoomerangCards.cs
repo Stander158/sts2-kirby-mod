@@ -9,9 +9,9 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>回旋镖: deal 3(4) damage to ALL enemies twice, gain 2(3) Block twice. Boomerang: Retain, +3(5) per hit.</summary>
+/// <summary>回旋镖: deal 3(4) damage to a random enemy twice (each hit picks again), gain 2(3) Block twice. Boomerang: Retain, +3(5) per hit.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.RandomEnemy)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Boomerang];
 
@@ -25,7 +25,7 @@ public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.
         KirbyFx.PlaySound(KirbyFx.BoomerangSound);
 
         await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
-            .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
+            .TargetingRandomOpponents(CombatState!).WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
         for (var i = 0; i < DynamicVars.Repeat.IntValue; i++)
             await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
     }

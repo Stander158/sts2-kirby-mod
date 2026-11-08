@@ -36,7 +36,7 @@
   "KIRBY_MOD_CARD_MACH_TORNADO.title": "马赫龙卷风",
   "KIRBY_MOD_CARD_MACH_TORNADO.description": "造成{CalculatedDamage:diff()}点伤害。\n[gold]剑[/gold]：[gold]保留[/gold]，伤害+{ExtraDamage:diff()}。\n每当你打出马赫龙卷风以外的[gold]剑[/gold]相关攻击牌，将此牌从[gold]弃牌堆[/gold]放回[gold]手牌[/gold]。",
   "KIRBY_MOD_CARD_BOOMERANG_THROW.title": "回旋镖",
-  "KIRBY_MOD_CARD_BOOMERANG_THROW.description": "对所有敌人造成{CalculatedDamage:diff()}点伤害{Repeat:diff()}次。获得{Block:diff()}点[gold]格挡[/gold]{Repeat:diff()}次。\n[gold]回旋镖[/gold]：[gold]保留[/gold]，每次伤害+{ExtraDamage:diff()}。",
+  "KIRBY_MOD_CARD_BOOMERANG_THROW.description": "对随机敌人造成{CalculatedDamage:diff()}点伤害{Repeat:diff()}次。获得{Block:diff()}点[gold]格挡[/gold]{Repeat:diff()}次。\n[gold]回旋镖[/gold]：[gold]保留[/gold]，每次伤害+{ExtraDamage:diff()}。",
   "KIRBY_MOD_CARD_FINAL_CUTTER.title": "终极切割",
   "KIRBY_MOD_CARD_FINAL_CUTTER.description": "对所有敌人造成{CalculatedDamage:diff()}点伤害{Repeat:diff()}次。获得{Block:diff()}点[gold]格挡[/gold]3次。\n[gold]回旋镖[/gold]：[gold]保留[/gold]，每次伤害+{ExtraDamage:diff()}。",
   "KIRBY_MOD_CARD_INVINCIBLE_GUARD.title": "无敌防御",

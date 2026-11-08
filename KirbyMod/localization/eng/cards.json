@@ -36,7 +36,7 @@
   "KIRBY_MOD_CARD_MACH_TORNADO.title": "Mach Tornado",
   "KIRBY_MOD_CARD_MACH_TORNADO.description": "Deal {CalculatedDamage:diff()} damage.\n[gold]Sword[/gold]: [gold]Retain[/gold], +{ExtraDamage:diff()} damage.\nWhenever you play a [gold]Sword[/gold] Attack other than Mach Tornado, return this from your [gold]Discard Pile[/gold] to your [gold]Hand[/gold].",
   "KIRBY_MOD_CARD_BOOMERANG_THROW.title": "Cutter",
-  "KIRBY_MOD_CARD_BOOMERANG_THROW.description": "Deal {CalculatedDamage:diff()} damage to ALL enemies {Repeat:diff()} times. Gain {Block:diff()} [gold]Block[/gold] {Repeat:diff()} times.\n[gold]Cutter[/gold]: [gold]Retain[/gold], +{ExtraDamage:diff()} damage per hit.",
+  "KIRBY_MOD_CARD_BOOMERANG_THROW.description": "Deal {CalculatedDamage:diff()} damage to a random enemy {Repeat:diff()} times. Gain {Block:diff()} [gold]Block[/gold] {Repeat:diff()} times.\n[gold]Cutter[/gold]: [gold]Retain[/gold], +{ExtraDamage:diff()} damage per hit.",
   "KIRBY_MOD_CARD_FINAL_CUTTER.title": "Final Cutter",
   "KIRBY_MOD_CARD_FINAL_CUTTER.description": "Deal {CalculatedDamage:diff()} damage to ALL enemies {Repeat:diff()} times. Gain {Block:diff()} [gold]Block[/gold] 3 times.\n[gold]Cutter[/gold]: [gold]Retain[/gold], +{ExtraDamage:diff()} damage per hit.",
   "KIRBY_MOD_CARD_INVINCIBLE_GUARD.title": "Invincible Guard",
