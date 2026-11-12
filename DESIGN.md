@@ -397,7 +397,7 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 
 - 游戏版本兼容（2026-11-12）：beta 分支 0.113.0 改了一批钩子和命令的签名（ModifyDamage* / ModifyDamageCap 多了 CardPlay，AfterDeath 多了 source，GetResultPileTypeForCardPlay 换成 GetResultLocationForCardPlay，AttackCommand.FromCard、CreatureCmd.Damage / LoseBlock、Hook.ModifyDamage 加了参数）。代码按 0.113 写，旧写法放在 `#if STS2_V113 ... #else` 里，`GameCompat` 补上 0.107.1 缺的 FromCard 重载；出牌后去哪个牌堆统一走 `KirbyCard.ResultPile`。`Directory.Build.props` 的 RitsuLibReferenceTarget 要和本机游戏版本一致（0.113.0 时自动定义 STS2_V113）。单个 dll 只能跑在它编译时对应的版本上（否则报 Method not found），所以包里放两份：
   - 根目录的 `KirbyMod.dll` 是入口（`Loader/`，程序集名 KirbyMod.Loader）：读游戏目录的 release_info.json，加载 `compat/<版本>/KirbyMod.dll` 里不比游戏新的最新一份，把它的类型补进 `ReflectionHelper.ModTypes`（游戏只在自己加载的程序集里找卡牌等模型），再调用它的 `Entry.Initialize`。
-  - 各版本的游戏 dll 存在 `D:\StS2Moddingefs\game-<版本>\`，所以不管 Steam 装的是哪个分支都能编译两份。
+  - 各版本的游戏 dll 存在 `D:/StS2Modding/refs/game-<版本>/`，所以不管 Steam 装的是哪个分支都能编译两份。
   - 打包：`bash package.sh`（加 `--install` 同时装进游戏 mods），输出到 Workshop 内容目录 `dist/KirbyMod-0.3.0-workshop/KirbyMod`。
   - 2026-11-12 在正式版和 beta 上各打过一场，入口都选对了版本，没有报错。
 
