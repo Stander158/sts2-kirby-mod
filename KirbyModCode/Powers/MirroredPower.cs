@@ -68,10 +68,13 @@ public sealed class MirroredPower : ModPowerTemplate
         return 0m;
     }
 
-    public override async Task AfterModifyingDamageAmount(CardModel? cardSource)
+    // Not AfterModifyingDamageAmount: the game only calls that on the first cap that lowered the hit, so when Inhale
+    // also zeroes the same hit, Mirror would never hear about it. BeforeDamageReceived reaches every listener.
+    public override async Task BeforeDamageReceived(PlayerChoiceContext choiceContext, Creature target, decimal amount,
+        ValueProp props, Creature? dealer, CardModel? cardSource)
     {
         var state = State;
-        if (!state.AttackInProgress || state.LastTarget == null)
+        if (!state.AttackInProgress || dealer != Owner || state.LastTarget == null || target != state.LastTarget)
             return;
 
         var block = AttackMath.UncappedDamage(state.LastTarget, Owner, state.PendingBaseDamage, state.PendingProps,
