@@ -49,7 +49,7 @@ public sealed class BeamAttack() : KirbyCard(1, CardType.Attack, CardRarity.Comm
 
         KirbyFx.PlaySound(KirbyFx.BeamSound);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(target)
             .WithBeam(Owner.Creature, () => [target])
             .Execute(ctx);
@@ -85,7 +85,7 @@ public sealed class TimeChargeBeam() : KirbyCard(2, CardType.Attack, CardRarity.
     {
         KirbyFx.PlaySound(KirbyFx.TimeChargeBeamSound);
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!)
             .WithBeam(Owner.Creature, () => CombatState!.HittableEnemies.ToList(), impact: true)
             .Execute(ctx);
@@ -129,7 +129,7 @@ public sealed class UltimateBeam() : KirbyCard(2, CardType.Attack, CardRarity.Ra
 
             var target = Owner.RunState.Rng.CombatTargets.NextItem(enemies)!;
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this)
+                .FromCard(this, cardPlay)
                 .Targeting(target)
                 .WithBeam(Owner.Creature, () => [target], impact: true)
                 .Execute(ctx);

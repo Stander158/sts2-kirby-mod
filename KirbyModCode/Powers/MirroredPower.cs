@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Entities.Cards;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -54,7 +55,11 @@ public sealed class MirroredPower : ModPowerTemplate
         return Task.CompletedTask;
     }
 
+#if STS2_V113
+    public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+#else
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource)
+#endif
     {
         if (!State.AttackInProgress || dealer != Owner || target == null || !props.IsPoweredAttack())
             return decimal.MaxValue;

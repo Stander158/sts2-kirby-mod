@@ -10,9 +10,10 @@
         <!-- MegaDot build matching the game's engine (v4.5.1.m.12). Used for export-pack when publishing. -->
         <GodotPath>D:/StS2Modding/tools/MegaDot/MegaDot_v4.5.1-stable_mono_win64_console.exe</GodotPath>
 
-        <!-- RitsuLib from the Steam Workshop install; compiled against the game API it targets. -->
+        <!-- RitsuLib from the Steam Workshop install; compiled against the game API it targets. Must match the
+             installed game: 0.113.0 for the beta branch (also turns on STS2_V113), 0.107.1 for the stable branch. -->
         <RitsuLibDir>D:/Steam/steamapps/workshop/content/2868840/3747602295/</RitsuLibDir>
-        <RitsuLibReferenceTarget>0.107.1</RitsuLibReferenceTarget>
+        <RitsuLibReferenceTarget>0.113.0</RitsuLibReferenceTarget>
 
         <!-- Optional folder with art that is not in the repository (borrowed, personal use only). When it exists, its
              images/ tree is copied over the public placeholders before the .pck is exported. -->

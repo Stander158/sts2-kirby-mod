@@ -18,6 +18,20 @@ public abstract class KirbyCard(int cost, CardType type, CardRarity rarity, Targ
 {
     public override CardAssetProfile AssetProfile => KirbyArt.ForCard(GetType());
 
+    /// <summary>The pile this card goes to after being played; <paramref name="basePile" /> is the game's choice.</summary>
+    protected virtual PileType ResultPile(PileType basePile) => basePile;
+
+    // Game 0.113 replaced GetResultPileTypeForCardPlay with GetResultLocationForCardPlay (pile + player + position).
+#if STS2_V113
+    protected override CardLocation GetResultLocationForCardPlay()
+    {
+        var location = base.GetResultLocationForCardPlay();
+        return location with { pileType = ResultPile(location.pileType) };
+    }
+#else
+    protected override PileType GetResultPileTypeForCardPlay() => ResultPile(base.GetResultPileTypeForCardPlay());
+#endif
+
     public virtual IReadOnlyList<CopyAbilityKind> SynergyAbilities => [];
 
     protected bool SynergyActive => CopyAbilities.Has(Owner, SynergyAbilities);

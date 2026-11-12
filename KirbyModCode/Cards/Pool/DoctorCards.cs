@@ -112,7 +112,7 @@ public sealed class PillThrow() : DoctorReplayCard(1, CardType.Attack, CardRarit
             return;
         }
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(target)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(target)
             .WithHitFx("vfx/vfx_attack_blunt").Execute(ctx);
         if (target.IsAlive)
             await PowerCmd.Apply<PoisonPower>(ctx, target, DynamicVars[nameof(PoisonPower)].BaseValue, Owner.Creature, this);

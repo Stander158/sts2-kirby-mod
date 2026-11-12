@@ -16,6 +16,11 @@
         <NoWarn>$(NoWarn);MSB3270</NoWarn>
     </PropertyGroup>
 
+    <!-- Game 0.113 changed several hook signatures; STS2_V113 picks the matching overrides. -->
+    <PropertyGroup Condition="'$(RitsuLibReferenceTarget)' == '0.113.0'">
+        <DefineConstants>$(DefineConstants);STS2_V113</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup Condition="Exists('$(Sts2DataDir)')">
         <Reference Include="0Harmony" HintPath="$(Sts2DataDir)/0Harmony.dll" Private="false"/>
         <Reference Include="sts2" HintPath="$(Sts2DataDir)/sts2.dll" Private="false"/>

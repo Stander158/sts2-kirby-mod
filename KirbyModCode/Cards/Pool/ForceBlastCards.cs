@@ -42,11 +42,7 @@ public sealed class ForceBlast() : KirbyCard(1, CardType.Skill, CardRarity.Uncom
     protected override void OnUpgrade() => DynamicVars["Hits"].UpgradeValueBy(1);
 
     // Back to hand instead of the discard pile (an Exhaust from elsewhere still wins), like Particle Wall.
-    protected override PileType GetResultPileTypeForCardPlay()
-    {
-        var pile = base.GetResultPileTypeForCardPlay();
-        return pile == PileType.Discard ? PileType.Hand : pile;
-    }
+    protected override PileType ResultPile(PileType basePile) => basePile == PileType.Discard ? PileType.Hand : basePile;
 
     // Only the hand counts: a Launch elsewhere is neither boosted nor stops a new one being made.
     private IEnumerable<Launch> Launches() => PileType.Hand.GetPile(Owner).Cards.OfType<Launch>();
@@ -64,7 +60,7 @@ public sealed class Launch() : KirbyCard(0, CardType.Attack, CardRarity.Token, T
     {
         KirbyFx.PlaySound(KirbyFx.LaunchSound);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_hyperbeam_impact").Execute(ctx);
     }
 

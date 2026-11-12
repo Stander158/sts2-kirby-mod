@@ -24,7 +24,7 @@ public sealed class BoomerangThrow() : KirbyCard(1, CardType.Attack, CardRarity.
     {
         KirbyFx.PlaySound(KirbyFx.BoomerangSound);
 
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this, cardPlay)
             .TargetingRandomOpponents(CombatState!).WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
         for (var i = 0; i < DynamicVars.Repeat.IntValue; i++)
             await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
@@ -53,7 +53,7 @@ public sealed class FinalCutter() : KirbyCard(2, CardType.Attack, CardRarity.Unc
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this, cardPlay)
             .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_big_slash").Execute(ctx);
         for (var i = 0; i < BlockHits; i++)
             await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);

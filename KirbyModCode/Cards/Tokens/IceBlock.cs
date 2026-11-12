@@ -58,7 +58,7 @@ public sealed class IceBlock() : ModCardTemplate(1, CardType.Skill, CardRarity.T
 
     private Task Hit(PlayerChoiceContext ctx, CardPlay cardPlay) =>
         DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(ctx);

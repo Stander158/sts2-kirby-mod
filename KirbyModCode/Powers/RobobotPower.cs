@@ -21,8 +21,12 @@ public sealed class RobobotPower : ModPowerTemplate
 
     public override PowerStackType StackType => PowerStackType.Single;
 
+#if STS2_V113
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
+#else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,
         CardModel? cardSource) =>
+#endif
         IsOwnCard(cardSource, CardTag.Strike) && props.IsPoweredAttack() ? Bonus : 0m;
 
     public override decimal ModifyBlockAdditive(Creature target, decimal block, ValueProp props, CardModel? cardSource,

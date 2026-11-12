@@ -28,7 +28,7 @@ public sealed class PlasmaCannon() : KirbyCard(0, CardType.Attack, CardRarity.Ra
         var hits = ResolveEnergyXValue() + (IsUpgraded ? 1 : 0);
         if (hits > 0)
         {
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this)
+            await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(hits).FromCard(this, cardPlay)
                 .Targeting(cardPlay.Target!).WithLightningHit().Execute(ctx);
         }
 
@@ -79,7 +79,7 @@ public sealed class UltimateFlash() : KirbyCard(4, CardType.Attack, CardRarity.U
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         var enemies = CombatState!.HittableEnemies.ToList();
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).TargetingAllOpponents(CombatState!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).TargetingAllOpponents(CombatState!)
             .WithLightningHit().Execute(ctx);
 
         if (SynergyActive && enemies.Any(enemy => !enemy.IsAlive))

@@ -81,7 +81,7 @@ public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
         {
             var dex = Owner.Creature.GetPowerAmount<DexterityPower>();
             if (dex > 0)
-                await DamageCmd.Attack(dex * DynamicVars["DexDamage"].BaseValue).FromCard(this)
+                await DamageCmd.Attack(dex * DynamicVars["DexDamage"].BaseValue).FromCard(this, cardPlay)
                     .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
             await PowerCmd.Apply<DexterityPower>(ctx, Owner.Creature, DynamicVars["WheelDex"].BaseValue, Owner.Creature, this);
         }
@@ -106,12 +106,16 @@ public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Comm
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).WithHitFx("vfx/vfx_heavy_blunt");
+        var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).WithHitFx("vfx/vfx_heavy_blunt");
         await (SynergyActive ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
     }
 
+#if STS2_V113
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+#else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,
         CardModel? cardSource)
+#endif
     {
         if (cardSource != this || !IsMutable || dealer != Owner.Creature || !props.IsPoweredAttack())
             return 0m;

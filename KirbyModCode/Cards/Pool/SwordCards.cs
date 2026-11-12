@@ -21,7 +21,7 @@ public sealed class Slash() : KirbyCard(1, CardType.Attack, CardRarity.Common, T
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_attack_slash").Execute(ctx);
     }
 
@@ -42,7 +42,7 @@ public sealed class SpinSlash() : KirbyCard(1, CardType.Attack, CardRarity.Uncom
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_attack_slash").Execute(ctx);
     }
 
@@ -61,7 +61,7 @@ public sealed class RisingSlash() : KirbyCard(2, CardType.Attack, CardRarity.Com
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_big_slash").Execute(ctx);
 
         await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<DescendingSlash>(Owner, IsUpgraded),
@@ -89,7 +89,7 @@ public sealed class DescendingSlash() : KirbyCard(1, CardType.Attack, CardRarity
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_big_slash").Execute(ctx);
     }
 
@@ -110,7 +110,7 @@ public sealed class MachTornado() : KirbyCard(0, CardType.Attack, CardRarity.Rar
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
     }
 

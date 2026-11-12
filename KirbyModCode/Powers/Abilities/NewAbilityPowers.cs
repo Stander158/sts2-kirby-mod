@@ -68,7 +68,11 @@ public sealed class CarPower : CopyAbilityPower
             return;
 
         Flash();
+#if STS2_V113
+        await CreatureCmd.Damage(ctx, enemies, damage, ValueProp.Unpowered, Owner, null, null);
+#else
         await CreatureCmd.Damage(ctx, enemies, damage, ValueProp.Unpowered, Owner, null);
+#endif
     }
 }
 

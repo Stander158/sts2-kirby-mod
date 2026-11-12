@@ -69,7 +69,7 @@ public sealed class KirbyFireball() : KirbyCard(1, CardType.Attack, CardRarity.U
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_fire_burst", KirbyFx.FireSfx).Execute(ctx);
 
         for (var i = 0; i < DynamicVars.Cards.IntValue; i++)
@@ -95,7 +95,7 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_giant_horizontal_slash").Execute(ctx);
 
         if (!CopyAbilities.Has(Owner, [CopyAbilityKind.Sword]))
@@ -103,8 +103,12 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     }
 
     // Vigor itself adds its amount once; this adds the remaining (times - 1) copies.
+#if STS2_V113
+    public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+#else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,
         CardModel? cardSource)
+#endif
     {
         if (cardSource != this || !IsMutable || dealer != Owner.Creature || !props.IsPoweredAttack())
             return 0m;
@@ -146,7 +150,7 @@ public sealed class DragonStorm() : KirbyCard(3, CardType.Attack, CardRarity.Rar
     {
         await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Fire, upgraded: false, this);
 
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_fire_burst", KirbyFx.FireSfx).Execute(ctx);
 
         if (!SynergyActive)
@@ -216,15 +220,18 @@ public sealed class CurlingStone() : KirbyCard(0, CardType.Skill, CardRarity.Unc
         if (block <= 0)
             return;
 
+#if STS2_V113
+        await CreatureCmd.LoseBlock(ctx, target, block, Owner.Creature);
+#else
         await CreatureCmd.LoseBlock(target, block);
+#endif
         var buffers = block / DynamicVars["BlockPerBuffer"].IntValue;
         if (buffers > 0)
             await PowerCmd.Apply<BufferPower>(ctx, target, buffers, Owner.Creature, this);
     }
 
     // Exhaust is written in the text instead of being a keyword, since Stone turns it off.
-    protected override PileType GetResultPileTypeForCardPlay() =>
-        SynergyActive ? base.GetResultPileTypeForCardPlay() : PileType.Exhaust;
+    protected override PileType ResultPile(PileType basePile) => SynergyActive ? basePile : PileType.Exhaust;
 
     protected override void OnUpgrade() => DynamicVars["BlockPerBuffer"].UpgradeValueBy(-2);
 }

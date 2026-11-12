@@ -395,6 +395,8 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 复制能力 power 都继承 `CopyAbilityPower`；能力给的牌实现 `ICopyAbilityCard`；有能力加成的牌实现 `IAbilitySynergyCard`（回合结束前由能力 power 给单回合保留）。
 - **临时（第四阶段前）**：卡比卡池还没覆盖齐 攻击/技能/能力 × 普通/罕见/稀有 时，卡牌奖励、商店、变化等"从角色卡池随机拿牌"的效果会额外混入铁甲战士已解锁的牌（`KirbyCardPool.FilterThroughEpochs`）。否则游戏会在生成奖励时报错卡死（例：涅奥的沉重石板）。卡池凑齐后自动停用（现在已凑齐，不再混入）。
 
+- 游戏版本兼容（2026-11-12）：beta 分支 0.113.0 改了一批钩子和命令的签名（ModifyDamage* / ModifyDamageCap 多了 CardPlay，AfterDeath 多了 source，GetResultPileTypeForCardPlay 换成 GetResultLocationForCardPlay，AttackCommand.FromCard、CreatureCmd.Damage / LoseBlock、Hook.ModifyDamage 加了参数）。代码按 0.113 写，旧写法放在 `#if STS2_V113 ... #else` 里，`GameCompat` 补上 0.107.1 缺的 FromCard 重载；出牌后去哪个牌堆统一走 `KirbyCard.ResultPile`。`Directory.Build.props` 的 RitsuLibReferenceTarget 要和本机游戏版本一致（0.113.0 时自动定义 STS2_V113）。按 0.113 编译的 dll 在正式版 0.107.1 上会报 Method not found，反过来也一样。
+
 ## 开发阶段
 
 0. 环境：.NET 9 SDK、MegaDot 4.5.1、ilspycmd；反编译 sts2.dll / RitsuLib / Hornet 到 `D:\StS2Modding\decompiled`。

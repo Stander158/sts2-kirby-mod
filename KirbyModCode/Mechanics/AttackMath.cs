@@ -30,9 +30,15 @@ public static class AttackMath
     public static int UncappedDamage(Creature target, Creature dealer, decimal baseDamage, ValueProp props,
         CardModel? cardSource)
     {
+#if STS2_V113
+        var damage = Hook.ModifyDamage(IRunState.GetFrom([target, dealer]), target.CombatState, target, dealer,
+            baseDamage, props, cardSource, null, ModifyDamageHookType.Additive | ModifyDamageHookType.Multiplicative,
+            CardPreviewMode.None, out _);
+#else
         var damage = Hook.ModifyDamage(IRunState.GetFrom([target, dealer]), target.CombatState, target, dealer,
             baseDamage, props, cardSource, ModifyDamageHookType.Additive | ModifyDamageHookType.Multiplicative,
             CardPreviewMode.None, out _);
+#endif
         return Math.Max(0, (int)damage);
     }
 }

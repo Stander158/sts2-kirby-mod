@@ -69,7 +69,7 @@ public sealed class SteelWing() : KirbyCard(0, CardType.Attack, CardRarity.Commo
     {
         KirbyFx.PlaySound(KirbyFx.DynabladeSound);
 
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this).Targeting(cardPlay.Target!)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_flying_slash").Execute(ctx);
 
         var piles = IsUpgraded ? KirbyMouth.LivePiles : [PileType.Hand];

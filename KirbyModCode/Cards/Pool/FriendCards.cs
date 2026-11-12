@@ -74,7 +74,7 @@ public sealed class FriendTrain() : FriendCard(1, CardType.Attack, TargetType.An
     {
         var target = cardPlay.Target!;
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(ctx);

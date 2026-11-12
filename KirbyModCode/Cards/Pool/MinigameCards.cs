@@ -51,7 +51,7 @@ public sealed class QuickDraw() : KirbyCard(0, CardType.Attack, CardRarity.Rare,
         var target = cardPlay.Target!;
         if (Untouched)
             await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-                .FromCard(this)
+                .FromCard(this, cardPlay)
                 .Targeting(target)
                 .WithHitFx("vfx/vfx_attack_slash")
                 .Execute(ctx);
@@ -90,7 +90,7 @@ public sealed class MegatonPunch() : KirbyCard(1, CardType.Attack, CardRarity.Ra
             ? DynamicVars["MegatonDamage"].BaseValue
             : DynamicVars.Damage.BaseValue;
         await DamageCmd.Attack(damage)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(ctx);
@@ -132,8 +132,8 @@ public sealed class BombRally() : KirbyCard(1, CardType.Skill, CardRarity.Rare, 
     private int Step => DynamicVars["BombBase"].IntValue;
 
     // Passing hands the bomb over as a new card, so the played one leaves combat instead of being discarded.
-    protected override PileType GetResultPileTypeForCardPlay() =>
-        CurrentTarget is { IsPlayer: true } ? PileType.None : base.GetResultPileTypeForCardPlay();
+    protected override PileType ResultPile(PileType basePile) =>
+        CurrentTarget is { IsPlayer: true } ? PileType.None : basePile;
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
@@ -147,7 +147,7 @@ public sealed class BombRally() : KirbyCard(1, CardType.Skill, CardRarity.Rare, 
         }
 
         await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
-            .FromCard(this)
+            .FromCard(this, cardPlay)
             .Targeting(target)
             .WithHitFx("vfx/vfx_attack_blunt")
             .Execute(ctx);
@@ -157,7 +157,11 @@ public sealed class BombRally() : KirbyCard(1, CardType.Skill, CardRarity.Rare, 
 
     protected override async Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
+#if STS2_V113
+        await CreatureCmd.Damage(choiceContext, Owner.Creature, Step, ValueProp.Unpowered | ValueProp.Move, this, null);
+#else
         await CreatureCmd.Damage(choiceContext, Owner.Creature, Step, ValueProp.Unpowered | ValueProp.Move, this);
+#endif
     }
 
     public override async Task AfterCardChangedPiles(CardModel card, PileType oldPileType, AbstractModel? clonedBy)

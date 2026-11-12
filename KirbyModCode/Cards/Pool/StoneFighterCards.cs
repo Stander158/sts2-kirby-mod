@@ -51,7 +51,7 @@ public sealed class StonePunch() : KirbyCard(1, CardType.Attack, CardRarity.Comm
     {
         await CreatureCmd.GainBlock(Owner.Creature, DynamicVars.Block, cardPlay);
         if (SynergyActive)
-            await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this).Targeting(cardPlay.Target!)
+            await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).Targeting(cardPlay.Target!)
                 .WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
     }
 
@@ -95,7 +95,7 @@ public sealed class VacuumStrike() : KirbyCard(1, CardType.Attack, CardRarity.Ra
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).WithHitCount(DynamicVars.Repeat.IntValue).FromCard(this, cardPlay)
             .Targeting(cardPlay.Target!).WithHitFx("vfx/vfx_thrash").Execute(ctx);
     }
 

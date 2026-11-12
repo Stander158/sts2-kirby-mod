@@ -145,14 +145,22 @@ public sealed class InhalingPower : ModPowerTemplate
             "inhaled enemy's first attack (all hits)");
     }
 
+#if STS2_V113
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+#else
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer,
         CardModel? cardSource)
+#endif
     {
         var state = State;
         return state.NegateAll && target == Owner && dealer != null && dealer == state.Target ? 0.5m : 1m;
     }
 
+#if STS2_V113
+    public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
+#else
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource)
+#endif
     {
         var state = State;
         if (target != Owner || dealer == null || dealer != state.Target)
@@ -194,8 +202,12 @@ public sealed class InhalingPower : ModPowerTemplate
             state.UpgradedTokens, $"blocked status card {card.Id.Entry}");
     }
 
+#if STS2_V113
+    public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
+#else
     public override async Task AfterDeath(PlayerChoiceContext choiceContext, Creature creature, bool wasRemovalPrevented,
         float deathAnimLength)
+#endif
     {
         var state = State;
         if (state.Resolved || wasRemovalPrevented || creature != state.Target)

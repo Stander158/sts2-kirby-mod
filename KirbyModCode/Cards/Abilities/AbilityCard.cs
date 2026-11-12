@@ -32,6 +32,6 @@ public abstract class AbilityCard(CardRarity rarity, int cost = 1, CardType type
             EnergyCost.UpgradeBy(-1);
     }
 
-    protected override PileType GetResultPileTypeForCardPlay() =>
+    protected override PileType ResultPile(PileType basePile) =>
         Owner.Creature.HasPower<GalaxyWishRecyclePower>() ? PileType.Discard : PileType.Exhaust;
 }
