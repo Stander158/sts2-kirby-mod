@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!--
+        The KirbyMod.dll the game loads: picks compat/<game version>/KirbyMod.dll and starts it (see KirbyLoader).
+        Built against the oldest supported game; it only touches APIs that every supported version has.
+    -->
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>KirbyMod.Loader</AssemblyName>
+        <RootNamespace>KirbyMod.Loader</RootNamespace>
+        <NoWarn>$(NoWarn);MSB3270</NoWarn>
+        <LoaderRefsDir>$(Sts2RefsRoot)game-0.107.1</LoaderRefsDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="sts2" HintPath="$(LoaderRefsDir)/sts2.dll" Private="false"/>
+        <Reference Include="0Harmony" HintPath="$(LoaderRefsDir)/0Harmony.dll" Private="false"/>
+        <Reference Include="GodotSharp" HintPath="$(LoaderRefsDir)/GodotSharp.dll" Private="false"/>
+    </ItemGroup>
+</Project>

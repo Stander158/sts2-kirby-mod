@@ -1,3 +1,4 @@
+using KirbyMod.Mechanics;
 using KirbyMod.Characters;
 using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Commands;

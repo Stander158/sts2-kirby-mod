@@ -4,16 +4,24 @@
 
         <!-- Game install. Mods are copied to $(ModsPath)KirbyMod/ on build. -->
         <Sts2Path>D:/Steam/steamapps/common/Slay the Spire 2</Sts2Path>
-        <Sts2DataDir>$(Sts2Path)/data_sts2_windows_x86_64</Sts2DataDir>
         <ModsPath>$(Sts2Path)/mods/</ModsPath>
+
+        <!-- Copies of each supported game version's dlls (sts2.dll, 0Harmony, SmartFormat, GodotSharp), in
+             game-<version>/ folders, so every version can be built whichever Steam branch is installed. -->
+        <Sts2RefsRoot>D:/StS2Modding/refs/</Sts2RefsRoot>
 
         <!-- MegaDot build matching the game's engine (v4.5.1.m.12). Used for export-pack when publishing. -->
         <GodotPath>D:/StS2Modding/tools/MegaDot/MegaDot_v4.5.1-stable_mono_win64_console.exe</GodotPath>
 
         <!-- RitsuLib from the Steam Workshop install; compiled against the game API it targets. Must match the
-             installed game: 0.113.0 for the beta branch (also turns on STS2_V113), 0.107.1 for the stable branch. -->
+             game version being built: 0.113.0 (beta branch; also turns on STS2_V113) or 0.107.1 (stable). package.sh
+             builds both and packs them behind the loader. -->
         <RitsuLibDir>D:/Steam/steamapps/workshop/content/2868840/3747602295/</RitsuLibDir>
-        <RitsuLibReferenceTarget>0.113.0</RitsuLibReferenceTarget>
+        <RitsuLibReferenceTarget Condition="'$(RitsuLibReferenceTarget)' == ''">0.113.0</RitsuLibReferenceTarget>
+
+        <!-- Game dlls to compile against: the saved copy for RitsuLibReferenceTarget, else the installed game. -->
+        <Sts2DataDir Condition="Exists('$(Sts2RefsRoot)game-$(RitsuLibReferenceTarget)/sts2.dll')">$(Sts2RefsRoot)game-$(RitsuLibReferenceTarget)</Sts2DataDir>
+        <Sts2DataDir Condition="'$(Sts2DataDir)' == ''">$(Sts2Path)/data_sts2_windows_x86_64</Sts2DataDir>
 
         <!-- Optional folder with art that is not in the repository (borrowed, personal use only). When it exists, its
              images/ tree is copied over the public placeholders before the .pck is exported. -->
