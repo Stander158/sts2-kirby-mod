@@ -89,7 +89,7 @@
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.title": "Bubble Storage",
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.description": "[gold]Swallow[/gold] no longer empties your [gold]Mouthful[/gold].",
   "KIRBY_MOD_CARD_SUPER_ABILITY.title": "Super Ability",
-  "KIRBY_MOD_CARD_SUPER_ABILITY.description": "Your next {SuperAbilityPower:diff()} Copy {SuperAbilityPower:plural:Ability is|Abilities are} gained twice.",
+  "KIRBY_MOD_CARD_SUPER_ABILITY.description": "Your next Copy Ability is gained {IfUpgraded:show:three times|twice}.",
   "KIRBY_MOD_CARD_SMASH_BROS_KIRBY.title": "Smash Bros. Kirby",
   "KIRBY_MOD_CARD_SMASH_BROS_KIRBY.description": "Copy Abilities can coexist: gaining a new one no longer removes the others.",
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.title": "Star Gear",

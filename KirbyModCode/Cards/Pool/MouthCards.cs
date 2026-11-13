@@ -38,21 +38,20 @@ public sealed class BubbleStorage() : KirbyCard(1, CardType.Power, CardRarity.Un
     protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
 }
 
-/// <summary>超级能力 (power): double the benefits of the next 1(2) copy abilities you gain.</summary>
+/// <summary>超级能力 (power): the next copy ability you gain is gained twice (upgraded: 3 times).</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class SuperAbility() : KirbyCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<SuperAbilityPower>(1)];
-
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<SuperAbilityPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
+        [IsUpgraded ? HoverTipFactory.FromPower<SuperAbilityPlusPower>() : HoverTipFactory.FromPower<SuperAbilityPower>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<SuperAbilityPower>(ctx, Owner.Creature, DynamicVars[nameof(SuperAbilityPower)].BaseValue,
-            Owner.Creature, this);
+        if (IsUpgraded)
+            await PowerCmd.Apply<SuperAbilityPlusPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
+        else
+            await PowerCmd.Apply<SuperAbilityPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
-
-    protected override void OnUpgrade() => DynamicVars[nameof(SuperAbilityPower)].UpgradeValueBy(1);
 }
 
 /// <summary>大乱斗卡比 (power): copy abilities can coexist. Upgrade: cost 1.</summary>

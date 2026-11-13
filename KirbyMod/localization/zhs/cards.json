@@ -89,7 +89,7 @@
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.title": "泡泡储存",
   "KIRBY_MOD_CARD_BUBBLE_STORAGE.description": "[gold]吞咽[/gold]后，[gold]满嘴[/gold]层数不再清空。",
   "KIRBY_MOD_CARD_SUPER_ABILITY.title": "超级能力",
-  "KIRBY_MOD_CARD_SUPER_ABILITY.description": "接下来获得的{SuperAbilityPower:diff()}个复制能力，都会获得两次。",
+  "KIRBY_MOD_CARD_SUPER_ABILITY.description": "接下来获得的复制能力，会获得{IfUpgraded:show:三|两}次。",
   "KIRBY_MOD_CARD_SMASH_BROS_KIRBY.title": "大乱斗卡比",
   "KIRBY_MOD_CARD_SMASH_BROS_KIRBY.description": "复制能力可以共存：获得新的复制能力时，不再失去之前的。",
   "KIRBY_MOD_CARD_STAR_BULLET_BOOST.title": "星之齿轮",

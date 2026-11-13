@@ -26,6 +26,17 @@ public sealed class SuperAbilityPower : ModPowerTemplate
     public override PowerStackType StackType => PowerStackType.Counter;
 }
 
+/// <summary>超级能力+: each of the next N copy abilities is gained 3 times; used before <see cref="SuperAbilityPower" />.</summary>
+[RegisterPower]
+public sealed class SuperAbilityPlusPower : ModPowerTemplate
+{
+    public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("demon_form_power");
+
+    public override PowerType Type => PowerType.Buff;
+
+    public override PowerStackType StackType => PowerStackType.Counter;
+}
+
 /// <summary>大乱斗卡比: copy abilities coexist; gaining one no longer removes the others.</summary>
 [RegisterPower]
 public sealed class SmashBrosPower : ModPowerTemplate
