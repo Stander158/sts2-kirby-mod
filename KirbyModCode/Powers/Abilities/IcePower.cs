@@ -11,11 +11,11 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Powers;
 
-/// <summary>冰: when gained and at the start of each turn, turn up to 2 cards in hand into Ice Blocks.</summary>
+/// <summary>冰: when gained and at the start of each turn, you may turn 1 card in hand into an Ice Block.</summary>
 [RegisterPower]
 public sealed class IcePower : CopyAbilityPower
 {
-    public const int MaxBlocksPerTurn = 2;
+    public const int MaxBlocksPerTurn = 1;
 
     public override CopyAbilityKind Kind => CopyAbilityKind.Ice;
 
