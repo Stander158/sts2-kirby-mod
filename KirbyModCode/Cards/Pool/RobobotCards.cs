@@ -43,9 +43,9 @@ public sealed class Robobot() : KirbyCard(2, CardType.Power, CardRarity.Uncommon
     protected override void OnUpgrade() => DynamicVars[nameof(AbilityConservationPower)].UpgradeValueBy(1);
 }
 
-/// <summary>无敌棒棒糖: gain 1(2) Invincibility. Exhaust.</summary>
+/// <summary>无敌棒棒糖: you or an ally gains 1(2) Invincibility. Exhaust.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class InvincibleLollipop() : KirbyCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
+public sealed class InvincibleLollipop() : KirbyCard(3, CardType.Skill, CardRarity.Rare, TargetType.AnyPlayer)
 {
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
@@ -55,7 +55,9 @@ public sealed class InvincibleLollipop() : KirbyCard(3, CardType.Skill, CardRari
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        await PowerCmd.Apply<InvincibilityPower>(ctx, Owner.Creature, DynamicVars[nameof(InvincibilityPower)].BaseValue,
+        // Single player has no target selection for AnyPlayer.
+        var target = cardPlay.Target ?? Owner.Creature;
+        await PowerCmd.Apply<InvincibilityPower>(ctx, target, DynamicVars[nameof(InvincibilityPower)].BaseValue,
             Owner.Creature, this);
     }
 

@@ -60,7 +60,7 @@ public sealed class WheelCharge() : KirbyCard(1, CardType.Skill, CardRarity.Unco
 
 /// <summary>
 /// 疯狂摩托手 (Wheelie Rider): the Wheel ability card, 2 cost, Exhaust. Gain 2(3) Dexterity; if you already have Wheel,
-/// deal Dexterity x 7(9) damage to ALL enemies. Then gain Wheel. Wheel: Retain.
+/// deal Dexterity x 7(9) damage to ALL enemies, otherwise gain Wheel. Wheel: Retain.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
@@ -87,8 +87,8 @@ public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
                 await DamageCmd.Attack(dex * DynamicVars["DexDamage"].BaseValue).FromCard(this, cardPlay)
                     .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
         }
-
-        await base.OnPlay(ctx, cardPlay);
+        else
+            await base.OnPlay(ctx, cardPlay);  // gain Wheel only if it was not held
     }
 
     // Upgrade raises the Dexterity and the multiplier; the cost stays 2.

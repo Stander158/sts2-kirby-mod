@@ -46,7 +46,8 @@ public sealed class MetaKnightRevenge() : KirbyCard(3, CardType.Attack, CardRari
 }
 
 /// <summary>
-/// 魅塔梦魇 (skill, Exhaust): your Sword cards cost 0 this turn, gain Sword and add a Mach Tornado to the discard pile. Upgrade: cost 2.
+/// 魅塔梦魇 (skill, 3 cost, Exhaust): your Sword cards cost 0 this turn, gain Master (Galaxia; upgraded when this is)
+/// and add a Mach Tornado to the discard pile. The upgrade keeps the cost.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class MetaNightmare() : KirbyCard(3, CardType.Skill, CardRarity.Rare, TargetType.Self)
@@ -54,17 +55,23 @@ public sealed class MetaNightmare() : KirbyCard(3, CardType.Skill, CardRarity.Ra
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        [HoverTipFactory.FromPower<SwordPower>(), HoverTipFactory.FromCard<MachTornado>()];
+    [
+        HoverTipFactory.FromPower(CopyAbilities.CanonicalPower(CopyAbilityKind.Galaxia)),
+        HoverTipFactory.FromCard<MachTornado>(),
+    ];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        // First, so the Sword card handed out by gaining Sword is free too.
+        // First, so the Sword cards handed out by gaining Master are free too.
         if (!Owner.Creature.HasPower<MetaNightmarePower>())
             await PowerCmd.Apply<MetaNightmarePower>(ctx, Owner.Creature, 1, Owner.Creature, this);
 
-        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Sword, upgraded: false, this);
+        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Galaxia, upgraded: IsUpgraded, this);
         await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<MachTornado>(Owner, false), PileType.Discard, Owner);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    // The upgrade only makes the Master it gives upgraded; the cost stays 3.
+    protected override void OnUpgrade()
+    {
+    }
 }
