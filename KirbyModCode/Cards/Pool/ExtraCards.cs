@@ -169,9 +169,9 @@ public sealed class DragonStorm() : KirbyCard(3, CardType.Attack, CardRarity.Rar
 }
 
 /// <summary>
-/// 究极冰球 (2 cost, Exhaust): exhaust every other card in your hand and add that many Ice Blocks (Ice Block+ when
-/// upgraded), then gain the Ice copy ability (after the Ice Blocks, so its on-gain Ice Blocks prompt has nothing left
-/// to pick from); if you already held Ice, it is kept as is. Ice (held when played): Retain, and for the rest of
+/// 究极冰球 (2 cost, Exhaust): transform any number of chosen cards in your hand into Ice Blocks (Ice Block+ when
+/// upgraded; the upgraded card can also pick un-upgraded Ice Blocks), then gain the Ice copy ability; if you already
+/// held Ice, it is kept as is. Ice (held when played): Retain, and for the rest of
 /// combat Ice Blocks deal damage AND give Block.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
@@ -188,12 +188,15 @@ public sealed class SnowBowl() : KirbyCard(2, CardType.Skill, CardRarity.Rare, T
     {
         var heldIce = SynergyActive;
 
-        var others = PileType.Hand.GetPile(Owner).Cards.Where(card => card != this).ToList();
-        foreach (var card in others)
-            await CardCmd.Exhaust(ctx, card);
-        for (var i = 0; i < others.Count; i++)
-            await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<IceBlock>(Owner, IsUpgraded),
-                PileType.Hand, Owner);
+        bool CanFreeze(CardModel card) => card is not IceBlock || (IsUpgraded && !card.IsUpgraded);
+        var candidates = PileType.Hand.GetPile(Owner).Cards.Count(card => card != this && CanFreeze(card));
+        if (candidates > 0)
+        {
+            var chosen = await CardSelectCmd.FromHand(ctx, Owner,
+                new CardSelectorPrefs(SelectionScreenPrompt, 0, candidates), CanFreeze, this);
+            foreach (var card in chosen.ToList())
+                await CardCmd.Transform(card, KirbyMouth.CreateCard<IceBlock>(Owner, IsUpgraded));
+        }
 
         if (heldIce)
             await PowerCmd.Apply<SnowBowlPower>(ctx, Owner.Creature, 1, Owner.Creature, this);

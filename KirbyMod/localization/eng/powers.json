@@ -154,5 +154,9 @@
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]Swallow[/gold] grants the Beam ability.",
   "KIRBY_MOD_POWER_STASIS_POWER.title": "Stasis",
   "KIRBY_MOD_POWER_STASIS_POWER.description": "Frozen in time. An enemy skips its next move; a player can't play cards until the end of their turn.",
-  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "You can't play cards until the end of your turn."
+  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "You can't play cards until the end of your turn.",
+  "KIRBY_MOD_SWALLOW_WHOLE.title": "Inhale",
+  "KIRBY_MOD_SWALLOW_WHOLE.description": "If the inhaled enemy has {Threshold} HP or less (not a boss), it goes straight into your mouth.",
+  "KIRBY_MOD_SUPPRESSED.title": "Suppressed",
+  "KIRBY_MOD_SUPPRESSED.description": "Until your next turn, all damage the inhaled enemy deals to you is halved."
 }

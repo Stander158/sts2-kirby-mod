@@ -4,6 +4,7 @@ using KirbyMod.Powers;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using STS2RitsuLib.Interop.AutoRegistration;
 using STS2RitsuLib.Scaffolding.Content;
 
@@ -22,7 +23,17 @@ public sealed class UltimateInhale() : ModCardTemplate(1, CardType.Skill, CardRa
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => Inhale.GetInhaleHoverTips(IsUpgraded);
+    /// <summary>The Inhale tips, with 压制 (Suppressed: the inhaled enemy's damage to you is halved) after the first.</summary>
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips
+    {
+        get
+        {
+            var tips = Inhale.GetInhaleHoverTips(IsUpgraded, KirbyMouth.FrenziedExecuteThreshold).ToList();
+            tips.Insert(1, new HoverTip(new LocString("powers", "KIRBY_MOD_SUPPRESSED.title"),
+                new LocString("powers", "KIRBY_MOD_SUPPRESSED.description")));
+            return tips;
+        }
+    }
 
     protected override bool IsPlayable => KirbyMouth.CanUseInhale(Owner);
 

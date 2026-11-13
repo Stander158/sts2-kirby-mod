@@ -28,16 +28,14 @@ public sealed class BeamAbility() : AbilityCard(CardRarity.Uncommon)
         [.. base.AdditionalHoverTips, HoverTipFactory.FromPower<ClockPower>()];
 }
 
-/// <summary>光束攻击: deal 8(11); if the target intends to attack, apply 1(2) Weak. Beam: Retain, and 1 Clock to it.</summary>
+/// <summary>光束攻击: deal 8(11); if the target intends to attack, apply 1(2) Weak. Beam: Retain, and 2(3) Clock to it.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class BeamAttack() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
-    public const int Clock = 1;
-
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Beam];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(8, ValueProp.Move), new PowerVar<WeakPower>(1), new DynamicVar("Clock", Clock)];
+        [new DamageVar(8, ValueProp.Move), new PowerVar<WeakPower>(1), new DynamicVar("Clock", 2)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.FromPower<ClockPower>()];
@@ -59,25 +57,24 @@ public sealed class BeamAttack() : KirbyCard(1, CardType.Attack, CardRarity.Comm
         if (attacking)
             await PowerCmd.Apply<WeakPower>(ctx, target, DynamicVars["WeakPower"].BaseValue, Owner.Creature, this);
         if (SynergyActive)
-            await PowerCmd.Apply<ClockPower>(ctx, target, Clock, Owner.Creature, this);
+            await PowerCmd.Apply<ClockPower>(ctx, target, DynamicVars["Clock"].BaseValue, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(3);
         DynamicVars["WeakPower"].UpgradeValueBy(1);
+        DynamicVars["Clock"].UpgradeValueBy(1);
     }
 }
 
-/// <summary>时间蓄力光束: deal 13(17) to ALL enemies. Beam: Retain, and 3 Clock to ALL enemies.</summary>
+/// <summary>时间蓄力光束: deal 13(17) to ALL enemies. Beam: Retain, and 3(4) Clock to ALL enemies.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class TimeChargeBeam() : KirbyCard(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
-    public const int Clock = 3;
-
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Beam];
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(13, ValueProp.Move), new DynamicVar("Clock", Clock)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(13, ValueProp.Move), new DynamicVar("Clock", 3)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<ClockPower>()];
 
@@ -91,25 +88,30 @@ public sealed class TimeChargeBeam() : KirbyCard(2, CardType.Attack, CardRarity.
             .Execute(ctx);
 
         if (SynergyActive)
-            await PowerCmd.Apply<ClockPower>(ctx, CombatState!.HittableEnemies.ToList(), Clock, Owner.Creature, this);
+            await PowerCmd.Apply<ClockPower>(ctx, CombatState!.HittableEnemies.ToList(), DynamicVars["Clock"].BaseValue,
+                Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(4);
+    protected override void OnUpgrade()
+    {
+        DynamicVars.Damage.UpgradeValueBy(4);
+        DynamicVars["Clock"].UpgradeValueBy(1);
+    }
 }
 
 /// <summary>
-/// 究极光束 (Flare Beam): hit a random enemy for 12(14) twice, 1 Weak per hit; gain Beam; from now on gain 1 Clock at the
-/// start of each turn. Beam (held when played): each hit also applies 2(4) Clock. Exhaust. No Retain.
+/// 究极光束 (Flare Beam): 3 cost. Hit a random enemy for 12(14) three times, 1 Weak per hit; from now on gain 1 Clock at
+/// the start of each turn. Beam (held when played): each hit also applies 3(4) Clock; otherwise gain Beam. Exhaust. No Retain.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class UltimateBeam() : KirbyCard(2, CardType.Attack, CardRarity.Rare, TargetType.RandomEnemy)
+public sealed class UltimateBeam() : KirbyCard(3, CardType.Attack, CardRarity.Rare, TargetType.RandomEnemy)
 {
-    private const int Hits = 2;
+    private const int Hits = 3;
 
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(12, ValueProp.Move), new PowerVar<WeakPower>(1), new DynamicVar("Clock", 2)];
+        [new DamageVar(12, ValueProp.Move), new PowerVar<WeakPower>(1), new DynamicVar("Clock", 3)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
     [
@@ -141,14 +143,15 @@ public sealed class UltimateBeam() : KirbyCard(2, CardType.Attack, CardRarity.Ra
                 await PowerCmd.Apply<ClockPower>(ctx, target, DynamicVars["Clock"].BaseValue, Owner.Creature, this);
         }
 
-        await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Beam, false, this);
+        if (!hadBeam)
+            await CopyAbilities.Gain(ctx, Owner, CopyAbilityKind.Beam, false, this);
         await PowerCmd.Apply<UltimateBeamPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
         DynamicVars.Damage.UpgradeValueBy(2);
-        DynamicVars["Clock"].UpgradeValueBy(2);
+        DynamicVars["Clock"].UpgradeValueBy(1);
     }
 }
 

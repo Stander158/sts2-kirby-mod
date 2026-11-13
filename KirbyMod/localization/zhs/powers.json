@@ -1,7 +1,7 @@
 {
   "KIRBY_MOD_NO_ABILITY.title": "无能力",
   "KIRBY_MOD_NO_ABILITY.description": "当前没有能力；去试试[gold]吸入[/gold]一个敌人，下回合[gold]吞咽[/gold]！",
-  "KIRBY_MOD_POWER_INHALING_POWER.title": "吸入",
+  "KIRBY_MOD_POWER_INHALING_POWER.title": "吸入中",
   "KIRBY_MOD_POWER_INHALING_POWER.description": "根据被吸入敌人的意图，获得不同的[gold]满嘴[/gold]与复制能力；它死亡时，改为获得等同于它最大生命一半的[gold]满嘴[/gold]。成功时获得[gold]吐星星[/gold]和[gold]吞咽[/gold]。持续到你的下回合开始。",
   "KIRBY_MOD_POWER_INHALING_POWER.smartDescription": "根据被吸入敌人的意图，获得不同的[gold]满嘴[/gold]与复制能力；它死亡时，改为获得等同于它最大生命一半的[gold]满嘴[/gold]。成功时获得[gold]吐星星[/gold]和[gold]吞咽[/gold]。持续到你的下回合开始。",
   "KIRBY_MOD_POWER_MOUTHFUL_POWER.title": "满嘴",
@@ -154,5 +154,9 @@
   "KIRBY_MOD_POWER_ABILITY_IN_MOUTH_POWER.BEAM.description": "[gold]吞咽[/gold]时获得复制能力：光束。",
   "KIRBY_MOD_POWER_STASIS_POWER.title": "停滞",
   "KIRBY_MOD_POWER_STASIS_POWER.description": "被时间停住了。敌人跳过下一次行动；玩家在本回合结束前不能打出任何牌。",
-  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "在本回合结束前，你不能打出任何牌。"
+  "KIRBY_MOD_POWER_STASIS_POWER.smartDescription": "在本回合结束前，你不能打出任何牌。",
+  "KIRBY_MOD_SWALLOW_WHOLE.title": "吸入",
+  "KIRBY_MOD_SWALLOW_WHOLE.description": "被吸入的敌人生命不高于{Threshold}时（幕末Boss除外），它直接入嘴。",
+  "KIRBY_MOD_SUPPRESSED.title": "压制",
+  "KIRBY_MOD_SUPPRESSED.description": "直到你的下回合开始，被吸入的敌人对你造成的所有伤害减半。"
 }

@@ -19,8 +19,8 @@ using STS2RitsuLib.Interop.AutoRegistration;
 namespace KirbyMod.Cards;
 
 /// <summary>
-/// 超速居合: costs 1 more each turn after the first. Deals 37(50) only if Kirby has not lost HP this combat; on turn 1
-/// it also applies 2(4) Weak and 2(4) Vulnerable (after the hit). Exhaust.
+/// 超速居合: costs 1 more each turn after the first. Deals 37(50) minus twice the damage Kirby has taken (HP lost to
+/// damage) this combat, not below 0; on turn 1 it also applies 2(4) Weak and 2(4) Vulnerable (after the hit). Exhaust.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class QuickDraw() : KirbyCard(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
@@ -28,13 +28,19 @@ public sealed class QuickDraw() : KirbyCard(0, CardType.Attack, CardRarity.Rare,
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DamageVar(37, ValueProp.Move), new PowerVar<WeakPower>(2), new PowerVar<VulnerablePower>(2)];
+    [
+        new CalculationBaseVar(37),
+        new ExtraDamageVar(-2),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier((card, _) => card.IsMutable ? DamageTaken(card.Owner) : 0),
+        new PowerVar<WeakPower>(2), new PowerVar<VulnerablePower>(2),
+    ];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<WeakPower>(), HoverTipFactory.FromPower<VulnerablePower>()];
 
-    private bool Untouched => !CombatManager.Instance.History.Entries.OfType<DamageReceivedEntry>()
-        .Any(e => e.Receiver == Owner.Creature && e.Result.UnblockedDamage > 0);
+    /// <summary>Damage the player has taken this combat (after Block).</summary>
+    private static decimal DamageTaken(Player player) => CombatManager.Instance.History.Entries
+        .OfType<DamageReceivedEntry>().Where(e => e.Receiver == player.Creature).Sum(e => (decimal)e.Result.UnblockedDamage);
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {
@@ -49,8 +55,7 @@ public sealed class QuickDraw() : KirbyCard(0, CardType.Attack, CardRarity.Rare,
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         var target = cardPlay.Target!;
-        if (Untouched)
-            await DamageCmd.Attack(DynamicVars.Damage.BaseValue)
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage)
                 .FromCard(this, cardPlay)
                 .Targeting(target)
                 .WithHitFx("vfx/vfx_attack_slash")
@@ -65,7 +70,7 @@ public sealed class QuickDraw() : KirbyCard(0, CardType.Attack, CardRarity.Rare,
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(13);
+        DynamicVars.CalculationBase.UpgradeValueBy(13);
         DynamicVars["WeakPower"].UpgradeValueBy(2);
         DynamicVars["VulnerablePower"].UpgradeValueBy(2);
     }
