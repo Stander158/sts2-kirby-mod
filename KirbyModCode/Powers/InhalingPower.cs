@@ -26,6 +26,8 @@ namespace KirbyMod.Powers;
 ///     <item>the inhaled enemy dies, for Mouthful equal to half its Max HP;</item>
 ///     <item>otherwise, 6 Mouthful at the start of Kirby's next turn.</item>
 /// </list>
+/// Succeeding does not Flash(): the big open-mouth Kirby on Kirby and the small icon rising from the power bar
+/// were too loud next to the Mouthful gain.
 /// From Hypernova Inhale, every hit of the inhaled enemy deals half damage until then (the first attack still becomes
 /// Mouthful at its full damage).
 /// </summary>
@@ -140,7 +142,6 @@ public sealed class InhalingPower : ModPowerTemplate
             return;
 
         state.Resolved = true;
-        Flash();
         await KirbyMouth.Succeed(choiceContext, Owner, (int)state.Total, state.UpgradedTokens,
             "inhaled enemy's first attack (all hits)");
     }
@@ -197,7 +198,6 @@ public sealed class InhalingPower : ModPowerTemplate
             inMouth.Kind = CopyAbilityKind.Fire;
 
         await CardPileCmd.RemoveFromCombat(card);
-        Flash();
         await KirbyMouth.Succeed(new BlockingPlayerChoiceContext(), Owner, KirbyMouth.FallbackMouthful,
             state.UpgradedTokens, $"blocked status card {card.Id.Entry}");
     }
@@ -214,7 +214,6 @@ public sealed class InhalingPower : ModPowerTemplate
             return;
 
         state.Resolved = true;
-        Flash();
         await KirbyMouth.Succeed(choiceContext, Owner, Math.Max(1, creature.MaxHp / 2), state.UpgradedTokens,
             $"inhaled enemy died, max hp {creature.MaxHp}");
     }

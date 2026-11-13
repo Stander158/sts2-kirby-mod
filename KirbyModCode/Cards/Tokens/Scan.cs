@@ -19,6 +19,8 @@ public sealed class Scan() : ModCardTemplate(0, CardType.Skill, CardRarity.Token
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => Inhale.GetInhaleHoverTips(IsUpgraded);
 
+    protected override bool IsPlayable => KirbyMouth.CanUseInhale(Owner);
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await KirbyMouth.StartInhale(ctx, Owner, cardPlay.Target!, this);

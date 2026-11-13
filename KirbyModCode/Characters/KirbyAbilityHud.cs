@@ -187,7 +187,7 @@ internal static class KirbyAbilityHud
     }
 
     /// <summary>The ability's badge, or its power icon when the badges are not there (public build).</summary>
-    private static Texture2D? BadgeTexture(CopyAbilityPower power)
+    internal static Texture2D? BadgeTexture(CopyAbilityPower power)
     {
         var badge = Badges + KirbyArt.SnakeCase(power.Kind.ToString()) + ".png";
         return Load(ResourceLoader.Exists(badge) ? badge : power.AssetProfile.BigIconPath ?? power.AssetProfile.IconPath);

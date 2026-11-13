@@ -21,10 +21,11 @@ public sealed class Inhale() : ModCardTemplate(1, CardType.Skill, CardRarity.Bas
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => GetInhaleHoverTips(IsUpgraded);
 
-    /// <summary>Shared by every Inhale card: the two powers, then previews of the Spit Star / Swallow it can give.</summary>
-    public static IEnumerable<IHoverTip> GetInhaleHoverTips(bool upgraded, bool frenzied = false) =>
+    protected override bool IsPlayable => KirbyMouth.CanUseInhale(Owner);
+
+    /// <summary>Shared by every Inhale card: Inhaling, then previews of the Spit Star / Swallow it can give.</summary>
+    public static IEnumerable<IHoverTip> GetInhaleHoverTips(bool upgraded) =>
     [
-        frenzied ? HoverTipFactory.FromPower<FrenziedInhaledPower>() : HoverTipFactory.FromPower<InhaledPower>(),
         HoverTipFactory.FromPower<InhalingPower>(),
         HoverTipFactory.FromCard<SpitStar>(upgraded),
         HoverTipFactory.FromCard<Swallow>(upgraded),

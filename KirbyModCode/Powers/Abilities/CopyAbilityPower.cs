@@ -34,7 +34,7 @@ public abstract class CopyAbilityPower : ModPowerTemplate
         /// <summary>Sleep: Kirby lost HP since the ability was gained.</summary>
         public bool WasHurt;
 
-        /// <summary>Sleep: how many times it was gained before waking up (2 under Super Ability).</summary>
+        /// <summary>Sleep: how many rewards it has banked before waking up (2 per gain under Super Ability).</summary>
         public int TimesGained;
     }
 
@@ -110,8 +110,13 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
     protected override object InitInternalData() => new Data();
 
-    /// <summary>On-gain effect. Runs again when a held ability is regained (and twice under Super Ability).</summary>
+    /// <summary>
+    /// On-gain effect. Runs again when a held ability is regained. Scale its amounts by <see cref="GainMultiplier" />.
+    /// </summary>
     public virtual Task OnGained(PlayerChoiceContext ctx, Player player) => Task.CompletedTask;
+
+    /// <summary>Super Ability: 2 (3 for Super Ability+) while <see cref="OnGained" /> runs, else 1.</summary>
+    public int GainMultiplier { get; set; } = 1;
 
     /// <summary>
     /// Takes back everything <see cref="Grant{TPower}" /> gave: stats (Strength, Dexterity) in full, consumable buffs

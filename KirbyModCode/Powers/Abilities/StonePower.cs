@@ -9,8 +9,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Powers;
 
 /// <summary>
-/// 石头: 1 Buffer on gain, and 2 Plating at the start of each turn while held. Losing the ability takes back only 1
-/// Buffer, even if it was gained twice (the Plating stays).
+/// 石头: 1 Buffer on gain, and 2 Plating at the start of each turn while held. Losing the ability takes back the
+/// Buffer it gave that is still unused (the Plating stays).
 /// </summary>
 [RegisterPower]
 public sealed class StonePower : CopyAbilityPower
@@ -23,7 +23,7 @@ public sealed class StonePower : CopyAbilityPower
     public const int BufferOnGain = 1;
 
     public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
-        Grant<BufferPower>(ctx, BufferOnGain);
+        Grant<BufferPower>(ctx, BufferOnGain * GainMultiplier);
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {

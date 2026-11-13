@@ -4,7 +4,10 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Powers;
 
-/// <summary>增强吸入: whenever you gain a copy ability, from any source, put Inhale into your hand.</summary>
+/// <summary>
+/// 增强吸入: whenever you gain a copy ability, from any source, put Inhale into your hand. Inhale cards can be played
+/// while you hold a copy ability (see <see cref="Mechanics.KirbyMouth.CanUseInhale" />).
+/// </summary>
 [RegisterPower]
 public sealed class EnhancedInhalePower : ModPowerTemplate
 {

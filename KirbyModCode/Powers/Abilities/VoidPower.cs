@@ -39,11 +39,12 @@ public sealed class VoidPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await Grant<StrengthPower>(ctx, SwordPower.Strength + BoomerangPower.Strength + FighterPower.Strength);
-        await Grant<DexterityPower>(ctx, BoomerangPower.Dexterity + WheelPower.Dexterity);
-        await Grant<VigorPower>(ctx, SwordPower.VigorOnGain);
-        await Grant<BufferPower>(ctx, StonePower.BufferOnGain);
-        await CreatureCmd.GainBlock(Owner, WheelPower.BlockOnGain, ValueProp.Unpowered, null);
+        var k = GainMultiplier;
+        await Grant<StrengthPower>(ctx, (SwordPower.Strength + BoomerangPower.Strength + FighterPower.Strength) * k);
+        await Grant<DexterityPower>(ctx, (BoomerangPower.Dexterity + WheelPower.Dexterity) * k);
+        await Grant<VigorPower>(ctx, SwordPower.VigorOnGain * k);
+        await Grant<BufferPower>(ctx, StonePower.BufferOnGain * k);
+        await CreatureCmd.GainBlock(Owner, WheelPower.BlockOnGain * k, ValueProp.Unpowered, null);
     }
 
     // Counts as Sword and Doctor: Meta Knight's Revenge costs 1, Experiment 1 less (see SwordPower, DoctorPower).

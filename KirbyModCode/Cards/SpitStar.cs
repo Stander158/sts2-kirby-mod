@@ -38,14 +38,22 @@ public sealed class SpitStar() : ModCardTemplate(1, CardType.Attack, CardRarity.
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         KirbyFx.PlaySound(KirbyFx.SpitStarSound);
+        // Star Rod: spitting keeps the Mouthful.
+        var keepMouthful = Owner.Creature.HasPower<StarRodPower>();
+        KirbySprite.ShowSpitting(Owner.Creature, 0.5);
+        // The mouth is empty from the moment he spits: the Mouthful power goes only after the star lands, which can be
+        // later than the 0.5 s open mouth, and the full-mouth sprite must not come back in between.
+        if (!keepMouthful)
+            KirbySprite.SetMouthful(Owner.Creature, false);
 
         var attack = DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).WithHitFx("vfx/vfx_starry_impact");
         var splash = Owner.Creature.HasPower<StarBulletPower>()
                      && DynamicVars.CalculatedDamage.Calculate(cardPlay.Target) >= StarBulletPower.SplashThreshold;
+        await KirbyFx.StarBullet(Owner.Creature, splash ? CombatState!.HittableEnemies : [cardPlay.Target!],
+            passThrough: splash);
         await (splash ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
 
-        // Star Rod: spitting keeps the Mouthful.
-        await KirbyMouth.ClearMouth(Owner.Creature, keepMouthful: Owner.Creature.HasPower<StarRodPower>());
+        await KirbyMouth.ClearMouth(Owner.Creature, keepMouthful);
 
         var inhale = KirbyMouth.FindExhaustedInhale(Owner);
         if (inhale != null)

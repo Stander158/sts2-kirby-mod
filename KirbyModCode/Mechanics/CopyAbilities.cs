@@ -260,8 +260,8 @@ public static class CopyAbilities
     /// <summary>
     /// Gives Kirby the copy ability <paramref name="kind" />. Without Smash Bros. Kirby the previous abilities are lost
     /// first (their cards exhausted); with it they stay, and regaining a held ability repeats its on-gain effect.
-    /// Under Super Ability the same ability is gained twice (3 times under Super Ability+): everything below happens
-    /// again, as if it were regained while held. While Kirby holds Void nothing else can be gained: he gets Ability Lock instead.
+    /// Under Super Ability its on-gain effects are doubled (tripled under Super Ability+): the ability's own effect and
+    /// the cards it hands out, not Drop Ability or the "whenever you gain a copy ability" effects (Galaxy Wish, Enhanced Inhale). While Kirby holds Void nothing else can be gained: he gets Ability Lock instead.
     /// </summary>
     public static async Task Gain(PlayerChoiceContext ctx, Player player, CopyAbilityKind kind, bool upgraded,
         CardModel? source, PileType dropAbilityPile = PileType.Hand, bool keepOthers = false, bool allowEndTurn = true)
@@ -290,21 +290,20 @@ public static class CopyAbilities
         if (!keepOthers && !kirby.HasPower<SmashBrosPower>())
             await KirbyMouth.LoseCopyAbility(ctx, player);
 
-        CopyAbilityPower? power = null;
-        for (var i = 0; i < times; i++)
-            power = await GainOnce(ctx, player, kind, upgraded, source, dropAbilityPile);
+        var power = await GainOnce(ctx, player, kind, upgraded, source, dropAbilityPile, times);
 
-        // Last, and only once even when gained twice: Sleep ends the turn.
-        if (allowEndTurn && power is { EndsTurnOnGain: true })
+        // Last: Sleep ends the turn.
+        if (allowEndTurn && power.EndsTurnOnGain)
             PlayerCmd.EndTurn(player, canBackOut: false);
     }
 
     /// <summary>
     /// One gain of <paramref name="kind" />: apply the power (or reuse the held one), hand out its card and Drop
-    /// Ability, fire the "whenever you gain a copy ability" effects, then its own on-gain effect.
+    /// Ability, fire the "whenever you gain a copy ability" effects, then its own on-gain effect. Super Ability's
+    /// <paramref name="multiplier" /> scales the ability's cards and on-gain effect only.
     /// </summary>
     private static async Task<CopyAbilityPower> GainOnce(PlayerChoiceContext ctx, Player player, CopyAbilityKind kind,
-        bool upgraded, CardModel? source, PileType dropAbilityPile)
+        bool upgraded, CardModel? source, PileType dropAbilityPile, int multiplier)
     {
         var kirby = player.Creature;
 
@@ -320,7 +319,8 @@ public static class CopyAbilities
             power.Upgraded |= upgraded;
         }
 
-        await GrantAbilityCard(player, kind, upgraded);
+        for (var i = 0; i < multiplier; i++)
+            await GrantAbilityCard(player, kind, upgraded);
         if (dropAbilityPile == PileType.Hand)
             await KirbyMouth.AddToHandIfMissing<DropAbility>(player);
         else if (!KirbyMouth.LivePiles.SelectMany(pile => pile.GetPile(player).Cards).Any(card => card is DropAbility))
@@ -332,7 +332,16 @@ public static class CopyAbilities
         if (kirby.HasPower<EnhancedInhalePower>())
             await KirbyMouth.PutInhaleIntoHand(player, includeLivePiles: true);
 
-        await power.OnGained(ctx, player);
+        power.GainMultiplier = multiplier;
+        try
+        {
+            await power.OnGained(ctx, player);
+        }
+        finally
+        {
+            power.GainMultiplier = 1;
+        }
+
         return power;
     }
 

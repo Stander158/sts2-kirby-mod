@@ -59,8 +59,8 @@ public sealed class WheelCharge() : KirbyCard(1, CardType.Skill, CardRarity.Unco
 }
 
 /// <summary>
-/// 疯狂摩托手 (Wheelie Rider): the Wheel ability card, 2 cost, Exhaust. If you already have Wheel: deal Dexterity x 7(9)
-/// damage to ALL enemies and gain 2 Dexterity. Then gain Wheel. Wheel: Retain.
+/// 疯狂摩托手 (Wheelie Rider): the Wheel ability card, 2 cost, Exhaust. Gain 2(3) Dexterity; if you already have Wheel,
+/// deal Dexterity x 7(9) damage to ALL enemies. Then gain Wheel. Wheel: Retain.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
@@ -77,20 +77,26 @@ public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        if (SynergyActive)
+        // Wheel is checked before this card's own Wheel is gained; the Dexterity comes first, so it counts.
+        var hadWheel = SynergyActive;
+        await PowerCmd.Apply<DexterityPower>(ctx, Owner.Creature, DynamicVars["WheelDex"].BaseValue, Owner.Creature, this);
+        if (hadWheel)
         {
             var dex = Owner.Creature.GetPowerAmount<DexterityPower>();
             if (dex > 0)
                 await DamageCmd.Attack(dex * DynamicVars["DexDamage"].BaseValue).FromCard(this, cardPlay)
                     .TargetingAllOpponents(CombatState!).WithHitFx("vfx/vfx_heavy_blunt").Execute(ctx);
-            await PowerCmd.Apply<DexterityPower>(ctx, Owner.Creature, DynamicVars["WheelDex"].BaseValue, Owner.Creature, this);
         }
 
         await base.OnPlay(ctx, cardPlay);
     }
 
-    // Upgrade raises the damage only; the cost stays 2.
-    protected override void OnUpgrade() => DynamicVars["DexDamage"].UpgradeValueBy(2);
+    // Upgrade raises the Dexterity and the multiplier; the cost stays 2.
+    protected override void OnUpgrade()
+    {
+        DynamicVars["WheelDex"].UpgradeValueBy(1);
+        DynamicVars["DexDamage"].UpgradeValueBy(2);
+    }
 }
 
 /// <summary>轮子碾压: deal 9(13); Dexterity also counts as Strength on this card. Wheel: Retain, and every other enemy takes it too.</summary>

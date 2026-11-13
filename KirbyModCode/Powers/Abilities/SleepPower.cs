@@ -14,8 +14,8 @@ namespace KirbyMod.Powers;
 
 /// <summary>
 /// 睡眠: on gain, end the turn immediately. At the start of the next turn Sleep ends (other abilities stay); if Kirby
-/// lost no HP in between, gain 2(3) Strength, 2(3) Dexterity and heal 8(12) for each time it was gained (twice under
-/// Super Ability).
+/// lost no HP in between, gain 2(3) Strength, 2(3) Dexterity and heal 8(12) for each time it was gained (doubled /
+/// tripled under Super Ability).
 /// </summary>
 [RegisterPower]
 public sealed class SleepPower : CopyAbilityPower
@@ -42,7 +42,7 @@ public sealed class SleepPower : CopyAbilityPower
 
     public override Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        State.TimesGained++;
+        State.TimesGained += GainMultiplier;
         return Task.CompletedTask;
     }
 

@@ -38,7 +38,7 @@ public sealed class FirePower : CopyAbilityPower
         foreach (var burn in burns)
             MakePlayable(burn);
 
-        for (var i = 0; i < BurnsOnGain; i++)
+        for (var i = 0; i < BurnsOnGain * GainMultiplier; i++)
         {
             var burn = KirbyMouth.CreateCard<Burn>(player, upgraded: false);
             await CardPileCmd.AddGeneratedCardToCombat(burn, PileType.Hand, player);

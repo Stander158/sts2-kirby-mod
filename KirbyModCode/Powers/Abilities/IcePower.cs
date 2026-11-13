@@ -21,22 +21,23 @@ public sealed class IcePower : CopyAbilityPower
 
     public override PowerAssetProfile AssetProfile => KirbyArt.Power("ice_ability");
 
-    public override Task OnGained(PlayerChoiceContext ctx, Player player) => Freeze(ctx, player);
+    public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
+        Freeze(ctx, player, MaxBlocksPerTurn * GainMultiplier);
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
     {
         if (player == Owner.Player)
-            await Freeze(choiceContext, player);
+            await Freeze(choiceContext, player, MaxBlocksPerTurn);
     }
 
-    private async Task Freeze(PlayerChoiceContext choiceContext, Player player)
+    private async Task Freeze(PlayerChoiceContext choiceContext, Player player, int max)
     {
         var candidates = PileType.Hand.GetPile(player).Cards.Count(card => card is not IceBlock);
         if (candidates == 0)
             return;
 
         var chosen = await CardSelectCmd.FromHand(choiceContext, player,
-            new CardSelectorPrefs(SelectionScreenPrompt, 0, Math.Min(candidates, MaxBlocksPerTurn)),
+            new CardSelectorPrefs(SelectionScreenPrompt, 0, Math.Min(candidates, max)),
             card => card is not IceBlock, this);
 
         foreach (var card in chosen.ToList())

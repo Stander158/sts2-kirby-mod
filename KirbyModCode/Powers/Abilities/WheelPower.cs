@@ -22,7 +22,7 @@ public sealed class WheelPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await CreatureCmd.GainBlock(Owner, BlockOnGain, ValueProp.Unpowered, null);
-        await Grant<DexterityPower>(ctx, Dexterity);
+        await CreatureCmd.GainBlock(Owner, BlockOnGain * GainMultiplier, ValueProp.Unpowered, null);
+        await Grant<DexterityPower>(ctx, Dexterity * GainMultiplier);
     }
 }

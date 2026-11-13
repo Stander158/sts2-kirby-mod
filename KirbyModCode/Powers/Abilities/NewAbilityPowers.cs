@@ -49,8 +49,8 @@ public sealed class CarPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await Grant<DexterityPower>(ctx, Dexterity);
-        await Ram(ctx, DamageOnGain + (Upgraded ? UpgradeBonus : 0));
+        await Grant<DexterityPower>(ctx, Dexterity * GainMultiplier);
+        await Ram(ctx, (DamageOnGain + (Upgraded ? UpgradeBonus : 0)) * GainMultiplier);
     }
 
     // Like Poison, turn-start damage goes in AfterSideTurnStart: killing earlier breaks the turn-start loop.
@@ -94,7 +94,7 @@ public sealed class StarRodPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await PowerCmd.Apply<MouthfulPower>(ctx, Owner, Mouthful, Owner, null);
+        await PowerCmd.Apply<MouthfulPower>(ctx, Owner, Mouthful * GainMultiplier, Owner, null);
         await KirbyMouth.AddToHandIfMissing<SpitStar>(player, Upgraded);
     }
 
@@ -126,12 +126,16 @@ public sealed class GalaxiaPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await Grant<StrengthPower>(ctx, Strength);
+        await Grant<StrengthPower>(ctx, Strength * GainMultiplier);
 
-        var pool = CopyAbilities.CardsOf(CopyAbilityKind.Sword).ToList();
+        // Different Sword cards while there are enough; the pool refills when Super Ability asks for more.
+        var all = CopyAbilities.CardsOf(CopyAbilityKind.Sword).ToList();
+        var pool = new List<Type>();
         var rng = player.RunState.Rng.CombatCardGeneration;
-        for (var i = 0; i < Cards && pool.Count > 0; i++)
+        for (var i = 0; i < Cards * GainMultiplier && all.Count > 0; i++)
         {
+            if (pool.Count == 0)
+                pool.AddRange(all);
             var type = rng.NextItem(pool)!;
             pool.Remove(type);
             var card = await CopyAbilities.GrantCard(player, type);

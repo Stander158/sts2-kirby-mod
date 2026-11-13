@@ -26,8 +26,8 @@ public sealed class SwordPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await Grant<StrengthPower>(ctx, Strength);
-        await Grant<VigorPower>(ctx, VigorOnGain);
+        await Grant<StrengthPower>(ctx, Strength * GainMultiplier);
+        await Grant<VigorPower>(ctx, VigorOnGain * GainMultiplier);
     }
 
     // The game always uses modifiedCost (the return value is ignored), so other cards must get their cost back.

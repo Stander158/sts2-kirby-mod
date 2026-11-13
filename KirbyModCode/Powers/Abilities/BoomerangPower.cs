@@ -20,7 +20,7 @@ public sealed class BoomerangPower : CopyAbilityPower
 
     public override async Task OnGained(PlayerChoiceContext ctx, Player player)
     {
-        await Grant<StrengthPower>(ctx, Strength);
-        await Grant<DexterityPower>(ctx, Dexterity);
+        await Grant<StrengthPower>(ctx, Strength * GainMultiplier);
+        await Grant<DexterityPower>(ctx, Dexterity * GainMultiplier);
     }
 }

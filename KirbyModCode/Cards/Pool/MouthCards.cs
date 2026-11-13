@@ -16,6 +16,8 @@ public sealed class GooeyInhale() : KirbyCard(1, CardType.Skill, CardRarity.Comm
 {
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => Inhale.GetInhaleHoverTips(IsUpgraded);
 
+    protected override bool IsPlayable => KirbyMouth.CanUseInhale(Owner);
+
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await KirbyMouth.StartInhale(ctx, Owner, cardPlay.Target!, this);

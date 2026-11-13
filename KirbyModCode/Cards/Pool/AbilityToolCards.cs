@@ -76,9 +76,9 @@ public sealed class DededeInhale() : KirbyCard(1, CardType.Power, CardRarity.Unc
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>究极之果 (power): the inhaled enemy's first hit deals 0 (still becomes Mouthful). Upgrade: cost 1.</summary>
+/// <summary>究极之果 (power): the inhaled enemy's first hit deals 0 (still becomes Mouthful). Upgrade: Innate.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class UltimateFruit() : KirbyCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class UltimateFruit() : KirbyCard(3, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<UltimateFruitPower>()];
 
@@ -87,7 +87,7 @@ public sealed class UltimateFruit() : KirbyCard(2, CardType.Power, CardRarity.Un
         await PowerCmd.Apply<UltimateFruitPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
+    protected override void OnUpgrade() => AddKeyword(CardKeyword.Innate);
 }
 
 /// <summary>重返梦幻岛: choose 1 of 3 random copy ability cards (upgraded: upgraded ones) and shuffle it into your draw pile. Exhaust.</summary>

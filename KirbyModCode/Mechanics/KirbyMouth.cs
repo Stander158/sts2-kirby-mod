@@ -7,6 +7,12 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Helpers;
+using MegaCrit.Sts2.Core.Nodes.Rooms;
+using MegaCrit.Sts2.Core.Nodes.Vfx;
+using MegaCrit.Sts2.Core.Rooms;
+using Godot;
+using MegaCrit.Sts2.Core.Combat;
 
 namespace KirbyMod.Mechanics;
 
@@ -15,8 +21,18 @@ public static class KirbyMouth
 {
     /// <summary>Mouthful when the inhaled enemy does something other than attack.</summary>
     public const int FallbackMouthful = 6;
-    /// <summary>An inhaled enemy at or below this HP dies before it acts.</summary>
+    /// <summary>An enemy at or below this HP when inhaled is swallowed whole (dies on the spot).</summary>
     public const int InhaleExecuteThreshold = 16;
+    /// <summary>The same for Hypernova Inhale.</summary>
+    public const int FrenziedExecuteThreshold = 33;
+
+    /// <summary>Inhale cards can't be played while Kirby holds a copy ability, unless he has Enhanced Inhale.</summary>
+    public static bool CanUseInhale(Player? player) =>
+        player == null || !CopyAbilities.HasAny(player) || player.Creature.HasPower<EnhancedInhalePower>();
+
+    /// <summary>An act boss itself (not its minions) can't be swallowed whole.</summary>
+    public static bool IsActBoss(Creature creature) =>
+        creature.CombatState?.Encounter?.RoomType == RoomType.Boss && creature.IsPrimaryEnemy;
 
     public static readonly PileType[] LivePiles = [PileType.Hand, PileType.Draw, PileType.Discard];
 
@@ -32,16 +48,15 @@ public static class KirbyMouth
                           $"hp={target.CurrentHp}/{target.MaxHp} -> ability={kind}{(readKind == null ? " (random)" : "")}, outcome={outcome}");
 
         KirbyFx.PlaySound(source is Scan ? KirbyFx.ScanSound : KirbyFx.InhaleSound);
-
-        // Hypernova Inhale: Frenzied Inhaled (dies at 33 HP or less) instead of Inhaled.
-        if (source is UltimateInhale)
-            await PowerCmd.Apply<FrenziedInhaledPower>(ctx, target, 1, kirby, source);
-        else
-            await PowerCmd.Apply<InhaledPower>(ctx, target, 1, kirby, source);
         VfxCmd.PlayOnCreatureCenter(target, "vfx/vfx_gaseous_impact");
 
+        // At or below the threshold (33 for Hypernova Inhale) the enemy is swallowed whole: it dies at the end of this
+        // method, and Inhaling's death reward (half its Max HP as Mouthful) is the success. Not act bosses.
+        var threshold = source is UltimateInhale ? FrenziedExecuteThreshold : InhaleExecuteThreshold;
+        var swallow = target.IsAlive && target.CurrentHp <= threshold && !IsActBoss(target);
+
         // Escaping enemy: stunned so it stays, then a normal inhale with the fallback Mouthful and Wheel in the mouth.
-        if (outcome == InhaleOutcome.Escape)
+        if (outcome == InhaleOutcome.Escape && !swallow)
         {
             await CreatureCmd.Stun(target);
             outcome = InhaleOutcome.Fallback;
@@ -54,12 +69,88 @@ public static class KirbyMouth
 
         // A new Inhale overrides whatever ability was already in Kirby's mouth. No-Ability Inhale leaves it empty.
         await PowerCmd.Remove(kirby.GetPower<AbilityInMouthPower>());
-        if (source is GooeyInhale)
-            return;
-        var inMouth = (AbilityInMouthPower)ModelDb.Power<AbilityInMouthPower>().ToMutable();
-        inMouth.Kind = kind;
-        await PowerCmd.Apply(ctx, inMouth, kirby, 1, kirby, source);
+        if (source is not GooeyInhale)
+        {
+            var inMouth = (AbilityInMouthPower)ModelDb.Power<AbilityInMouthPower>().ToMutable();
+            inMouth.Kind = kind;
+            await PowerCmd.Apply(ctx, inMouth, kirby, 1, kirby, source);
+        }
+
+        if (swallow)
+        {
+            Entry.Logger.Info($"[Inhale] {target.Monster?.Id.Entry} swallowed whole (hp {target.CurrentHp} <= {threshold})");
+            await SwallowWhole(kirby, target);
+        }
     }
+
+    /// <summary>
+    /// Kills <paramref name="target" />, first flying it into Kirby while it shrinks to 80%, instead of its death
+    /// animation (the way Doom makes enemies disappear). Enemies that revive or have their own death sequence (the
+    /// game's ShouldDisappearFromDoom list: Test Subject before its last life, illusions, Decimillipede segments, ...)
+    /// keep their normal death.
+    /// </summary>
+    private static async Task SwallowWhole(Creature kirby, Creature target)
+    {
+        var room = NCombatRoom.Instance;
+        var node = room?.GetCreatureNode(target);
+        var kirbyNode = room?.GetCreatureNode(kirby);
+
+        // Wind: Whirlwind's whole-screen streaks, blowing towards Kirby (leftwards).
+        room?.CombatVfxContainer.AddChildSafely(NHorizontalLinesVfx.Create(new Color("FFFFFF80"), 1.0,
+            movingRightwards: false));
+
+        if (room != null && node != null && kirbyNode != null && target.Monster?.ShouldDisappearFromDoom == true)
+        {
+            const float duration = 0.7f;
+            const float endScale = 0.8f;
+            node.Hitbox.ReleaseFocus();
+            node.Hitbox.FocusMode = Control.FocusModeEnum.None;
+            node.Hitbox.MouseFilter = Control.MouseFilterEnum.Ignore;
+            // No health bar, powers, name or intents on the flying body. Both are scene nodes in 0.107 and 0.113
+            // (the game's own hide/animate-out methods differ between the two).
+            var stateDisplay = node.GetNodeOrNull<CanvasItem>("%HealthBar");
+            if (stateDisplay != null) stateDisplay.Visible = false;
+            node.IntentContainer.Visible = false;
+
+            // Body centres = hitbox centres (Kirby's hitbox centre is the middle of his sprite). Each frame the
+            // enemy's own centre is put on the path, whatever its scale and rotation, so the half turn cannot throw
+            // it off the line (PivotOffset did not hold: the body swung round its feet and landed below Kirby).
+            var from = node.Hitbox.GetGlobalRect().GetCenter();
+            var to = kirbyNode.Hitbox.GetGlobalRect().GetCenter();
+            var parentInverse = (node.GetParent() as CanvasItem)?.GetGlobalTransform().AffineInverse()
+                ?? Transform2D.Identity;
+            var centre = node.GetGlobalTransform().AffineInverse() * from;  // in the enemy's own (local) space
+            var startScale = node.Scale;
+            var startRotation = node.Rotation;
+            node.PivotOffset = Vector2.Zero;
+
+            void Step(float t)
+            {
+                var path = t * t * t * t;  // slow start, then sucked in fast (quartic ease-in)
+                var turn = t * t;          // shrinking and the half turn speed up too, a little less sharply
+                var scale = startScale.Lerp(startScale * endScale, turn);
+                var rotation = startRotation + Mathf.Pi * turn;
+                node.Scale = scale;
+                node.Rotation = rotation;
+                var body = new Transform2D(rotation, scale, 0f, Vector2.Zero) * centre;
+                node.Position = parentInverse * from.Lerp(to, path) - body;
+            }
+
+            var tween = node.CreateTween();
+            tween.TweenMethod(Callable.From<float>(Step), 0f, 1f, duration);
+            tween.TweenCallback(Callable.From(node.QueueFree));
+
+            // Like Doom: the node leaves the room now, so the kill below finds no node and plays no death animation.
+            node.DeathAnimationTask = WaitFor(node, tween);
+            room.RemoveCreatureNode(node);
+            await Cmd.Wait(duration);
+        }
+
+        await CreatureCmd.Kill(target);
+    }
+
+    private static async Task WaitFor(Node owner, Tween tween) =>
+        await owner.ToSignal(tween, Tween.SignalName.Finished);
 
     /// <summary>
     /// Inhale succeeded: gain Mouthful and get Spit Star and Swallow (one of each in hand, upgraded if the Inhale was).
@@ -71,11 +162,18 @@ public static class KirbyMouth
         if (player == null || kirby.IsDead)
             return;
 
-        // Inhaling lasts until Kirby's next turn, but the mouth is already full.
-        KirbySprite.SetInhaling(kirby, false);
-
         var before = MouthfulOf(kirby);
         await PowerCmd.Apply<MouthfulPower>(ctx, kirby, Math.Max(mouthful, 0), kirby, null);
+        // Inhaling lasts until Kirby's next turn, but the mouth is already full. Switched off only after Mouthful is on,
+        // so the sprite goes straight from inhaling to full mouth (not through the normal one).
+        // The last enemy dying ends the combat, and the game then applies no more powers: Kirby still shows the full
+        // mouth he earned for the rest of the fight's ending, with the Mouthful sound (normally played by MouthfulPower).
+        if (CombatManager.Instance.IsEnding && mouthful > 0)
+        {
+            KirbySprite.SetMouthful(kirby, true);
+            KirbyFx.PlaySound(KirbyFx.MouthfulSound, whileCombatEnds: true);
+        }
+        KirbySprite.SetInhaling(kirby, false);
         Entry.Logger.Info($"[Inhale] success ({reason}): Mouthful {before} + {mouthful} -> {MouthfulOf(kirby)}");
         await AddToHandIfMissing<SpitStar>(player, upgradedTokens);
         await AddToHandIfMissing<Swallow>(player, upgradedTokens);

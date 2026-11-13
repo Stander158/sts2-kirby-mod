@@ -18,5 +18,5 @@ public sealed class FighterPower : CopyAbilityPower
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("strength_power");
 
     public override Task OnGained(PlayerChoiceContext ctx, Player player) =>
-        Grant<StrengthPower>(ctx, Strength);
+        Grant<StrengthPower>(ctx, Strength * GainMultiplier);
 }
