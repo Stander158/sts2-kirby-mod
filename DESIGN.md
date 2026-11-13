@@ -452,5 +452,5 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 打出巨大锋翼鸟：SE_DYNASAKEBI。
 - 打出回旋镖：SE_CUTTER。
 - 打出波动拳：SE_HADOUTAME；打出发射：SE_HADOU。
-- 打出光束攻击：SE_BEAM；打出时间蓄力光束：SE_BGBRAKE。
+- 打出光束攻击：SE_BEAM；打出时间蓄力光束：SE_Beam_ShotHadou1（2026-11-12 起，原 SE_BGBRAKE）。
 - 选角色时：SE_WARPSTAR2（前 2.5 秒，结尾淡出）。
