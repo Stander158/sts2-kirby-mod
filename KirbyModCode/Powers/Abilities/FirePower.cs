@@ -64,7 +64,7 @@ public sealed class FirePower : CopyAbilityPower
     {
         if (cardPlay.Card is Burn && cardPlay.Card.Owner == Owner.Player && cardPlay.Target is { } target)
         {
-            var damage = BurnDamage + (Upgraded ? UpgradedBurnDamageBonus : 0);
+            var damage = BurnDamage + (Upgraded ? UpgradedBurnDamageBonus : 0) + Owner.GetPowerAmount<BonfirePower>();
             await DamageCmd.Attack(damage).FromCard(cardPlay.Card, cardPlay).Targeting(target)
                 .WithBurnHit().Execute(choiceContext);
         }

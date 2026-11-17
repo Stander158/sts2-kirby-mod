@@ -78,9 +78,9 @@ public sealed class FireAbility() : AbilityCard(CardRarity.Uncommon)
     }
 }
 
-/// <summary>睡眠能力: Rare. Upgrade: 3 Strength / 3 Dexterity and heal 12 on waking.</summary>
+/// <summary>睡眠能力: Uncommon. Upgrade: 3 Strength / 3 Dexterity and heal 12 on waking.</summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class SleepAbility() : AbilityCard(CardRarity.Rare)
+public sealed class SleepAbility() : AbilityCard(CardRarity.Uncommon)
 {
     public override CopyAbilityKind Kind => CopyAbilityKind.Sleep;
 

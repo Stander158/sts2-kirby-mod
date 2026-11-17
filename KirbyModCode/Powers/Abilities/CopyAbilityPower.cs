@@ -36,6 +36,12 @@ public abstract class CopyAbilityPower : ModPowerTemplate
 
         /// <summary>Sleep: how many rewards it has banked before waking up (2 per gain under Super Ability).</summary>
         public int TimesGained;
+
+        /// <summary>Sleep: Slumber stacks when it was gained (rewarded on waking, cleared when it ends).</summary>
+        public int Slumber;
+
+        /// <summary>Sleep: turns from Slumber still to sleep through (each ends at once).</summary>
+        public int ExtraSleepTurns;
     }
 
     public abstract CopyAbilityKind Kind { get; }

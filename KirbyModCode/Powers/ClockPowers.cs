@@ -36,8 +36,9 @@ public sealed class ClockPower : ModPowerTemplate
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    // The tip shows the stacks needed right now.
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Threshold", Threshold)];
+    // The tip shows the stacks needed right now, and the clock points (stacks mod 12; nothing uses them yet).
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        [new DynamicVar("Threshold", Threshold), new DynamicVar("ClockPoints", 0)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
         [HoverTipFactory.FromPower<StasisPower>(), HoverTipFactory.FromPower<TimeImmunityPower>()];
@@ -58,6 +59,7 @@ public sealed class ClockPower : ModPowerTemplate
     {
         var needed = Threshold * (1 + Owner.GetPowerAmount<TimeImmunityPower>());
         DynamicVars["Threshold"].BaseValue = needed;
+        DynamicVars["ClockPoints"].BaseValue = Amount % Threshold;
         return needed;
     }
 

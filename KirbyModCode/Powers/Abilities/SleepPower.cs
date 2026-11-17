@@ -15,7 +15,8 @@ namespace KirbyMod.Powers;
 /// <summary>
 /// 睡眠: on gain, end the turn immediately. At the start of the next turn Sleep ends (other abilities stay); if Kirby
 /// lost no HP in between, gain 2(3) Strength, 2(3) Dexterity and heal 8(12) for each time it was gained (doubled /
-/// tripled under Super Ability).
+/// tripled under Super Ability). With Slumber it lasts 1 more turn per stack and waking unhurt also gives the Slumber
+/// reward (<see cref="KirbySlumberPower" />); Slumber is cleared once this Sleep is over.
 /// </summary>
 [RegisterPower]
 public sealed class SleepPower : CopyAbilityPower
@@ -43,6 +44,9 @@ public sealed class SleepPower : CopyAbilityPower
     public override Task OnGained(PlayerChoiceContext ctx, Player player)
     {
         State.TimesGained += GainMultiplier;
+        var slumber = Owner.GetPowerAmount<KirbySlumberPower>();
+        State.Slumber = slumber;
+        State.ExtraSleepTurns = slumber;
         return Task.CompletedTask;
     }
 
@@ -59,14 +63,35 @@ public sealed class SleepPower : CopyAbilityPower
         if (player != Owner.Player)
             return;
 
+        // Slumber: these turns are slept through.
+        if (State.ExtraSleepTurns > 0)
+        {
+            State.ExtraSleepTurns--;
+            Flash();
+            PlayerCmd.EndTurn(player, canBackOut: false);
+            return;
+        }
+
         if (!State.WasHurt)
         {
             Flash();
             await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, StatGain, Owner, null);
             await PowerCmd.Apply<DexterityPower>(choiceContext, Owner, StatGain, Owner, null);
             await CreatureCmd.Heal(Owner, (Upgraded ? UpgradedHeal : Heal) * TimesGained);
+            if (State.Slumber > 0)
+                await KirbySlumberPower.Reward(choiceContext, Owner, State.Slumber);
         }
 
         await KirbyMouth.LoseAbility(choiceContext, player, this);
+    }
+
+    // Slumber is used up by this Sleep, whether it ends by waking or early.
+    public override async Task OnLost(PlayerChoiceContext ctx, Player player)
+    {
+        await base.OnLost(ctx, player);
+        if (State.Slumber > 0 && Owner.GetPower<KirbySlumberPower>() is { } slumber)
+            await PowerCmd.Remove(slumber);
+        State.Slumber = 0;
+        State.ExtraSleepTurns = 0;
     }
 }

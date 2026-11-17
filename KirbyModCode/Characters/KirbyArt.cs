@@ -111,6 +111,14 @@ internal static class KirbyArt
         [typeof(BeamAttack)] = "wk_beam_attack",
         [typeof(TimeChargeBeam)] = "wk_time_charge_beam",
         [typeof(UltimateBeam)] = "wk_ultimate_beam",
+        [typeof(DeepSleep)] = "wk_deep_sleep",
+        [typeof(CaptureBeam)] = "wk_capture_beam",
+        [typeof(BeamGatling)] = "wk_beam_gatling",
+        [typeof(RocketStart)] = "wk_rocket_start",
+        [typeof(Bonfire)] = "wk_bonfire",
+        [typeof(FlameMantle)] = "wk_flame_mantle",
+        [typeof(MedicineBottle)] = "wk_medicine_bottle",
+        [typeof(Boulder)] = "wk_boulder",
     };
 
     private static bool Exists(string path) => Godot.ResourceLoader.Exists(path);
