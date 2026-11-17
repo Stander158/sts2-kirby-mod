@@ -13,10 +13,11 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Powers;
 
 /// <summary>
-/// 睡眠: on gain, end the turn immediately. At the start of the next turn Sleep ends (other abilities stay); if Kirby
-/// lost no HP in between, gain 2(3) Strength, 2(3) Dexterity and heal 8(12) for each time it was gained (doubled /
-/// tripled under Super Ability). With Slumber it lasts 1 more turn per stack and waking unhurt also gives the Slumber
-/// reward (<see cref="KirbySlumberPower" />); Slumber is cleared once this Sleep is over.
+/// 睡眠: on gain, end the turn immediately. Any unblocked damage (from any source, not the round total) loses it, unless
+/// Ability Conservation takes the hit. At the start of the next turn Kirby wakes up with it still held: Sleep ends
+/// (other abilities stay) and he gains 2(3) Strength, 2(3) Dexterity and heals 8(12) for each time it was gained
+/// (doubled / tripled under Super Ability). With Slumber it lasts 1 more turn per stack and waking also gives the
+/// Slumber reward (<see cref="KirbySlumberPower" />); Slumber is cleared once this Sleep is over.
 /// </summary>
 [RegisterPower]
 public sealed class SleepPower : CopyAbilityPower
@@ -35,6 +36,9 @@ public sealed class SleepPower : CopyAbilityPower
 
     public override bool EndsTurnOnGain => true;
 
+    // Lost to any unblocked hit instead (below).
+    public override bool LostToHeavyHits => false;
+
     public override Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
         KirbyFx.PlaySound(KirbyFx.SleepSound);
@@ -50,12 +54,20 @@ public sealed class SleepPower : CopyAbilityPower
         return Task.CompletedTask;
     }
 
-    public override Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target, DamageResult result,
-        ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override async Task AfterDamageReceived(PlayerChoiceContext choiceContext, Creature target,
+        DamageResult result, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
-        if (target == Owner && result.UnblockedDamage > 0)
-            State.WasHurt = true;
-        return Task.CompletedTask;
+        // Still counts the round's damage for the other abilities held (Smash Bros. Kirby).
+        await base.AfterDamageReceived(choiceContext, target, result, props, dealer, cardSource);
+        if (target != Owner || result.UnblockedDamage <= 0 || Owner.Player is not { } player
+            || !Owner.Powers.Contains(this))
+            return;
+
+        if (await CopyAbilities.SpendConservation(Owner, result))
+            return;
+
+        await KirbyMouth.LoseAbility(choiceContext, player, this);
+        await CopyAbilities.AfterAbilityLost(player);
     }
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
@@ -72,15 +84,12 @@ public sealed class SleepPower : CopyAbilityPower
             return;
         }
 
-        if (!State.WasHurt)
-        {
-            Flash();
-            await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, StatGain, Owner, null);
-            await PowerCmd.Apply<DexterityPower>(choiceContext, Owner, StatGain, Owner, null);
-            await CreatureCmd.Heal(Owner, (Upgraded ? UpgradedHeal : Heal) * TimesGained);
-            if (State.Slumber > 0)
-                await KirbySlumberPower.Reward(choiceContext, Owner, State.Slumber);
-        }
+        Flash();
+        await PowerCmd.Apply<StrengthPower>(choiceContext, Owner, StatGain, Owner, null);
+        await PowerCmd.Apply<DexterityPower>(choiceContext, Owner, StatGain, Owner, null);
+        await CreatureCmd.Heal(Owner, (Upgraded ? UpgradedHeal : Heal) * TimesGained);
+        if (State.Slumber > 0)
+            await KirbySlumberPower.Reward(choiceContext, Owner, State.Slumber);
 
         await KirbyMouth.LoseAbility(choiceContext, player, this);
     }

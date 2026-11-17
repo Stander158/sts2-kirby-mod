@@ -19,8 +19,8 @@ using STS2RitsuLib.Scaffolding.Content;
 namespace KirbyMod.Powers;
 
 /// <summary>
-/// 沉睡 (Deep Sleep): each stack makes the next Sleep last 1 more turn (those turns end at once). Waking up unhurt
-/// then gives, per stack, <see cref="Stats" /> Strength, Dexterity, Vigor (and Stretch on 0.113), heals
+/// 沉睡 (Deep Sleep): each stack makes the next Sleep last 1 more turn (those turns end at once). Waking up (Sleep not
+/// lost to damage) then gives, per stack, <see cref="Stats" /> Strength, Dexterity, Vigor (and Stretch on 0.113), heals
 /// <see cref="Heal" /> and gives 1 Sweet Dreams. Cleared once that Sleep is over, hurt or not.
 /// </summary>
 [RegisterPower]

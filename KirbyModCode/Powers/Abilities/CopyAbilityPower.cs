@@ -31,9 +31,6 @@ public abstract class CopyAbilityPower : ModPowerTemplate
         /// <summary>Buffs this ability granted (power type → amount), taken back when it is lost.</summary>
         public readonly Dictionary<Type, int> Granted = [];
 
-        /// <summary>Sleep: Kirby lost HP since the ability was gained.</summary>
-        public bool WasHurt;
-
         /// <summary>Sleep: how many rewards it has banked before waking up (2 per gain under Super Ability).</summary>
         public int TimesGained;
 
@@ -109,7 +106,7 @@ public abstract class CopyAbilityPower : ModPowerTemplate
             return;
 
         if (CopyAbilities.AddRoundDamage(player, result.UnblockedDamage))
-            await CopyAbilities.OnHeavyHit(choiceContext, player);
+            await CopyAbilities.OnHeavyHit(choiceContext, player, result);
     }
 
     protected Data State => GetInternalData<Data>();

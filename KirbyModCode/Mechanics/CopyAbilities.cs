@@ -224,21 +224,37 @@ public static class CopyAbilities
     /// Enough damage this round: every held ability that can be lost this way is lost (its cards exhausted), or 1
     /// Ability Conservation is spent instead. The starter relic then returns Inhale.
     /// </summary>
-    public static async Task OnHeavyHit(PlayerChoiceContext ctx, Player player)
+    public static async Task OnHeavyHit(PlayerChoiceContext ctx, Player player, DamageResult? hit = null)
     {
         var losing = Held(player).Where(power => power.LostToHeavyHits).ToList();
         if (losing.Count == 0)
             return;
 
-        if (player.Creature.GetPower<AbilityConservationPower>() is { } conservation)
-        {
-            await PowerCmd.Decrement(conservation);
+        if (await SpendConservation(player.Creature, hit))
             return;
-        }
 
         foreach (var power in losing)
             await KirbyMouth.LoseAbility(ctx, player, power);
         await AfterAbilityLost(player);
+    }
+
+    private static readonly ConditionalWeakTable<DamageResult, object> ConservedHits = new();
+
+    /// <summary>
+    /// Ability Conservation saves the abilities <paramref name="hit" /> would take: true if it did. One hit spends at
+    /// most 1, even when it both reaches the round threshold and hits Sleep (Smash Bros. Kirby).
+    /// </summary>
+    public static async Task<bool> SpendConservation(Creature kirby, DamageResult? hit)
+    {
+        if (hit != null && ConservedHits.TryGetValue(hit, out _))
+            return true;
+        if (kirby.GetPower<AbilityConservationPower>() is not { } conservation)
+            return false;
+
+        await PowerCmd.Decrement(conservation);
+        if (hit != null)
+            ConservedHits.AddOrUpdate(hit, new object());
+        return true;
     }
 
     /// <summary>The starter relic's "an ability was lost" effect (returns Inhale), after damage or a deliberate drop.</summary>

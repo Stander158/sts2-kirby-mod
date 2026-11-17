@@ -64,6 +64,15 @@ internal static class KirbySprite
 
     public static void SetInhaling(Creature creature, bool on) => Set(creature, InhalingMeta, on);
 
+    /// <summary>Whether <paramref name="creature" /> stands to the left of <paramref name="other" /> on screen.</summary>
+    public static bool IsLeftOf(Creature creature, Creature other)
+    {
+        var a = creature.GetCreatureNode();
+        var b = other.GetCreatureNode();
+        return a != null && b != null
+            && a.Hitbox.GetGlobalRect().GetCenter().X < b.Hitbox.GetGlobalRect().GetCenter().X;
+    }
+
     /// <summary>
     /// Spit Star: the open-mouth (inhale) sprite for <paramref name="seconds" />, over everything else. A newer spit
     /// restarts the time; only the last one switches it back.
@@ -98,6 +107,39 @@ internal static class KirbySprite
             || !sprite.IsInsideTree())
             return;
 
+        StartSleeping(sprite);
+    }
+
+    /// <summary>
+    /// The game-over screen outside combat (shop, event, rest site) shows Kirby sprites that belong to no creature: each
+    /// one under <paramref name="root" /> falls asleep (once it is in the scene tree), unless it already is.
+    /// </summary>
+    public static void StartSleepingUnder(Node root)
+    {
+        foreach (var sprite in KirbySprites(root))
+        {
+            if (sprite.GetMeta(SleepingMeta, false).AsBool())
+                continue;
+            if (sprite.IsInsideTree())
+                StartSleeping(sprite);
+            else
+                sprite.Connect(Node.SignalName.TreeEntered, Callable.From(() => StartSleeping(sprite)),
+                    (uint)GodotObject.ConnectFlags.OneShot);
+        }
+    }
+
+    private static IEnumerable<Sprite2D> KirbySprites(Node node)
+    {
+        if (node is Sprite2D { Texture: { } texture } sprite
+            && texture.ResourcePath.StartsWith(KirbyTheme.CharacterImages + "kirby_"))
+            yield return sprite;
+        foreach (var child in node.GetChildren())
+        foreach (var found in KirbySprites(child))
+            yield return found;
+    }
+
+    private static void StartSleeping(Sprite2D sprite)
+    {
         var intro = LoadFrames("intro");
         var loop = LoadFrames("loop");
         if (loop.Count == 0)
@@ -110,7 +152,7 @@ internal static class KirbySprite
         if (!sprite.HasMeta(BaseScaleMeta))
             sprite.SetMeta(BaseScaleMeta, sprite.Scale);
         sprite.SetMeta(SleepingMeta, true);
-        sprite.Scale = sprite.GetMeta(BaseScaleMeta).AsVector2() * SleepScale;
+        sprite.Scale = Facing(sprite, sprite.GetMeta(BaseScaleMeta).AsVector2() * SleepScale);
 
         var tween = sprite.CreateTween();
         if (intro.Count > 0)
@@ -176,6 +218,17 @@ internal static class KirbySprite
             : robobot && ResourceLoader.Exists(Robobot) ? (Robobot, RobobotScale)
             : (Normal, 1f);
         sprite.Texture = ResourceLoader.Load<Texture2D>(path);
-        sprite.Scale = baseScale * scale;
+        sprite.Scale = Facing(sprite, baseScale * scale);
     }
+
+    /// <summary>
+    /// <paramref name="scale" /> facing the way the sprite faces now. The game turns Kirby by negating Body.Scale.X
+    /// (Kaiser Crab's Surrounded, after a card or potion targets a side), so a new scale keeps that sign. The textures
+    /// are 349 wide on a -175 offset, so mirroring keeps Kirby in place.
+    /// </summary>
+    private static Vector2 Facing(Sprite2D sprite, Vector2 scale) =>
+        new(Mathf.Abs(scale.X) * (sprite.Scale.X < 0f ? -1f : 1f), scale.Y);
+
+    /// <summary>Whether Kirby's sprite is turned to the left (see <see cref="Facing" />).</summary>
+    public static bool FacesLeft(Creature creature) => creature.GetCreatureNode()?.Body.Scale.X < 0f;
 }

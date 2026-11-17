@@ -3,6 +3,7 @@ using KirbyMod.Characters;
 using KirbyMod.Mechanics;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -77,7 +78,8 @@ public sealed class CarPower : CopyAbilityPower
 }
 
 /// <summary>
-/// 星之杖: gain 16 Mouthful when gained and 16 at the start of each turn, and a Spit Star+ in hand when gained.
+/// 星之杖: gain 16 Mouthful when gained and 16 at the start of each turn. When gained, a Spit Star in hand if there is
+/// none; at the start of each turn, an Ethereal Spit Star (not Retained) in hand. Both are Spit Star+ when upgraded.
 /// While held, Spit Star keeps your Mouthful.
 /// </summary>
 [RegisterPower]
@@ -105,6 +107,12 @@ public sealed class StarRodPower : CopyAbilityPower
 
         Flash();
         await PowerCmd.Apply<MouthfulPower>(choiceContext, Owner, MouthfulPerTurn, Owner, null);
+
+        // Spit Star already Exhausts; this one is Ethereal instead of Retained.
+        var star = KirbyMouth.CreateCard<SpitStar>(player, Upgraded);
+        star.RemoveKeyword(CardKeyword.Retain);
+        star.AddKeyword(CardKeyword.Ethereal);
+        await CardPileCmd.AddGeneratedCardToCombat(star, PileType.Hand, player);
     }
 }
 

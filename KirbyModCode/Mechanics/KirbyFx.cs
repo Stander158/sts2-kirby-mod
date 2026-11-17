@@ -112,18 +112,23 @@ internal static class KirbyFx
         const float spinPerSecond = 3f;  // turns per second
         const float scale = 1f;  // the energy counter's size (its star is drawn at 128 px)
         var kirby = shooterNode.Hitbox.GetGlobalRect();
-        var mouth = kirby.Position + new Vector2(kirby.Size.X * 0.8f, kirby.Size.Y * 0.5f);
+        // The mouth is on the side Kirby faces (the game turns him left in the Kaiser Crab fight).
+        var facingLeft = KirbySprite.FacesLeft(shooter);
+        var mouth = kirby.Position + new Vector2(kirby.Size.X * (facingLeft ? 0.2f : 0.8f), kirby.Size.Y * 0.5f);
 
         Vector2 end;
         float hitDistance;
         if (passThrough)
         {
             var aim = centres.Aggregate(Vector2.Zero, (sum, c) => sum + c) / centres.Count;
+            // Flies the way Kirby faces, out of that side of the screen.
+            var side = facingLeft ? -1f : 1f;
             var direction = (aim - mouth).Normalized();
-            if (direction.X <= 0.1f)
-                direction = Vector2.Right;
+            if (direction.X * side <= 0.1f)
+                direction = new Vector2(side, 0f);
             hitDistance = centres.Max(c => (c - mouth).Dot(direction));
-            var offScreen = room.GetViewport().GetVisibleRect().End.X + 150f;
+            var visible = room.GetViewport().GetVisibleRect();
+            var offScreen = facingLeft ? visible.Position.X - 150f : visible.End.X + 150f;
             end = mouth + direction * ((offScreen - mouth.X) / direction.X);
         }
         else

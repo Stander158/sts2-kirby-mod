@@ -16,21 +16,32 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>深度睡眠 (Deep Sleep): Rare power, 1(0). Gain 1 Slumber and add a Sleep Ability card to hand.</summary>
+/// <summary>
+/// 深度睡眠 (Deep Sleep): Rare power, 0. Gain 1 Slumber and add a Sleep Ability card to hand. Upgraded: the card is
+/// Sleep Ability+ and you also gain 3 Ability Conservation (each one keeps Sleep through one unblocked hit).
+/// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class DeepSleep() : KirbyCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
+public sealed class DeepSleep() : KirbyCard(0, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-        [HoverTipFactory.FromPower<KirbySlumberPower>(), HoverTipFactory.FromCard<SleepAbility>()];
+    private const int UpgradedConservation = 3;
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => IsUpgraded
+        ?
+        [
+            HoverTipFactory.FromPower<KirbySlumberPower>(), HoverTipFactory.FromCard<SleepAbility>(true),
+            HoverTipFactory.FromPower<AbilityConservationPower>(),
+        ]
+        : [HoverTipFactory.FromPower<KirbySlumberPower>(), HoverTipFactory.FromCard<SleepAbility>()];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         await PowerCmd.Apply<KirbySlumberPower>(ctx, Owner.Creature, 1, Owner.Creature, this);
-        await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<SleepAbility>(Owner, upgraded: false),
+        if (IsUpgraded)
+            await PowerCmd.Apply<AbilityConservationPower>(ctx, Owner.Creature, UpgradedConservation, Owner.Creature,
+                this);
+        await CardPileCmd.AddGeneratedCardToCombat(KirbyMouth.CreateCard<SleepAbility>(Owner, IsUpgraded),
             PileType.Hand, Owner);
     }
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
 /// <summary>
@@ -60,7 +71,7 @@ public sealed class CaptureBeam() : KirbyCard(1, CardType.Skill, CardRarity.Comm
 }
 
 /// <summary>
-/// 光束机关枪 (Beam Gatling): Uncommon skill, 1. Apply 4(6) Clock; if that sends it into Stasis, all players gain 2
+/// 光束机关枪 (Beam Blast): Uncommon skill, 1. Apply 4(6) Clock; if that sends it into Stasis, all players gain 2
 /// energy and draw 2. Beam: Retain, apply 1 Vulnerable.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]

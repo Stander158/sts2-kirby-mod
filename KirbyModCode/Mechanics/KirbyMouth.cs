@@ -95,9 +95,9 @@ public static class KirbyMouth
         var node = room?.GetCreatureNode(target);
         var kirbyNode = room?.GetCreatureNode(kirby);
 
-        // Wind: Whirlwind's whole-screen streaks, blowing towards Kirby (leftwards).
+        // Wind: Whirlwind's whole-screen streaks, blowing towards Kirby (rightwards from an enemy on his left).
         room?.CombatVfxContainer.AddChildSafely(NHorizontalLinesVfx.Create(new Color("FFFFFF80"), 1.0,
-            movingRightwards: false));
+            movingRightwards: KirbySprite.IsLeftOf(target, kirby)));
 
         if (room != null && node != null && kirbyNode != null && target.Monster?.ShouldDisappearFromDoom == true)
         {
