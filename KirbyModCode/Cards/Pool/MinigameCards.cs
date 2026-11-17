@@ -109,14 +109,14 @@ public sealed class MegatonPunch() : KirbyCard(1, CardType.Attack, CardRarity.Ra
 }
 
 /// <summary>
-/// 炸弹接力 (multiplayer only): target an ally or an enemy. An ally gets a copy carrying 20(25) more damage and this one
-/// is gone; an enemy takes the current damage, and the card goes to the discard pile back at 20(25). Holding it at the
-/// end of your turn costs you 20(25) HP. The holder shows <see cref="BombHolderPower" />.
+/// 炸弹接力 (multiplayer only): target an ally or an enemy. An ally gets a copy carrying 25(30) more damage and this one
+/// is gone; an enemy takes the current damage, and the card goes to the discard pile back at 25(30). Holding it at the
+/// end of your turn costs you 25(30) HP. The holder shows <see cref="BombHolderPower" />.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class BombRally() : KirbyCard(1, CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)
 {
-    private const int BaseDamage = 20;
+    private const int BaseDamage = 25;
     private const int UpgradeDamage = 5;
 
     /// <summary>Any living creature but the card's owner.</summary>
