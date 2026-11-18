@@ -99,7 +99,7 @@ public sealed class WheelieRider() : AbilityCard(CardRarity.Rare, 2)
     }
 }
 
-/// <summary>轮子碾压: deal 9(13); Dexterity also counts as Strength on this card. Wheel: Retain, and every other enemy takes it too.</summary>
+/// <summary>轮子碾压: deal 9(13); Dexterity also counts as Strength on this card. Wheel: Retain, and every other enemy takes it too. Played with a tailwind dash (KirbyFx.Tailwind).</summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
@@ -112,8 +112,13 @@ public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Comm
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        var hitsAll = SynergyActive;
+        // A tailwind dash: through every enemy when it hits them all.
+        await KirbyFx.Tailwind(Owner.Creature, hitsAll
+            ? CombatState!.GetOpponentsOf(Owner.Creature).Where(enemy => enemy.IsAlive).ToList()
+            : [cardPlay.Target!]);
         var attack = DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).WithHitFx("vfx/vfx_heavy_blunt");
-        await (SynergyActive ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
+        await (hitsAll ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
     }
 
 #if STS2_V113

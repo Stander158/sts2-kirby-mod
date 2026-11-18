@@ -1,6 +1,7 @@
 using KirbyMod.Characters;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -9,11 +10,19 @@ using STS2RitsuLib.Scaffolding.Content;
 
 namespace KirbyMod.Powers;
 
-/// <summary>萝卜机甲 (does not stack): Strikes deal 3 more damage, Defends give 3 more Block. Inhale becomes Scan.</summary>
+/// <summary>
+/// 萝卜机甲 (does not stack): Strikes deal 3 more damage, Defends give 3 more Block, draw 1 more card each turn
+/// (2026-11-18). Inhale becomes Scan.
+/// </summary>
 [RegisterPower]
 public sealed class RobobotPower : ModPowerTemplate
 {
     public const int Bonus = 3;
+
+    public const int ExtraDraw = 1;
+
+    public override decimal ModifyHandDraw(Player player, decimal count) =>
+        player == Owner.Player ? count + ExtraDraw : count;
 
     public override PowerAssetProfile AssetProfile => KirbyArt.Power("robobot_armor");
 

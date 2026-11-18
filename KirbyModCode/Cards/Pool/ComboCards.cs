@@ -45,72 +45,83 @@ public sealed class DeepSleep() : KirbyCard(0, CardType.Power, CardRarity.Rare, 
 }
 
 /// <summary>
-/// 捕捉光束 (Capture Beam): Common skill, 1(0). This turn, every 2 cards played after it give the enemy 2 Clock. Beam:
-/// Retain; at the end of turn it takes damage equal to the Clock it gained this turn.
+/// 捕捉光束 (Capture Beam): Common attack, 2. Deal the turn number x4(5) damage and apply the turn number x2 Clock, then
+/// gain Block equal to the target's Clock points. Beam: Retain.
 /// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class CaptureBeam() : KirbyCard(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+public sealed class CaptureBeam() : KirbyCard(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
 {
+    public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Beam];
+
+    // Damage and Clock share CalculationBase (0): damage = ExtraDamage x round, Clock = CalculationExtra x round.
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+    [
+        new CalculationBaseVar(0), new ExtraDamageVar(4),
+        new CalculatedDamageVar(ValueProp.Move).WithMultiplier(BeamClock.Round),
+        new CalculationExtraVar(2), new CalculatedVar("Clock").WithMultiplier(BeamClock.Round),
+    ];
+
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => BeamClock.ClockTips();
+
+    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
+    {
+        var target = cardPlay.Target!;
+        var clock = BeamClock.Amount(this);
+
+        KirbyFx.PlaySound(KirbyFx.BeamSound);
+        await DamageCmd.Attack(DynamicVars.CalculatedDamage)
+            .FromCard(this, cardPlay)
+            .Targeting(target)
+            .WithBeam(Owner.Creature, () => [target])
+            .Execute(ctx);
+        if (!target.IsAlive)
+            return;
+
+        await PowerCmd.Apply<ClockPower>(ctx, target, clock, Owner.Creature, this);
+        var block = ClockPower.PointsOf(target);
+        if (block > 0)
+            await CreatureCmd.GainBlock(Owner.Creature, block, ValueProp.Unpowered, cardPlay);
+    }
+
+    protected override void OnUpgrade() => DynamicVars.ExtraDamage.UpgradeValueBy(1);
+}
+
+/// <summary>
+/// 光束机关枪 (Beam Blast): Uncommon attack, 1. Three times: apply 2(3) Clock, then deal damage equal to the target's
+/// Clock points. Beam: Retain.
+/// </summary>
+[RegisterCard(typeof(KirbyCardPool))]
+public sealed class BeamGatling() : KirbyCard(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+{
+    private const int Hits = 3;
+
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Beam];
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DynamicVar("Clock", 2)];
 
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromPower<ClockPower>()];
+    protected override IEnumerable<IHoverTip> AdditionalHoverTips => BeamClock.ClockTips();
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
         var target = cardPlay.Target!;
-        var synergy = SynergyActive;
-        KirbyFx.PlaySound(KirbyFx.BeamSound);
-        var power = await PowerCmd.Apply<CaptureBeamPower>(ctx, target, DynamicVars["Clock"].BaseValue, Owner.Creature,
-            this);
-        power?.Track(this, synergy);
-    }
-
-    protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
-}
-
-/// <summary>
-/// 光束机关枪 (Beam Blast): Uncommon skill, 1. Apply 4(6) Clock; if that sends it into Stasis, all players gain 2
-/// energy and draw 2. Beam: Retain, apply 1 Vulnerable.
-/// </summary>
-[RegisterCard(typeof(KirbyCardPool))]
-public sealed class BeamGatling() : KirbyCard(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
-{
-    public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Beam];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new DynamicVar("Clock", 4), new EnergyVar(2), new CardsVar(2), new PowerVar<VulnerablePower>(1)];
-
-    protected override IEnumerable<IHoverTip> AdditionalHoverTips =>
-    [
-        HoverTipFactory.FromPower<ClockPower>(), HoverTipFactory.FromPower<StasisPower>(),
-        HoverTipFactory.FromPower<VulnerablePower>(),
-    ];
-
-    protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
-    {
-        var target = cardPlay.Target!;
-        var synergy = SynergyActive;
-        var immunity = target.GetPowerAmount<TimeImmunityPower>();
 
         KirbyFx.PlaySound(KirbyFx.BeamSound);
-        await PowerCmd.Apply<ClockPower>(ctx, target, DynamicVars["Clock"].BaseValue, Owner.Creature, this);
+        for (var i = 0; i < Hits && target.IsAlive; i++)
+        {
+            await PowerCmd.Apply<ClockPower>(ctx, target, DynamicVars["Clock"].BaseValue, Owner.Creature, this);
+            var points = ClockPower.PointsOf(target);
+            if (points <= 0 || !target.IsAlive)
+                continue;
 
-        // Clock going off gives 1 Timing Immunity.
-        if (target.GetPowerAmount<TimeImmunityPower>() > immunity)
-            foreach (var player in CombatState!.Players.Where(player => player.Creature.IsAlive).ToList())
-            {
-                await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
-                await CardPileCmd.Draw(ctx, DynamicVars.Cards.BaseValue, player);
-            }
-
-        if (synergy && target.IsAlive)
-            await PowerCmd.Apply<VulnerablePower>(ctx, target, DynamicVars[nameof(VulnerablePower)].BaseValue,
-                Owner.Creature, this);
+            await DamageCmd.Attack(points)
+                .FromCard(this, cardPlay)
+                .Targeting(target)
+                .WithBeam(Owner.Creature, () => [target])
+                .Execute(ctx);
+        }
     }
 
-    protected override void OnUpgrade() => DynamicVars["Clock"].UpgradeValueBy(2);
+    protected override void OnUpgrade() => DynamicVars["Clock"].UpgradeValueBy(1);
 }
 
 /// <summary>火箭起步 (Rocket Start): Rare power, 2(1). Double your Dexterity. Wheel: Retain, gain 1 Block.</summary>

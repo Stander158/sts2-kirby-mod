@@ -22,6 +22,16 @@ public static class AttackMath
     private static readonly AccessTools.FieldRef<AttackCommand, CalculatedDamageVar?> CalculatedDamage =
         AccessTools.FieldRefAccess<AttackCommand, CalculatedDamageVar?>("_calculatedDamageVar");
 
+    private static readonly AccessTools.FieldRef<AttackCommand, Creature?> SingleTarget =
+        AccessTools.FieldRefAccess<AttackCommand, Creature?>("_singleTarget");
+
+    /// <summary>
+    /// Whether the attack is aimed at <paramref name="creature" />: it is the single target, or the attack hits all /
+    /// random creatures on its side.
+    /// </summary>
+    public static bool AimsAt(AttackCommand command, Creature creature) =>
+        SingleTarget(command) is { } target ? target == creature : command.TargetSide == creature.Side;
+
     /// <summary>Per-hit damage of the attack before any hooks (strength, vulnerable, ...).</summary>
     public static decimal BaseDamage(AttackCommand command, Creature? target) =>
         CalculatedDamage(command)?.Calculate(target) ?? DamagePerHit(command);

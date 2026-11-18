@@ -67,9 +67,10 @@ public static class KirbyMouth
         inhaling.Begin(target, outcome, upgradedTokens: source.IsUpgraded, negateAll: source is UltimateInhale);
         await PowerCmd.Apply(ctx, inhaling, kirby, 1, kirby, source);
 
-        // A new Inhale overrides whatever ability was already in Kirby's mouth. No-Ability Inhale leaves it empty.
+        // A new Inhale overrides whatever ability was already in Kirby's mouth. No-Ability Inhale, and an enemy with
+        // No Ability (Waddle Dee), leave it empty.
         await PowerCmd.Remove(kirby.GetPower<AbilityInMouthPower>());
-        if (source is not GooeyInhale)
+        if (source is not GooeyInhale && !target.HasPower<NoAbilityPower>())
         {
             var inMouth = (AbilityInMouthPower)ModelDb.Power<AbilityInMouthPower>().ToMutable();
             inMouth.Kind = kind;
@@ -223,13 +224,17 @@ public static class KirbyMouth
     }
 
     /// <summary>
-    /// Removes one ability (Sleep waking up). The cards it handed out stay (they are Ethereal and Exhaust anyway);
-    /// Drop Ability is exhausted once no ability is left.
+    /// Removes one ability (Sleep: hit or waking up). The cards it handed out stay (they are Ethereal and Exhaust
+    /// anyway); Drop Ability is exhausted once no ability is left. <paramref name="wokeUp" />: Sleep ended by waking
+    /// up, which Ability Star Saver does not count as losing it.
     /// </summary>
-    public static async Task LoseAbility(PlayerChoiceContext ctx, Player player, CopyAbilityPower power)
+    public static async Task LoseAbility(PlayerChoiceContext ctx, Player player, CopyAbilityPower power,
+        bool wokeUp = false)
     {
         await power.OnLost(ctx, player);
         await PowerCmd.Remove(power);
+        if (!wokeUp)
+            await AbilityStarSaverPower.OnAbilityLost(ctx, player, power);
 
         if (!CopyAbilities.HasAny(player))
             await ExhaustDropAbility(ctx, player);
@@ -244,6 +249,8 @@ public static class KirbyMouth
             await power.OnLost(ctx, player);
             await PowerCmd.Remove(power);
         }
+        foreach (var power in powers)
+            await AbilityStarSaverPower.OnAbilityLost(ctx, player, power);
 
         var dropped = await ExhaustDropAbility(ctx, player);
         return powers.Count > 0 || dropped;

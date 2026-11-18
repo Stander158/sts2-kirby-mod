@@ -118,6 +118,11 @@ internal static class KirbyArt
         [typeof(Bonfire)] = "wk_bonfire",
         [typeof(FlameMantle)] = "wk_flame_mantle",
         [typeof(MedicineBottle)] = "wk_medicine_bottle",
+        [typeof(StrawberryShortcake)] = "wk_strawberry_shortcake",
+        [typeof(ShortcakeSlice)] = "wk_shortcake_slice",
+        [typeof(Morpho)] = "wk_morpho",
+        [typeof(AbilityStarSaver)] = "wk_ability_star_saver",
+        [typeof(PossessedForm)] = "wk_possessed_form",
         [typeof(Boulder)] = "wk_boulder",
     };
 

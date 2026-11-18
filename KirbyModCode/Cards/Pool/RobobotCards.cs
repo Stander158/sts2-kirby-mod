@@ -11,9 +11,12 @@ using STS2RitsuLib.Interop.AutoRegistration;
 
 namespace KirbyMod.Cards;
 
-/// <summary>萝卜机甲 (power): gain 3(4) Ability Conservation and Robobot; every Inhale you have becomes Scan.</summary>
+/// <summary>
+/// 萝卜机甲 (rare power since 2026-11-18): gain 3(4) Ability Conservation and Robobot; every Inhale you have becomes
+/// Scan.
+/// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class Robobot() : KirbyCard(2, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class Robobot() : KirbyCard(2, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     private static readonly PileType[] InhalePiles = [.. KirbyMouth.LivePiles, PileType.Exhaust];
 

@@ -56,39 +56,30 @@ public sealed class PlasmaCharge() : KirbyCard(1, CardType.Skill, CardRarity.Unc
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>究极闪光 (4 cost): deal 27(37) damage to ALL enemies, +3(4) for each other card played this turn. Plasma: Retain, and gain 2 energy if it killed an enemy.</summary>
+/// <summary>
+/// 究极闪光 (4 cost): deal 48(64) damage to ALL enemies; gain 3 energy if it killed an enemy (2026-11-18: no longer
+/// needs Plasma). Plasma: Retain, and draw 2.
+/// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
 public sealed class UltimateFlash() : KirbyCard(4, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
 {
     public override IReadOnlyList<CopyAbilityKind> SynergyAbilities => [CopyAbilityKind.Plasma];
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-    [
-        new CalculationBaseVar(27),
-        new ExtraDamageVar(3),
-        new CalculatedDamageVar(ValueProp.Move).WithMultiplier(OtherCardsPlayedThisTurn),
-        new EnergyVar(2),
-    ];
-
-    private static decimal OtherCardsPlayedThisTurn(CardModel card, Creature? _) =>
-        card.IsMutable && card.CombatState != null
-            ? CombatManager.Instance.History.CardPlaysStarted.Count(entry =>
-                entry.HappenedThisTurn(card.CombatState) && entry.CardPlay.Card.Owner == card.Owner && entry.CardPlay.Card != card)
-            : 0;
+        [new DamageVar(48, ValueProp.Move), new EnergyVar(3), new CardsVar(2)];
 
     protected override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
+        var synergy = SynergyActive;
         var enemies = CombatState!.HittableEnemies.ToList();
-        await DamageCmd.Attack(DynamicVars.CalculatedDamage).FromCard(this, cardPlay).TargetingAllOpponents(CombatState!)
+        await DamageCmd.Attack(DynamicVars.Damage.BaseValue).FromCard(this, cardPlay).TargetingAllOpponents(CombatState!)
             .WithLightningHit().Execute(ctx);
 
-        if (SynergyActive && enemies.Any(enemy => !enemy.IsAlive))
+        if (enemies.Any(enemy => !enemy.IsAlive))
             await PlayerCmd.GainEnergy(DynamicVars.Energy.IntValue, Owner);
+        if (synergy)
+            await CardPileCmd.Draw(ctx, DynamicVars.Cards.BaseValue, Owner);
     }
 
-    protected override void OnUpgrade()
-    {
-        DynamicVars.CalculationBase.UpgradeValueBy(10);
-        DynamicVars.ExtraDamage.UpgradeValueBy(1);
-    }
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(16);
 }

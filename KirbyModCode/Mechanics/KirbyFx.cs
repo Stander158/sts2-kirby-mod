@@ -152,4 +152,72 @@ internal static class KirbyFx
         container.AddChildSafely(star);
         await Cmd.Wait(Math.Max(hitDistance, 0f) / speed);
     }
+
+    /// <summary>
+    /// Wheel Crush: a tailwind. Kirby dashes towards the way he faces and back, dust puffs at his feet, and white wind
+    /// streaks sweep from behind him past <paramref name="targets" /> (all of them when it hits every enemy). Returns
+    /// as Kirby reaches the end of his dash, so the hit lands then; the streaks keep flying. Purely visual (its
+    /// randomness is not the game's RNG).
+    /// </summary>
+    public static async Task Tailwind(Creature kirby, IReadOnlyList<Creature> targets)
+    {
+        var room = NCombatRoom.Instance;
+        var node = room?.GetCreatureNode(kirby);
+        if (room == null || node == null || NonInteractiveMode.IsActive)
+            return;
+
+        const int streaks = 9;
+        const float dash = 120f, dashIn = 0.12f, dashBack = 0.25f;
+        var side = KirbySprite.FacesLeft(kirby) ? -1f : 1f;
+        var self = node.Hitbox.GetGlobalRect();
+        var rects = targets.Select(room.GetCreatureNode).OfType<NCreature>().Select(n => n.Hitbox.GetGlobalRect()).ToList();
+        var farX = rects.Count == 0 ? self.GetCenter().X + side * 700f
+            : side > 0 ? rects.Max(r => r.End.X) : rects.Min(r => r.Position.X);
+        var top = rects.Count == 0 ? self.Position.Y : Math.Min(self.Position.Y, rects.Min(r => r.Position.Y));
+        var bottom = self.End.Y;
+        var startX = side > 0 ? self.Position.X : self.End.X;
+
+        var container = room.CombatVfxContainer;
+        var toLocal = container.GetGlobalTransform().AffineInverse();
+        var rng = new Random();
+        for (var i = 0; i < streaks; i++)
+        {
+            var length = 140f + rng.NextSingle() * 180f;
+            var y = Mathf.Lerp(top + 20f, bottom - 10f, rng.NextSingle());
+            var from = new Vector2(startX - side * (60f + rng.NextSingle() * 220f), y);
+            var to = new Vector2(farX + side * (150f + rng.NextSingle() * 150f), y);
+            var gradient = new Gradient();
+            gradient.SetColor(0, new Color(1f, 1f, 1f, 0f));
+            gradient.SetColor(1, new Color(1f, 1f, 1f, 0.85f));
+            var streak = new Line2D
+            {
+                Points = [Vector2.Zero, new Vector2(side * length, 0f)], Width = 3f + rng.NextSingle() * 3f,
+                Gradient = gradient, Position = toLocal * from, Modulate = new Color(1f, 1f, 1f, 0f),
+                BeginCapMode = Line2D.LineCapMode.Round, EndCapMode = Line2D.LineCapMode.Round,
+            };
+            var delay = i * 0.03f;
+            var duration = 0.3f + rng.NextSingle() * 0.12f;
+            streak.TreeEntered += () =>
+            {
+                var tween = streak.CreateTween();
+                tween.TweenInterval(delay);
+                tween.TweenProperty(streak, "modulate:a", 1f, 0.06f);
+                tween.Parallel().TweenProperty(streak, "position", toLocal * to, duration).SetEase(Tween.EaseType.Out);
+                tween.Parallel().TweenProperty(streak, "modulate:a", 0f, duration * 0.4f).SetDelay(duration * 0.6f);
+                tween.TweenCallback(Callable.From(streak.QueueFree));
+            };
+            container.AddChildSafely(streak);
+        }
+
+        VfxCmd.PlayOnCreature(kirby, "vfx/vfx_smoke_puff");
+        if (node.Body is { } body)
+        {
+            var home = body.Position;
+            var tween = body.CreateTween();
+            tween.TweenProperty(body, "position", home + new Vector2(side * dash, 0f), dashIn).SetEase(Tween.EaseType.Out);
+            tween.TweenProperty(body, "position", home, dashBack).SetEase(Tween.EaseType.InOut);
+        }
+
+        await Cmd.Wait(dashIn);
+    }
 }

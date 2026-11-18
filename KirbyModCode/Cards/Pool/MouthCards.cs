@@ -70,12 +70,15 @@ public sealed class SmashBrosKirby() : KirbyCard(2, CardType.Power, CardRarity.U
     protected override void OnUpgrade() => EnergyCost.UpgradeBy(-1);
 }
 
-/// <summary>星之齿轮 (power): Spit Star deals +50%(100%) damage; a Spit Star of 20+ damage also hits every other enemy.</summary>
+/// <summary>
+/// 星之齿轮 (rare power since 2026-11-18): Spit Star deals +75%(150%) damage; a Spit Star of 20+ damage also hits every
+/// other enemy.
+/// </summary>
 [RegisterCard(typeof(KirbyCardPool))]
-public sealed class StarBulletBoost() : KirbyCard(1, CardType.Power, CardRarity.Uncommon, TargetType.Self)
+public sealed class StarBulletBoost() : KirbyCard(1, CardType.Power, CardRarity.Rare, TargetType.Self)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        [new PowerVar<StarBulletPower>(50), new DynamicVar("SplashThreshold", StarBulletPower.SplashThreshold)];
+        [new PowerVar<StarBulletPower>(75), new DynamicVar("SplashThreshold", StarBulletPower.SplashThreshold)];
 
     protected override IEnumerable<IHoverTip> AdditionalHoverTips => [HoverTipFactory.FromCard<SpitStar>()];
 
@@ -85,5 +88,5 @@ public sealed class StarBulletBoost() : KirbyCard(1, CardType.Power, CardRarity.
             Owner.Creature, this);
     }
 
-    protected override void OnUpgrade() => DynamicVars[nameof(StarBulletPower)].UpgradeValueBy(50);
+    protected override void OnUpgrade() => DynamicVars[nameof(StarBulletPower)].UpgradeValueBy(75);
 }

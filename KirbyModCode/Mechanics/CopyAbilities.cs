@@ -394,6 +394,9 @@ public static class CopyAbilities
     /// <summary>The cards <paramref name="kind" /> hands out (Galaxia uses Sword's).</summary>
     public static IReadOnlyList<Type> CardsOf(CopyAbilityKind kind) => AbilityCardTypes[kind];
 
+    /// <summary>Whether <paramref name="kind" /> has a "gain copy ability X" card (Void has none).</summary>
+    public static bool HasAbilityCard(CopyAbilityKind kind) => AbilityCards.ContainsKey(kind);
+
     public static CardModel CreateAbilityCard(Player player, CopyAbilityKind kind)
     {
         var combatState = player.Creature.CombatState

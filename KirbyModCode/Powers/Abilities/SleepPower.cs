@@ -91,7 +91,7 @@ public sealed class SleepPower : CopyAbilityPower
         if (State.Slumber > 0)
             await KirbySlumberPower.Reward(choiceContext, Owner, State.Slumber);
 
-        await KirbyMouth.LoseAbility(choiceContext, player, this);
+        await KirbyMouth.LoseAbility(choiceContext, player, this, wokeUp: true);
     }
 
     // Slumber is used up by this Sleep, whether it ends by waking or early.

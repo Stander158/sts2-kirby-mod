@@ -33,6 +33,11 @@
         <None Include="KirbyMod.json;project.godot;DESIGN.md;KirbyMod/**"/>
     </ItemGroup>
 
+    <!-- Enemies (Waddle Dee) are held back for now: built only with -p:KirbyEnemies=true. -->
+    <ItemGroup Condition="'$(KirbyEnemies)' != 'true'">
+        <Compile Remove="KirbyModCode/Enemies/**"/>
+    </ItemGroup>
+
     <Target Name="CheckDependencyPaths">
         <Error Text="Slay the Spire 2 data not found at '$(Sts2DataDir)'. Check Directory.Build.props."
                Condition="'$(Sts2DataDir)' == '' or !Exists('$(Sts2DataDir)')"/>
