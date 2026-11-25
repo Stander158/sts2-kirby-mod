@@ -55,7 +55,7 @@ public sealed class MirroredPower : ModPowerTemplate
         return Task.CompletedTask;
     }
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
 #else
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource)

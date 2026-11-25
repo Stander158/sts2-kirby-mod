@@ -7,7 +7,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-VERSIONS=(0.107.1 0.113.0)          # oldest first; the last one is also the default in Directory.Build.props
+VERSIONS=(0.107.1 0.111.0 0.113.0)          # oldest first; the last one is also the default in Directory.Build.props
 REFS=D:/StS2Modding/refs
 DIST=D:/StS2Modding/dist/KirbyMod-0.3.0-workshop/KirbyMod
 STAGE=D:/StS2Modding/dist/stage

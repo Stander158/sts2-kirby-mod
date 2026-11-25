@@ -478,11 +478,32 @@ Slay the Spire 2 新角色 mod。基于 RitsuLib，参考 Workshop 上的 Hornet
 - 复制能力 power 都继承 `CopyAbilityPower`；能力给的牌实现 `ICopyAbilityCard`；有能力加成的牌实现 `IAbilitySynergyCard`（回合结束前由能力 power 给单回合保留）。
 - **临时（第四阶段前）**：卡比卡池还没覆盖齐 攻击/技能/能力 × 普通/罕见/稀有 时，卡牌奖励、商店、变化等"从角色卡池随机拿牌"的效果会额外混入铁甲战士已解锁的牌（`KirbyCardPool.FilterThroughEpochs`）。否则游戏会在生成奖励时报错卡死（例：涅奥的沉重石板）。卡池凑齐后自动停用（现在已凑齐，不再混入）。
 
-- 游戏版本兼容（2026-11-12）：beta 分支 0.113.0 改了一批钩子和命令的签名（ModifyDamage* / ModifyDamageCap 多了 CardPlay，AfterDeath 多了 source，GetResultPileTypeForCardPlay 换成 GetResultLocationForCardPlay，AttackCommand.FromCard、CreatureCmd.Damage / LoseBlock、Hook.ModifyDamage 加了参数）。代码按 0.113 写，旧写法放在 `#if STS2_V113 ... #else` 里，`GameCompat` 补上 0.107.1 缺的 FromCard 重载；出牌后去哪个牌堆统一走 `KirbyCard.ResultPile`。`Directory.Build.props` 的 RitsuLibReferenceTarget 要和本机游戏版本一致（0.113.0 时自动定义 STS2_V113）。单个 dll 只能跑在它编译时对应的版本上（否则报 Method not found），所以包里放两份：
-  - 根目录的 `KirbyMod.dll` 是入口（`Loader/`，程序集名 KirbyMod.Loader）：读游戏目录的 release_info.json，加载 `compat/<版本>/KirbyMod.dll` 里不比游戏新的最新一份，把它的类型补进 `ReflectionHelper.ModTypes`（游戏只在自己加载的程序集里找卡牌等模型），再调用它的 `Entry.Initialize`。
-  - 各版本的游戏 dll 存在 `D:/StS2Modding/refs/game-<版本>/`，所以不管 Steam 装的是哪个分支都能编译两份。
+- 游戏版本兼容（2026-11-12）：beta 分支 0.113.0 改了一批钩子和命令的签名（ModifyDamage* / ModifyDamageCap 多了 CardPlay，AfterDeath 多了 source，GetResultPileTypeForCardPlay 换成 GetResultLocationForCardPlay，AttackCommand.FromCard、CreatureCmd.Damage / LoseBlock、Hook.ModifyDamage 加了参数）。代码按新接口写，旧写法放在 `#if ... #else` 里，`GameCompat` 补上 0.107.1 缺的 FromCard 重载；出牌后去哪个牌堆统一走 `KirbyCard.ResultPile`。`Directory.Build.props` 的 RitsuLibReferenceTarget 要和本机游戏版本一致（≥0.111.0 时定义 STS2_V111，≥0.113.0 时再定义 STS2_V113）。单个 dll 只能跑在它编译时对应的版本上（否则报 Method not found），所以包里每个版本放一份：
+  - 根目录的 `KirbyMod.dll` 是入口（`Loader/`，程序集名 KirbyMod.Loader）：取游戏版本（见下面 2026-11-25 那条），加载 `compat/<版本>/KirbyMod.dll` 里不比游戏新的最新一份，把它的类型补进 `ReflectionHelper.ModTypes`（游戏只在自己加载的程序集里找卡牌等模型），再调用它的 `Entry.Initialize`。
+  - 各版本的游戏 dll 存在 `D:/StS2Modding/refs/game-<版本>/`，所以不管 Steam 装的是哪个分支都能全部编译。文件夹按 RitsuLib 的 compat 目标命名：`game-0.111.0` 里放的是 0.111.1（见里面的 release_info.json）。
   - 打包：`bash package.sh`（加 `--install` 同时装进游戏 mods），输出到 Workshop 内容目录 `dist/KirbyMod-0.3.0-workshop/KirbyMod`。
   - 2026-11-12 在正式版和 beta 上各打过一场，入口都选对了版本，没有报错。
+  - **2026-11-25 入口加固**（Mac 上启动即崩，并拖垮整个游戏）：
+    - 原因有三个。
+      - 版本读不到：只查了 exe 旁边，Mac 的 release_info.json 在 `Contents/Resources/`。
+      - 版本未知时直接选了最新的 0.113.0 build，它在 0.111.1 上缺 StretchPower。
+      - `GetTypes()` 没接异常，`ModTypes` 补丁已经装上，之后每次 `GetSubtypesInMods` 都抛异常，BaseLib 一调用游戏就启动失败。
+    - 现在的行为：
+      - 先检查 `RitsuLibFramework.IsInitialized`，没完成就打 error，不加载。RitsuLib 失败时 model 会退回按类名的 id：本地化全断；0.114 原版新增的 `CARD.FEED` 会和我们的 Feed 撞 ID，导致游戏起不来。
+      - 版本按顺序取：游戏 API（`ReleaseInfoManager.Instance.ReleaseInfo.Version`，反射调用，它自己知道 Mac 的目录结构）→ `NGame.GetGameVersion()` → exe 旁边和 `../Resources/` 的 release_info.json。都取不到就打 warn，列出查过的路径。
+      - 版本未知时，用 System.Reflection.Metadata 读每个 build 引用的 sts2 类型，选最新的、引用的类型全都在的那份（0.113.0 在 0.107.1 上缺 StretchPower 和 CardLocation）。
+      - `GetTypes()` 失败时记录 LoaderExceptions，然后 return；`ModTypes` 补丁只在 `GetTypes()` 通过之后才装。`AddCoreTypes` 自己吞掉所有异常，不改 `__result`。
+    - 测试（Windows，0.114.0 beta）：
+      - RitsuLib 0.6.15：RitsuLib 回滚补丁，KirbyMod 打 error 放弃加载，游戏正常进主菜单。
+      - RitsuLib 0.6.16（GitHub variant pack，装在游戏 `mods/STS2-RitsuLib`，会盖过 Workshop 版）：`Game v0.114.0 (ReleaseInfoManager); loading build 0.113.0.`，Feed 注册为 `KIRBY_MOD_CARD_FEED`，不再撞 ID。
+      - 版本未知（临时 loader 关掉 API 和文件两条路）：warn 列出查过的路径。假 build 缺类型被跳过，选中 0.113.0，正常加载。在 Windows 上只把 release_info.json 改名测不了这条：游戏 API 读的就是这个文件，RitsuLib 读不到版本也会拒绝启动。
+      - build 不匹配（假的 `compat/0.114.0`，引用一个不存在的游戏类型）：打 error 并列出类型加载错误，其他 mod 和主菜单都正常。
+    - 0.114 不需要单独出 build：用 0.114 的 sts2.dll 和 RitsuLib 0.6.16 `compat/0.114.0` 编译 0 错误。编出的 dll 和 `compat/0.113.0` 的外部成员引用完全相同（各 1070 条）。
+  - **2026-11-25 加 0.111 build**（正式版是 0.111.1）：
+    - 0.111 夹在中间。已经是新写法的：ModifyDamage* / ModifyDamageCap 带 CardPlay，GetResultLocationForCardPlay，AttackCommand.FromCard、CreatureCmd.Damage / LoseBlock、Hook.ModifyDamage 的新参数。还是旧写法的：AfterDeath 没有 source，也没有 StretchPower。
+    - 原来正式版用的是 0.107.1 build：11 个 override 悄悄失效（时钟、冰冻、萝卜机甲、吸入、朋友列车的加伤，无敌、镜像、吸入的伤害上限，终极剑、轮子碾压，出牌去向）。另外 `CardCmd.Exhaust` 在 0.111 改了返回类型，旧 build 调用会抛 MissingMethodException。
+    - 现在加了 STS2_V111：上面那批新接口都改用 `#if STS2_V111`，AfterDeath 和 Stretch 留在 `#if STS2_V113`。`package.sh` 多打一份 `compat/0.111.0`。
+    - 检查：0.107.1 和 0.113.0 两个 build 的外部成员引用和改之前完全相同。在 0.111.1 上启动，日志是 `Game v0.111.1 (ReleaseInfoManager); loading build 0.111.0.`，正常进主菜单。
 
 ## 开发阶段
 

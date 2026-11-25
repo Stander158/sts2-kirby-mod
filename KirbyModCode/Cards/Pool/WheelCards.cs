@@ -121,7 +121,7 @@ public sealed class WheelCrush() : KirbyCard(1, CardType.Attack, CardRarity.Comm
         await (hitsAll ? attack.TargetingAllOpponents(CombatState!) : attack.Targeting(cardPlay.Target!)).Execute(ctx);
     }
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
 #else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,

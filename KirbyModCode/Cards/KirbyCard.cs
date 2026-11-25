@@ -22,7 +22,7 @@ public abstract class KirbyCard(int cost, CardType type, CardRarity rarity, Targ
     protected virtual PileType ResultPile(PileType basePile) => basePile;
 
     // Game 0.113 replaced GetResultPileTypeForCardPlay with GetResultLocationForCardPlay (pile + player + position).
-#if STS2_V113
+#if STS2_V111
     protected override CardLocation GetResultLocationForCardPlay()
     {
         var location = base.GetResultLocationForCardPlay();

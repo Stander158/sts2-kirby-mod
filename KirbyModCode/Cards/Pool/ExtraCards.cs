@@ -103,7 +103,7 @@ public sealed class UltraSword() : KirbyCard(2, CardType.Attack, CardRarity.Rare
     }
 
     // Vigor itself adds its amount once; this adds the remaining (times - 1) copies.
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
 #else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,
@@ -223,7 +223,7 @@ public sealed class CurlingStone() : KirbyCard(0, CardType.Skill, CardRarity.Unc
         if (block <= 0)
             return;
 
-#if STS2_V113
+#if STS2_V111
         await CreatureCmd.LoseBlock(ctx, target, block, Owner.Creature);
 #else
         await CreatureCmd.LoseBlock(target, block);

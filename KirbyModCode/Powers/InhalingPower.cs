@@ -146,7 +146,7 @@ public sealed class InhalingPower : ModPowerTemplate
             "inhaled enemy's first attack (all hits)");
     }
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
 #else
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer,
@@ -157,7 +157,7 @@ public sealed class InhalingPower : ModPowerTemplate
         return state.NegateAll && target == Owner && dealer != null && dealer == state.Target ? 0.5m : 1m;
     }
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
 #else
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource)

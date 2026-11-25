@@ -14,8 +14,8 @@
         <GodotPath>D:/StS2Modding/tools/MegaDot/MegaDot_v4.5.1-stable_mono_win64_console.exe</GodotPath>
 
         <!-- RitsuLib from the Steam Workshop install; compiled against the game API it targets. Must match the
-             game version being built: 0.113.0 (beta branch; also turns on STS2_V113) or 0.107.1 (stable). package.sh
-             builds both and packs them behind the loader. -->
+             game API being built: 0.113.0 (beta; also turns on STS2_V111 and STS2_V113), 0.111.0 (stable 0.111.x;
+             turns on STS2_V111) or 0.107.1. package.sh builds all of them and packs them behind the loader. -->
         <RitsuLibDir>D:/Steam/steamapps/workshop/content/2868840/3747602295/</RitsuLibDir>
         <RitsuLibReferenceTarget Condition="'$(RitsuLibReferenceTarget)' == ''">0.113.0</RitsuLibReferenceTarget>
 

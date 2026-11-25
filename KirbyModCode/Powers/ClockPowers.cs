@@ -98,7 +98,7 @@ public sealed class ClockPower : ModPowerTemplate
         return true;
     }
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
 #else
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer,

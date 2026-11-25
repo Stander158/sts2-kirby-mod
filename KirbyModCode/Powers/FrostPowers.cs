@@ -33,7 +33,7 @@ public sealed class FrostDamagePower : FrostBonusPower
 {
     public override PowerAssetProfile AssetProfile => KirbyPowerIcons.Placeholder("strength_power");
 
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
 #else
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer,

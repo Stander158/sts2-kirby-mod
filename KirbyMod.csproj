@@ -16,8 +16,12 @@
         <NoWarn>$(NoWarn);MSB3270</NoWarn>
     </PropertyGroup>
 
-    <!-- Game 0.113 changed several hook signatures; STS2_V113 picks the matching overrides. -->
-    <PropertyGroup Condition="'$(RitsuLibReferenceTarget)' == '0.113.0'">
+    <!-- Game API changes by version, picking the matching overrides and calls: STS2_V111 for 0.111 and newer, STS2_V113
+         for 0.113 and newer (see DESIGN.md, 游戏版本兼容). -->
+    <PropertyGroup Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(RitsuLibReferenceTarget)', '0.111.0'))">
+        <DefineConstants>$(DefineConstants);STS2_V111</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="$([MSBuild]::VersionGreaterThanOrEquals('$(RitsuLibReferenceTarget)', '0.113.0'))">
         <DefineConstants>$(DefineConstants);STS2_V113</DefineConstants>
     </PropertyGroup>
 

@@ -162,7 +162,7 @@ public sealed class BombRally() : KirbyCard(1, CardType.Skill, CardRarity.Rare, 
 
     protected override async Task OnTurnEndInHand(PlayerChoiceContext choiceContext)
     {
-#if STS2_V113
+#if STS2_V111
         await CreatureCmd.Damage(choiceContext, Owner.Creature, Step, ValueProp.Unpowered | ValueProp.Move, this, null);
 #else
         await CreatureCmd.Damage(choiceContext, Owner.Creature, Step, ValueProp.Unpowered | ValueProp.Move, this);

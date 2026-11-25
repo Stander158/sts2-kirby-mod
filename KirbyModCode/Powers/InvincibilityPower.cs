@@ -33,7 +33,7 @@ public sealed class InvincibilityPower : ModPowerTemplate
     }
 
     // Same cap for block loss and damage previews.
-#if STS2_V113
+#if STS2_V111
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay) =>
 #else
     public override decimal ModifyDamageCap(Creature? target, ValueProp props, Creature? dealer, CardModel? cardSource) =>
