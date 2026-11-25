@@ -3,7 +3,7 @@
   "name": "Kirby / 卡比",
   "author": "Sam",
   "description": "卡比加入杀戮尖塔 2：吸入敌人，吞下复制能力。\nKirby joins Slay the Spire 2: inhale enemies and copy their abilities.",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "min_game_version": "0.107.1",
   "has_pck": true,
   "has_dll": true,
